@@ -177,7 +177,7 @@ If using a new Blender version:
 
 ```
 toolkit.py                              # Portable single-file toolkit
-CLAUDE.md                               # This documentation
+GUIDE.md                                # This documentation
 
 geo_nodes_mcp/                          # Module version (same functions)
 ├── __init__.py

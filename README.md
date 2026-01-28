@@ -19,7 +19,7 @@ group.
    metric reports.
 
 ## Documentation
-- `CLAUDE.md` – Hands-on quick start, helper catalog, project notes, and common
+- `GUIDE.md` – Hands-on quick start, helper catalog, project notes, and common
   pitfalls.
 - `WORKFLOW.md` – MCP-centric process covering Mermaid rules, response format,
   and the 22-step checklist the LLM must satisfy before building.
@@ -34,7 +34,7 @@ group.
 - `_archive/` – Legacy assets kept for historical reference (ignored by git).
 
 ## Contributing / Next Steps
-High-level roadmap items live near the end of `CLAUDE.md`. Briefly:
+High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 1. Regenerate catalogues so `supports_field` flags are accurate for field-aware
    validation.
 2. Add stricter node-setting validation using catalogue metadata.
