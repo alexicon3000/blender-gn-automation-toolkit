@@ -50,3 +50,18 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 2. Add stricter node-setting validation using catalogue metadata.
 3. Automate the LLM checklist in code so MCP workflows can fail fast before
    building.
+
+## Status at a Glance
+**Works today**
+- Catalogue/socket loaders, Mermaid→graph_json parsing, graph builders, and
+  validation helpers (`toolkit.py`, `geo_nodes_mcp/`).
+- Pre-link safety checks (direction/type) using Blender 4.4 metadata.
+- Post-build validation with metrics + screenshots.
+
+**Still to build/validate**
+- Refresh catalogues with accurate `supports_field` data to enable the new
+  field-awareness guard.
+- Catalogue-driven node-setting validation (enum/mode properties).
+- Automated enforcement of the 22-step LLM checklist.
+- "Full fat" graph reporting (nodes, sockets, settings, wire payloads) for
+  manual reconstruction when automation fails.
