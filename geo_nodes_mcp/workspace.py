@@ -5,7 +5,10 @@ Provides functions to set up and switch between validation workspaces
 in Blender without creating duplicates.
 """
 
-import bpy
+try:
+    import bpy  # type: ignore
+except ImportError:  # pragma: no cover - available only inside Blender
+    bpy = None  # type: ignore
 from mathutils import Euler
 import math
 

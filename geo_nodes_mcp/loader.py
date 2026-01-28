@@ -12,7 +12,10 @@ Usage via MCP:
 """
 
 LOADER_CODE = '''
-import bpy
+try:
+    import bpy  # type: ignore
+except ImportError:  # pragma: no cover - available only inside Blender
+    bpy = None  # type: ignore
 import os
 import tempfile
 from mathutils import Euler

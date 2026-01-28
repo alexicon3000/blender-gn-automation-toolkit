@@ -80,6 +80,16 @@ print_validation_report(result)
 # - metrics: {vertex_count, min_z, max_z, ground_contact}
 # - issues: [list of all problems]
 # - screenshot_path: path to workspace screenshot
+# - preflight: checklist from JSON validation (if build_graph_from_json ran)
+
+# Optional: include a full graph report for diagnostics
+result = full_geo_nodes_validation(
+    "ObjectName",
+    "ModifierName",
+    include_report=True,
+    node_id_map=result.get("nodes")
+)
+print_validation_report(result)
 ```
 
 ## Reference Data
@@ -95,6 +105,8 @@ print_validation_report(result)
 - **Contains:** 58 allowed socket type pairs for link validation
 
 **Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
+
+**Field Support Limitation:** The catalogue currently exports `supports_field=false` for every socket. Field-aware validation is limited until the catalogue is refreshed.
 
 ## Available Functions
 
@@ -118,7 +130,8 @@ print_validation_report(result)
 ### Validation
 | Function | Purpose |
 |----------|---------|
-| `full_geo_nodes_validation(obj, mod)` | Complete validation + screenshot |
+| `full_geo_nodes_validation(obj, mod, include_report=False)` | Complete validation + screenshot (+ full report) |
+| `full_graph_report(obj, mod)` | Full graph report without metrics/screenshot |
 | `validate_graph_structure(node_group)` | Check for invalid links |
 | `validate_geometry_metrics(obj)` | Check bounds, ground contact |
 | `print_validation_report(result)` | Pretty-print validation result |
@@ -199,6 +212,9 @@ socket_compat.csv                       # Socket compatibility matrix
 **Recent work**
 - Added catalogue + socket-compat loaders shared by toolkit & package
 - Enforced pre-link socket validation (direction + type)
+- Added fail-fast preflight validation for graph_json builds
+- Added full graph report helpers for diagnostics
+- print_validation_report now prints preflight checklists
 - Began scaffolding field-awareness (requires refreshed catalogue data)
 - Updated Mermaid/graph_json docs to always include GroupInput/GroupOutput
 
@@ -207,9 +223,7 @@ socket_compat.csv                       # Socket compatibility matrix
 2. Use catalogue metadata to validate node settings (enum/mode properties)
 3. Automate the LLM checklist (Rules 1‑22) so MCP can fail fast before building
 4. Document how to annotate Mermaid nodes with key parameter hints for human review
-5. Add a "full fat" graph report generator that lists each node's sockets,
-   the specific inputs/outputs used, their values, and data flowing through
-   each wire for manual reconstruction when needed.
+5. Extend full graph reports with node settings/summaries for manual rebuilds
 6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
    `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.
 
@@ -220,3 +234,16 @@ instead of launching a new Blender process. Copy the contents of
 
 Fallback (standalone Blender):
 `blender --background --python smoke_test_mermaid.py`
+
+## Preflight Validation Notes
+
+`build_graph_from_json()` runs a fail-fast preflight that checks:
+- Node list/ID validity
+- Known node types (catalogue)
+- Link endpoints and socket names (except Group Input/Output sockets)
+- Group Output connectivity (warning-only; viewer-only graphs are allowed)
+- Node settings value/type validation
+
+When preflight fails, the builder returns early with `success=False` and a
+`preflight` report attached. `print_validation_report()` will emit the
+preflight checklist automatically when present.

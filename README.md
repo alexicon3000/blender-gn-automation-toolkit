@@ -11,9 +11,11 @@ load catalogues, validate socket compatibility, or snapshot node graphs.
 - Catalog-driven safety: builders load Blender 4.4 node definitions and the
   socket compatibility matrix before linking, catching wrong directions or
   types early.
-- Pre-flight validation: `safe_link()` checks direction + types before
-  `links.new()`, and the validation suite captures both structural metrics and
-  screenshots so MCP runs surface issues immediately.
+- Pre-flight validation: `build_graph_from_json()` now runs a fail-fast
+  preflight checklist (node types, sockets, Group Output linkage, setting
+  types) before touching Blender.
+- Full graph reporting: optional “full report” dumps nodes, sockets, defaults,
+  and links to aid manual reconstruction when automation fails.
 
 ## Getting Started
 1. Open Blender 4.4+ and run:
@@ -26,7 +28,7 @@ load catalogues, validate socket compatibility, or snapshot node graphs.
    `mermaid_to_blender()` or `build_graph_from_json()` to instantiate the node
 group.
 3. Run `full_geo_nodes_validation()` to capture screenshots and structural/
-   metric reports.
+   metric reports. Pass `include_report=True` to include a full graph report.
 
 ## Documentation
 - `GUIDE.md` – Hands-on quick start, helper catalog, project notes, and common
@@ -46,8 +48,8 @@ group.
 ## Contributing / Next Steps
 High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 1. Regenerate catalogues so `supports_field` flags are accurate for field-aware
-   validation.
-2. Add stricter node-setting validation using catalogue metadata.
+   validation (currently exported values are all false).
+2. Expand node-setting validation using catalogue metadata (enum/mode rules).
 3. Automate the LLM checklist in code so MCP workflows can fail fast before
    building.
 
@@ -62,11 +64,11 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 
 **Still to build/validate**
 - Refresh catalogues with accurate `supports_field` data to enable the new
-  field-awareness guard.
+  field-awareness guard (current export returns false everywhere).
 - Catalogue-driven node-setting validation (enum/mode properties).
 - Automated enforcement of the 22-step LLM checklist.
-- "Full fat" graph reporting (nodes, sockets, settings, wire payloads) for
-  manual reconstruction when automation fails.
+- Extend the full graph report with per-link data payloads once the exporter
+  captures them.
 
 ## Smoke Tests
 

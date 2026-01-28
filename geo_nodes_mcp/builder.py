@@ -5,9 +5,13 @@ Takes a JSON specification and creates the actual node graph in Blender,
 with validation at each step.
 """
 
-import bpy
+try:
+    import bpy  # type: ignore
+except ImportError:  # pragma: no cover - available only inside Blender
+    bpy = None  # type: ignore
 
 from . import catalogue
+from . import validator
 
 
 def get_output_by_type(node, socket_type):
@@ -194,8 +198,15 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
         "success": False,
         "node_group": None,
         "nodes": {},
-        "errors": []
+        "errors": [],
+        "preflight": None,
     }
+
+    preflight = validator.validate_graph_json_preflight(graph_json)
+    result["preflight"] = preflight
+    if preflight["status"] != "OK":
+        result["errors"].extend(preflight["issues"])
+        return result
 
     # Get or create object
     obj = bpy.data.objects.get(obj_name)
