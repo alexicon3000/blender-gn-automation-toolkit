@@ -58,13 +58,27 @@ def get_blender_version():
     return bpy.app.version, f"{bpy.app.version[0]}.{bpy.app.version[1]}"
 
 
+def _catalogue_version_from_path(path):
+    if not path:
+        return None
+    basename = os.path.basename(path)
+    parts = basename.replace(".json", "").split("_")
+    if len(parts) >= 4 and parts[-2].isdigit() and parts[-1].isdigit():
+        return f"{parts[-2]}.{parts[-1]}"
+    return None
+
+
 def check_catalogue_version(catalogue_version=CATALOGUE_VERSION):
     """Check if current Blender matches catalogue version."""
     version_tuple, version_str = get_blender_version()
     major_minor = f"{version_tuple[0]}.{version_tuple[1]}"
 
-    if major_minor != catalogue_version:
-        print(f"WARNING: Catalogue is for Blender {catalogue_version}, "
+    env_path = os.environ.get(_CATALOGUE_ENV_VAR)
+    inferred = _catalogue_version_from_path(env_path)
+    effective_version = inferred or catalogue_version
+
+    if major_minor != effective_version:
+        print(f"WARNING: Catalogue is for Blender {effective_version}, "
               f"but running {version_str}. Socket names may differ!")
         return False
     return True
