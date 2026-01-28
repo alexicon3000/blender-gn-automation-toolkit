@@ -46,6 +46,9 @@ _SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 _NODE_CATALOGUE = None
 _NODE_CATALOGUE_INDEX = {}
 _NODE_CATALOGUE_SOURCE = None
+_NODE_CATALOGUE_MIN = None
+_NODE_CATALOGUE_MIN_INDEX = {}
+_NODE_CATALOGUE_MIN_SOURCE = None
 _SOCKET_COMPAT = None
 _SOCKET_COMPAT_SOURCE = None
 
@@ -85,10 +88,10 @@ def _candidate_catalogue_paths(preferred_path=None, prefer_complete=True):
     if env_path:
         candidates.append(env_path)
 
-    for base in (_REFERENCE_DIR, _TOOLKIT_DIR, archive_dir):
-        if not base:
-            continue
-        for name in names:
+    for name in names:
+        for base in (_REFERENCE_DIR, _TOOLKIT_DIR, archive_dir):
+            if not base:
+                continue
             path = os.path.join(base, name)
             candidates.append(path)
 
@@ -111,6 +114,21 @@ def _resolve_catalogue_path(preferred_path=None, prefer_complete=True):
     return None
 
 
+def _read_catalogue_file(resolved_path):
+    with open(resolved_path, 'r', encoding='utf-8') as fh:
+        data = json.load(fh)
+
+    if isinstance(data, dict):
+        nodes = data.get('nodes', [])
+    elif isinstance(data, list):
+        nodes = data
+    else:
+        raise ValueError(f"Unsupported catalogue format in {resolved_path}")
+
+    index = {entry.get('identifier'): entry for entry in nodes if entry.get('identifier')}
+    return nodes, index
+
+
 def load_node_catalogue(path=None, prefer_complete=True, force_reload=False):
     """Load node catalogue JSON (complete or minimal) and cache the result."""
     global _NODE_CATALOGUE, _NODE_CATALOGUE_INDEX, _NODE_CATALOGUE_SOURCE
@@ -125,18 +143,10 @@ def load_node_catalogue(path=None, prefer_complete=True, force_reload=False):
             "place geometry_nodes_complete/min files next to toolkit.py."
         )
 
-    with open(resolved, 'r', encoding='utf-8') as fh:
-        data = json.load(fh)
-
-    if isinstance(data, dict):
-        nodes = data.get('nodes', [])
-    elif isinstance(data, list):
-        nodes = data
-    else:
-        raise ValueError(f"Unsupported catalogue format in {resolved}")
+    nodes, index = _read_catalogue_file(resolved)
 
     _NODE_CATALOGUE = nodes
-    _NODE_CATALOGUE_INDEX = {entry.get('identifier'): entry for entry in nodes if entry.get('identifier')}
+    _NODE_CATALOGUE_INDEX = index
     _NODE_CATALOGUE_SOURCE = resolved
     return _NODE_CATALOGUE
 
@@ -162,6 +172,53 @@ def get_socket_spec(node_type, socket_name, is_output=True):
     for socket in sockets:
         if socket.get('name') == socket_name:
             return socket
+    return None
+
+
+def load_min_node_catalogue(path=None, force_reload=False):
+    """Load the minimal node catalogue (GeometryNode* only)."""
+    global _NODE_CATALOGUE_MIN, _NODE_CATALOGUE_MIN_INDEX, _NODE_CATALOGUE_MIN_SOURCE
+
+    if _NODE_CATALOGUE_MIN and not force_reload and not path:
+        return _NODE_CATALOGUE_MIN
+
+    resolved = _resolve_catalogue_path(path, prefer_complete=False)
+    if not resolved:
+        return None
+
+    nodes, index = _read_catalogue_file(resolved)
+    _NODE_CATALOGUE_MIN = nodes
+    _NODE_CATALOGUE_MIN_INDEX = index
+    _NODE_CATALOGUE_MIN_SOURCE = resolved
+    return _NODE_CATALOGUE_MIN
+
+
+def get_min_node_spec(node_type):
+    load_min_node_catalogue()
+    return _NODE_CATALOGUE_MIN_INDEX.get(node_type)
+
+
+def get_min_socket_spec(node_type, socket_name, is_output=True):
+    spec = get_min_node_spec(node_type)
+    if not spec:
+        return None
+    sockets = spec.get('outputs' if is_output else 'inputs', [])
+    for socket in sockets:
+        if socket.get('name') == socket_name:
+            return socket
+    return None
+
+
+def get_socket_field_support(node_type, socket_name, is_output=True):
+    """Return whether a socket supports fields (True/False) if known."""
+    socket_spec = get_socket_spec(node_type, socket_name, is_output)
+    supports = socket_spec.get('supports_field') if socket_spec else None
+    if supports is not None:
+        return supports
+
+    min_spec = get_min_socket_spec(node_type, socket_name, is_output)
+    if min_spec is not None:
+        return min_spec.get('supports_field')
     return None
 
 
@@ -252,6 +309,17 @@ def _describe_socket(socket):
     return f"{node_name}.{getattr(socket, 'name', '<socket>')} ({_socket_idname(socket)})"
 
 
+def _socket_supports_field(socket, is_output=True):
+    node = getattr(socket, 'node', None)
+    node_type = getattr(node, 'bl_idname', None) if node else None
+    if not node_type:
+        return None
+    try:
+        return get_socket_field_support(node_type, getattr(socket, 'name', ''), is_output=is_output)
+    except FileNotFoundError:
+        return None
+
+
 def validate_socket_link(from_socket, to_socket):
     """Validate socket direction and type compatibility before linking."""
     if not getattr(from_socket, 'is_output', False):
@@ -265,6 +333,14 @@ def validate_socket_link(from_socket, to_socket):
     if not are_socket_types_compatible(from_id, to_id):
         return False, (
             "Socket types are incompatible: "
+            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
+        )
+
+    source_field = _socket_supports_field(from_socket, is_output=True)
+    dest_field = _socket_supports_field(to_socket, is_output=False)
+    if source_field and dest_field is False:
+        return False, (
+            "Field output cannot connect to non-field input: "
             f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
         )
 

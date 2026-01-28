@@ -123,6 +123,17 @@ def _describe_socket(socket):
     return f"{node_name}.{getattr(socket, 'name', '<socket>')} ({_socket_idname(socket)})"
 
 
+def _socket_supports_field(socket, is_output=True):
+    node = getattr(socket, 'node', None)
+    node_type = getattr(node, 'bl_idname', None) if node else None
+    if not node_type:
+        return None
+    try:
+        return catalogue.get_socket_field_support(node_type, getattr(socket, 'name', ''), is_output=is_output)
+    except FileNotFoundError:
+        return None
+
+
 def validate_socket_link(from_socket, to_socket):
     if not getattr(from_socket, 'is_output', False):
         return False, f"Source socket is not an output: {_describe_socket(from_socket)}"
@@ -135,6 +146,13 @@ def validate_socket_link(from_socket, to_socket):
     if not catalogue.are_socket_types_compatible(from_id, to_id):
         return False, (
             "Socket types are incompatible: "
+            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
+        )
+    source_field = _socket_supports_field(from_socket, is_output=True)
+    dest_field = _socket_supports_field(to_socket, is_output=False)
+    if source_field and dest_field is False:
+        return False, (
+            "Field output cannot connect to non-field input: "
             f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
         )
     return True, None

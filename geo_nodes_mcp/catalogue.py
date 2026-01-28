@@ -28,6 +28,9 @@ _ARCHIVE_REFERENCE_DIR = _PROJECT_ROOT / "_GN-LLM-References"
 _NODE_CATALOGUE: Optional[List[Dict]] = None
 _NODE_INDEX: Dict[str, Dict] = {}
 _NODE_SOURCE: Optional[str] = None
+_NODE_CATALOGUE_MIN: Optional[List[Dict]] = None
+_NODE_INDEX_MIN: Dict[str, Dict] = {}
+_NODE_SOURCE_MIN: Optional[str] = None
 _SOCKET_COMPAT: Optional[Set[Tuple[str, str]]] = None
 _SOCKET_COMPAT_SOURCE: Optional[str] = None
 
@@ -46,10 +49,10 @@ def _candidate_catalogue_paths(preferred_path: Optional[str], prefer_complete: b
     if env_path:
         candidates.append(Path(env_path))
 
-    for base in (_REFERENCE_DIR, _PROJECT_ROOT, archive_dir):
-        if not base:
-            continue
-        for name in names:
+    for name in names:
+        for base in (_REFERENCE_DIR, _PROJECT_ROOT, archive_dir):
+            if not base:
+                continue
             candidates.append(base / name)
 
     # As a final fallback, allow locating beside the package file itself
@@ -74,6 +77,22 @@ def _resolve_catalogue_path(preferred_path: Optional[str], prefer_complete: bool
     return None
 
 
+
+def _read_catalogue_file(resolved: Path):
+    with resolved.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+
+    if isinstance(data, dict):
+        nodes = data.get("nodes", [])
+    elif isinstance(data, list):
+        nodes = data
+    else:
+        raise ValueError(f"Unsupported catalogue format in {resolved}")
+
+    index = {entry.get("identifier"): entry for entry in nodes if entry.get("identifier")}
+    return nodes, index
+
+
 def load_node_catalogue(path: Optional[str] = None, prefer_complete: bool = True, force_reload: bool = False):
     """Load and cache the node catalogue data structure."""
     global _NODE_CATALOGUE, _NODE_INDEX, _NODE_SOURCE
@@ -88,18 +107,10 @@ def load_node_catalogue(path: Optional[str] = None, prefer_complete: bool = True
             "place geometry_nodes_complete/min files in the repository."
         )
 
-    with resolved.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
-
-    if isinstance(data, dict):
-        nodes = data.get("nodes", [])
-    elif isinstance(data, list):
-        nodes = data
-    else:
-        raise ValueError(f"Unsupported catalogue format in {resolved}")
+    nodes, index = _read_catalogue_file(resolved)
 
     _NODE_CATALOGUE = nodes
-    _NODE_INDEX = {entry.get("identifier"): entry for entry in nodes if entry.get("identifier")}
+    _NODE_INDEX = index
     _NODE_SOURCE = str(resolved)
     return _NODE_CATALOGUE
 
@@ -126,6 +137,53 @@ def get_socket_spec(node_type: str, socket_name: str, is_output: bool = True) ->
 def get_catalogue_source() -> Optional[str]:
     """Return the resolved catalogue path currently in use."""
     return _NODE_SOURCE
+
+
+def load_min_node_catalogue(path: Optional[str] = None, force_reload: bool = False):
+    """Load the minimal node catalogue for sockets that include supports_field."""
+    global _NODE_CATALOGUE_MIN, _NODE_INDEX_MIN, _NODE_SOURCE_MIN
+
+    if _NODE_CATALOGUE_MIN and not force_reload and not path:
+        return _NODE_CATALOGUE_MIN
+
+    resolved = _resolve_catalogue_path(path, prefer_complete=False)
+    if not resolved:
+        return None
+
+    nodes, index = _read_catalogue_file(resolved)
+    _NODE_CATALOGUE_MIN = nodes
+    _NODE_INDEX_MIN = index
+    _NODE_SOURCE_MIN = str(resolved)
+    return _NODE_CATALOGUE_MIN
+
+
+def get_min_node_spec(node_type: str) -> Optional[Dict]:
+    load_min_node_catalogue()
+    return _NODE_INDEX_MIN.get(node_type)
+
+
+def get_min_socket_spec(node_type: str, socket_name: str, is_output: bool = True) -> Optional[Dict]:
+    spec = get_min_node_spec(node_type)
+    if not spec:
+        return None
+    sockets = spec.get("outputs" if is_output else "inputs", [])
+    for socket in sockets:
+        if socket.get("name") == socket_name:
+            return socket
+    return None
+
+
+def get_socket_field_support(node_type: str, socket_name: str, is_output: bool = True) -> Optional[bool]:
+    """Return whether a socket supports fields if data exists."""
+    socket_spec = get_socket_spec(node_type, socket_name, is_output)
+    supports = socket_spec.get("supports_field") if socket_spec else None
+    if supports is not None:
+        return supports
+
+    min_spec = get_min_socket_spec(node_type, socket_name, is_output)
+    if min_spec is not None:
+        return min_spec.get("supports_field")
+    return None
 
 
 def _candidate_socket_paths(preferred_path: Optional[str]) -> Iterable[Path]:
@@ -204,6 +262,10 @@ __all__ = [
     "get_node_spec",
     "get_socket_spec",
     "get_catalogue_source",
+    "load_min_node_catalogue",
+    "get_min_node_spec",
+    "get_min_socket_spec",
+    "get_socket_field_support",
     "load_socket_compatibility",
     "are_socket_types_compatible",
     "get_socket_compat_source",
