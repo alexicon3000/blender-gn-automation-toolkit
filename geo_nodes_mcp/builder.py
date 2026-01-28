@@ -7,6 +7,8 @@ with validation at each step.
 
 import bpy
 
+from . import catalogue
+
 
 def get_output_by_type(node, socket_type):
     """
@@ -56,6 +58,10 @@ def safe_link(node_group, from_socket, to_socket):
     Raises:
         RuntimeError if link is invalid
     """
+    ok, error = validate_socket_link(from_socket, to_socket)
+    if not ok:
+        raise RuntimeError(error)
+
     link = node_group.links.new(from_socket, to_socket)
     if not link.is_valid:
         raise RuntimeError(
@@ -101,6 +107,37 @@ def set_node_input(node, input_name, value):
         inp.default_value = value
 
     return True
+
+
+def _socket_idname(socket):
+    if hasattr(socket, 'bl_idname') and socket.bl_idname:
+        return socket.bl_idname
+    bl_rna = getattr(socket, 'bl_rna', None)
+    if bl_rna and hasattr(bl_rna, 'identifier'):
+        return bl_rna.identifier
+    return socket.__class__.__name__
+
+
+def _describe_socket(socket):
+    node_name = getattr(socket.node, 'name', '<node>') if hasattr(socket, 'node') else '<node>'
+    return f"{node_name}.{getattr(socket, 'name', '<socket>')} ({_socket_idname(socket)})"
+
+
+def validate_socket_link(from_socket, to_socket):
+    if not getattr(from_socket, 'is_output', False):
+        return False, f"Source socket is not an output: {_describe_socket(from_socket)}"
+    if getattr(to_socket, 'is_output', False):
+        return False, f"Destination socket is not an input: {_describe_socket(to_socket)}"
+
+    from_id = _socket_idname(from_socket)
+    to_id = _socket_idname(to_socket)
+
+    if not catalogue.are_socket_types_compatible(from_id, to_id):
+        return False, (
+            "Socket types are incompatible: "
+            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
+        )
+    return True, None
 
 
 def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=True):

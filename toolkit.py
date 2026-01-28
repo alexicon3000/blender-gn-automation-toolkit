@@ -23,6 +23,7 @@ import os
 import tempfile
 import math
 import json
+import csv
 from mathutils import Euler
 
 # ============================================================================
@@ -39,10 +40,14 @@ _ARCHIVE_REFERENCE_DIR = os.path.join(_TOOLKIT_DIR, "_GN-LLM-References")
 _CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
 _DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
 _DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
+_SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
+_SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 
 _NODE_CATALOGUE = None
 _NODE_CATALOGUE_INDEX = {}
 _NODE_CATALOGUE_SOURCE = None
+_SOCKET_COMPAT = None
+_SOCKET_COMPAT_SOURCE = None
 
 def get_blender_version():
     """Return Blender version tuple and string."""
@@ -161,6 +166,112 @@ def get_socket_spec(node_type, socket_name, is_output=True):
 
 
 # ============================================================================
+# SOCKET COMPATIBILITY HELPERS
+# ============================================================================
+
+def _candidate_socket_paths(preferred_path=None):
+    """Yield candidate socket compatibility CSV paths."""
+    env_path = os.environ.get(_SOCKET_COMPAT_ENV_VAR)
+    bases = [_REFERENCE_DIR, _TOOLKIT_DIR, _ARCHIVE_REFERENCE_DIR]
+
+    candidates = []
+    if preferred_path:
+        candidates.append(preferred_path)
+    if env_path:
+        candidates.append(env_path)
+    for base in bases:
+        if base:
+            candidates.append(os.path.join(base, _SOCKET_COMPAT_FILENAME))
+
+    seen = set()
+    for path in candidates:
+        if path and path not in seen:
+            seen.add(path)
+            yield path
+
+
+def _resolve_socket_path(preferred_path=None):
+    for path in _candidate_socket_paths(preferred_path):
+        if os.path.exists(path):
+            return path
+    return None
+
+
+def load_socket_compatibility(path=None, force_reload=False):
+    """Load allowed socket type pairs from CSV, cached for reuse."""
+    global _SOCKET_COMPAT, _SOCKET_COMPAT_SOURCE
+
+    if _SOCKET_COMPAT is not None and not force_reload and not path:
+        return _SOCKET_COMPAT
+
+    resolved = _resolve_socket_path(path)
+    if not resolved:
+        raise FileNotFoundError(
+            "Could not locate socket_compat.csv. Set GN_MCP_SOCKET_COMPAT_PATH or "
+            "place socket_compat.csv next to toolkit.py."
+        )
+
+    compat_pairs = set()
+    with open(resolved, 'r', encoding='utf-8') as fh:
+        reader = csv.reader(fh)
+        header = next(reader, None)
+        for row in reader:
+            if len(row) < 2:
+                continue
+            compat_pairs.add((row[0].strip(), row[1].strip()))
+
+    _SOCKET_COMPAT = compat_pairs
+    _SOCKET_COMPAT_SOURCE = resolved
+    return _SOCKET_COMPAT
+
+
+def get_socket_compat_source():
+    """Return the resolved socket compatibility CSV path."""
+    return _SOCKET_COMPAT_SOURCE
+
+
+def are_socket_types_compatible(from_idname, to_idname):
+    """Return True if the socket type pair is allowed by the matrix."""
+    compat = load_socket_compatibility()
+    if not compat:
+        return False
+    return (from_idname, to_idname) in compat
+
+
+def _socket_idname(socket):
+    if hasattr(socket, 'bl_idname') and socket.bl_idname:
+        return socket.bl_idname
+    bl_rna = getattr(socket, 'bl_rna', None)
+    if bl_rna and hasattr(bl_rna, 'identifier'):
+        return bl_rna.identifier
+    return socket.__class__.__name__
+
+
+def _describe_socket(socket):
+    node_name = getattr(socket.node, 'name', '<node>') if hasattr(socket, 'node') else '<node>'
+    return f"{node_name}.{getattr(socket, 'name', '<socket>')} ({_socket_idname(socket)})"
+
+
+def validate_socket_link(from_socket, to_socket):
+    """Validate socket direction and type compatibility before linking."""
+    if not getattr(from_socket, 'is_output', False):
+        return False, f"Source socket is not an output: {_describe_socket(from_socket)}"
+    if getattr(to_socket, 'is_output', False):
+        return False, f"Destination socket is not an input: {_describe_socket(to_socket)}"
+
+    from_id = _socket_idname(from_socket)
+    to_id = _socket_idname(to_socket)
+
+    if not are_socket_types_compatible(from_id, to_id):
+        return False, (
+            "Socket types are incompatible: "
+            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
+        )
+
+    return True, None
+
+
+# ============================================================================
 # SOCKET HELPERS - Avoid index-based socket access
 # ============================================================================
 
@@ -234,6 +345,10 @@ def safe_link(node_group, from_socket, to_socket):
     Raises:
         RuntimeError if link is invalid
     """
+    ok, error = validate_socket_link(from_socket, to_socket)
+    if not ok:
+        raise RuntimeError(error)
+
     link = node_group.links.new(from_socket, to_socket)
     if not link.is_valid:
         raise RuntimeError(
