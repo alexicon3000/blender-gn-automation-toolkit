@@ -1310,8 +1310,17 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
     seen_nodes = {}
     seen_links = set()
 
-    # Special IDs that reference auto-created nodes (don't create new nodes for these)
-    SPECIAL_NODE_IDS = {"__GROUP_INPUT__", "__GROUP_OUTPUT__"}
+    # Special IDs map to the auto-created group input/output nodes.
+    SPECIAL_NODE_TYPES = {
+        "__GROUP_INPUT__": "NodeGroupInput",
+        "__GROUP_OUTPUT__": "NodeGroupOutput",
+    }
+
+    def _mark_special_node(node_id):
+        if node_id in SPECIAL_NODE_TYPES:
+            seen_nodes[node_id] = SPECIAL_NODE_TYPES[node_id]
+            return True
+        return False
 
     lines = mermaid_text.strip().split('\n')
 
@@ -1333,8 +1342,7 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
                 continue
 
             # Skip special node IDs - they reference auto-created Group I/O nodes
-            if node_id in SPECIAL_NODE_IDS:
-                seen_nodes[node_id] = None  # Mark as seen but don't create
+            if _mark_special_node(node_id):
                 continue
 
             # Try to resolve the Blender type
@@ -1392,6 +1400,11 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
                     if short_type in socket_input_map[socket_name]:
                         to_socket = socket_input_map[socket_name][short_type]
 
+            if _mark_special_node(from_id):
+                pass
+            if _mark_special_node(to_id):
+                pass
+
             link_key = (from_id, socket_name, to_id)
             if link_key not in seen_links:
                 seen_links.add(link_key)
@@ -1413,6 +1426,11 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
                 l["from"] == from_id and l["to"] == to_id
                 for l in result["links"]
             )
+
+            if _mark_special_node(from_id):
+                pass
+            if _mark_special_node(to_id):
+                pass
 
             if not already_captured:
                 link_key = (from_id, "Geometry", to_id)
