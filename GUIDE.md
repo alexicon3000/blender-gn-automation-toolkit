@@ -54,6 +54,31 @@ graph_json = {
 result = build_graph_from_json("MyObject", "MyModifier", graph_json)
 ```
 
+#### Incremental Merge Updates
+
+When you need to update an existing node group without rebuilding from scratch,
+use merge mode. The builder diffs the existing node tree by JSON node IDs,
+creates missing nodes, updates settings, and rewires links. You can optionally
+remove nodes/links that are not present in the JSON.
+
+```python
+merge_result = build_graph_from_json(
+    "MyObject",
+    "MyModifier",
+    graph_json,
+    merge_existing=True,
+    remove_extras=True,
+)
+
+print(merge_result.get("diff_summary"))
+```
+
+Notes:
+- `merge_existing=True` implies `clear_existing=False`.
+- `remove_extras=True` only removes nodes/links (not interface sockets).
+- The result includes `diff_summary` with created/updated/removed nodes and
+  added/removed links.
+
 ### Option 3: Manual with Safe Helpers
 
 For fine-grained control:
@@ -90,6 +115,15 @@ result = full_geo_nodes_validation(
     node_id_map=result.get("nodes")
 )
 print_validation_report(result)
+
+# Include merge context in the full report (optional)
+report = full_graph_report(
+    "ObjectName",
+    "ModifierName",
+    node_id_map=result.get("nodes"),
+    last_graph_json=graph_json,
+    last_diff_summary=merge_result.get("diff_summary"),
+)
 ```
 
 ## Reference Data
@@ -248,6 +282,10 @@ instead of launching a new Blender process. Copy the contents of
 **Targeted field-mismatch test (MCP)**: Copy
 `scripts/field_mismatch_test_payload.py` into `execute_blender_code`. It should
 fail with a field-compatibility error, confirming the guard is active.
+
+**Merge-mode smoke test (MCP)**: Copy
+`scripts/merge_smoke_test_payload.py` into `execute_blender_code` to validate
+incremental merge behavior and diff summaries.
 
 Fallback (standalone Blender):
 `blender --background --python smoke_test_mermaid.py`

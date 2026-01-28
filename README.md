@@ -19,8 +19,13 @@ with Geometry Nodes automation.
 - Pre-flight validation: `build_graph_from_json()` now runs a fail-fast
   preflight checklist (node types, sockets, Group Output linkage, setting
   types) before touching Blender.
+- Incremental merge support: set `merge_existing=True` to diff against existing
+  graphs by JSON node ID, update settings, and rewire links without a full
+  rebuild. Optional `remove_extras=True` removes nodes/links not in the JSON;
+  the build result includes a `diff_summary` of changes.
 - Full graph reporting: optional “full report” dumps nodes, sockets, defaults,
-  and links to aid manual reconstruction when automation fails.
+  and links to aid manual reconstruction when automation fails. You can pass
+  `last_graph_json` and `last_diff_summary` to include recent merge context.
 
 ## Getting Started
 1. Open Blender 5.0+ and run:
@@ -31,7 +36,8 @@ with Geometry Nodes automation.
    current Python session.
 2. Plan graphs in Mermaid or `graph_json`, then call
    `mermaid_to_blender()` or `build_graph_from_json()` to instantiate the node
-group.
+group. For incremental updates, call `build_graph_from_json(...,
+merge_existing=True, remove_extras=True)` to diff and merge by node ID.
 3. Run `full_geo_nodes_validation()` to capture screenshots and structural/
    metric reports. Pass `include_report=True` to include a full graph report.
 
@@ -92,6 +98,10 @@ your MCP `execute_blender_code` call. This validates the full chain:
 **Targeted field-mismatch test (MCP)**: Copy
 `scripts/field_mismatch_test_payload.py` into `execute_blender_code`. It should
 fail with a field-compatibility error, confirming the guard is active.
+
+**Merge-mode smoke test (MCP)**: Copy
+`scripts/merge_smoke_test_payload.py` into `execute_blender_code` to verify
+incremental merge/diff behavior and diff summaries.
 
 **Standalone Blender**: `blender --background --python smoke_test_mermaid.py`
 

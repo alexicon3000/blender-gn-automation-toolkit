@@ -625,13 +625,15 @@ def _socket_id(socket):
     return socket.__class__.__name__
 
 
-def generate_full_graph_report(node_group, node_id_map=None):
+def generate_full_graph_report(node_group, node_id_map=None, last_graph_json=None, last_diff_summary=None):
     """Generate a full graph report with nodes, sockets, and link details."""
     report = {
         "name": node_group.name,
         "node_count": len(node_group.nodes),
         "link_count": len(node_group.links),
         "node_id_map": node_id_map or {},
+        "last_graph_json": last_graph_json,
+        "last_diff_summary": last_diff_summary,
         "nodes": [],
         "links": [],
     }
@@ -819,7 +821,155 @@ def validate_graph_json_preflight(graph_json):
 
     return result
 
-def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=True, collection=None):
+def _normalize_link_spec(link_spec):
+    from_id = link_spec.get("from")
+    to_id = link_spec.get("to")
+    from_socket_name = link_spec.get("from_socket") or link_spec.get("socket")
+    to_socket_name = link_spec.get("to_socket") or link_spec.get("socket")
+    if "to_socket" in link_spec:
+        to_socket_name = link_spec["to_socket"]
+    return from_id, from_socket_name, to_id, to_socket_name
+
+
+def _link_key(from_id, from_socket_name, to_id, to_socket_name):
+    return (from_id, from_socket_name, to_id, to_socket_name)
+
+
+def _gather_existing_nodes(node_group):
+    """Map node.name to node for existing nodes (excluding group IO)."""
+    mapping = {}
+    for node in node_group.nodes:
+        if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput"}:
+            continue
+        mapping[node.name] = node
+    return mapping
+
+
+def _gather_existing_links(node_group):
+    """Map existing links keyed by from/to node names and socket names."""
+    links = {}
+    for link in node_group.links:
+        if not link.from_node or not link.to_node:
+            continue
+        key = _link_key(
+            link.from_node.name,
+            link.from_socket.name,
+            link.to_node.name,
+            link.to_socket.name,
+        )
+        links[key] = link
+    return links
+
+
+def _diff_graph(node_group, graph_json):
+    nodes_spec = {node["id"]: node for node in graph_json.get("nodes", []) if node.get("id")}
+    existing_nodes = _gather_existing_nodes(node_group)
+
+    nodes_to_add = [node_id for node_id in nodes_spec if node_id not in existing_nodes]
+    nodes_to_update = [node_id for node_id in nodes_spec if node_id in existing_nodes]
+    nodes_to_remove = [node_id for node_id in existing_nodes if node_id not in nodes_spec]
+
+    desired_links = {}
+    for link_spec in graph_json.get("links", []):
+        from_id, from_socket, to_id, to_socket = _normalize_link_spec(link_spec)
+        if not from_id or not to_id:
+            continue
+        desired_links[_link_key(from_id, from_socket, to_id, to_socket)] = link_spec
+
+    existing_links = _gather_existing_links(node_group)
+
+    links_to_add = [key for key in desired_links if key not in existing_links]
+    links_to_keep = [key for key in desired_links if key in existing_links]
+    links_to_remove = [key for key in existing_links if key not in desired_links]
+
+    return {
+        "nodes_to_add": nodes_to_add,
+        "nodes_to_update": nodes_to_update,
+        "nodes_to_remove": nodes_to_remove,
+        "links_to_add": links_to_add,
+        "links_to_keep": links_to_keep,
+        "links_to_remove": links_to_remove,
+    }
+
+
+def _apply_node_settings(node_map, node_settings, errors):
+    for node_id, settings in node_settings.items():
+        node = node_map.get(node_id)
+        if not node:
+            errors.append(f"Settings for unknown node: {node_id}")
+            continue
+
+        for input_name, value in settings.items():
+            try:
+                set_node_input(node, input_name, value)
+            except Exception as e:
+                errors.append(f"Failed to set {node_id}.{input_name}: {e}")
+
+
+def _remove_links(node_group, links_to_remove):
+    if not links_to_remove:
+        return
+    existing_links = _gather_existing_links(node_group)
+    for key in links_to_remove:
+        link = existing_links.get(key)
+        if link:
+            node_group.links.remove(link)
+
+
+def _remove_conflicting_links(node_group, target_node, target_socket_name):
+    for link in list(node_group.links):
+        if link.to_node == target_node and link.to_socket.name == target_socket_name:
+            node_group.links.remove(link)
+
+
+def _apply_links(node_group, node_map, graph_json, errors):
+    for link_spec in graph_json.get("links", []):
+        from_id, from_socket_name, to_id, to_socket_name = _normalize_link_spec(link_spec)
+
+        from_node = node_map.get(from_id)
+        to_node = node_map.get(to_id)
+
+        if not from_node:
+            errors.append(f"Link from unknown node: {from_id}")
+            continue
+        if not to_node:
+            errors.append(f"Link to unknown node: {to_id}")
+            continue
+
+        from_socket = next((out for out in from_node.outputs if out.name == from_socket_name), None)
+        if not from_socket:
+            errors.append(
+                f"Output socket '{from_socket_name}' not found on {from_id}. "
+                f"Available: {[o.name for o in from_node.outputs]}"
+            )
+            continue
+
+        to_socket = next((inp for inp in to_node.inputs if inp.name == to_socket_name), None)
+        if not to_socket:
+            errors.append(
+                f"Input socket '{to_socket_name}' not found on {to_id}. "
+                f"Available: {[i.name for i in to_node.inputs]}"
+            )
+            continue
+
+        _remove_conflicting_links(node_group, to_node, to_socket_name)
+
+        try:
+            safe_link(node_group, from_socket, to_socket)
+        except RuntimeError as e:
+            errors.append(str(e))
+
+
+def build_graph_from_json(
+    obj_name,
+    modifier_name,
+    graph_json,
+    clear_existing=True,
+    collection=None,
+    merge_existing=False,
+    remove_extras=False,
+    return_diff=True,
+):
     """
     Build a geometry node graph from a JSON specification.
 
@@ -858,6 +1008,7 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
         "nodes": {},
         "errors": [],
         "preflight": None,
+        "diff_summary": None,
     }
 
     preflight = validate_graph_json_preflight(graph_json)
@@ -891,6 +1042,9 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
 
     result["node_group"] = ng
 
+    if merge_existing:
+        clear_existing = False
+
     # Clear existing nodes if requested
     if clear_existing:
         ng.nodes.clear()
@@ -899,14 +1053,23 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
         ng.interface.new_socket(name="Geometry", in_out='INPUT', socket_type='NodeSocketGeometry')
         ng.interface.new_socket(name="Geometry", in_out='OUTPUT', socket_type='NodeSocketGeometry')
 
-    # Create Group Input/Output nodes
-    group_input = ng.nodes.new('NodeGroupInput')
+    # Ensure Group Input/Output nodes exist
+    group_input = next((node for node in ng.nodes if node.bl_idname == 'NodeGroupInput'), None)
+    if not group_input:
+        group_input = ng.nodes.new('NodeGroupInput')
     group_input.location = (-400, 0)
     result["nodes"]["__GROUP_INPUT__"] = group_input
 
-    group_output = ng.nodes.new('NodeGroupOutput')
+    group_output = next((node for node in ng.nodes if node.bl_idname == 'NodeGroupOutput'), None)
+    if not group_output:
+        group_output = ng.nodes.new('NodeGroupOutput')
     group_output.location = (400, 0)
     result["nodes"]["__GROUP_OUTPUT__"] = group_output
+
+    existing_nodes = _gather_existing_nodes(ng)
+    diff_summary = _diff_graph(ng, graph_json) if merge_existing else None
+    if return_diff:
+        result["diff_summary"] = diff_summary
 
     # Create nodes from spec
     x_offset = -200
@@ -920,11 +1083,17 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
             result["errors"].append(f"Invalid node spec: {node_spec}")
             continue
 
+        if merge_existing and node_id in existing_nodes:
+            node = existing_nodes[node_id]
+            node.name = node_id
+            node.label = node_id
+            result["nodes"][node_id] = node
+            continue
+
         try:
             node = ng.nodes.new(node_type)
-            # Keep Blender's natural node name and don't set a label
-            # This ensures nodes display as "Grid", "Mesh to Points", etc.
-            # The node_id is only used internally for the result["nodes"] lookup
+            node.name = node_id
+            node.label = node_id
 
             # Auto-layout (simple horizontal arrangement)
             node.location = (x_offset, y_offset)
@@ -939,71 +1108,17 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
             result["errors"].append(f"Failed to create node '{node_id}' ({node_type}): {e}")
 
     # Apply node settings
-    for node_id, settings in graph_json.get("node_settings", {}).items():
-        node = result["nodes"].get(node_id)
-        if not node:
-            result["errors"].append(f"Settings for unknown node: {node_id}")
-            continue
-
-        for input_name, value in settings.items():
-            try:
-                set_node_input(node, input_name, value)
-            except Exception as e:
-                result["errors"].append(f"Failed to set {node_id}.{input_name}: {e}")
+    _apply_node_settings(result["nodes"], graph_json.get("node_settings", {}), result["errors"])
+    # Remove extras if requested
+    if merge_existing and remove_extras and diff_summary:
+        for node_id in diff_summary["nodes_to_remove"]:
+            node = existing_nodes.get(node_id)
+            if node:
+                ng.nodes.remove(node)
+        _remove_links(ng, diff_summary["links_to_remove"])
 
     # Create links
-    for link_spec in graph_json.get("links", []):
-        from_id = link_spec.get("from")
-        from_socket_name = link_spec.get("from_socket") or link_spec.get("socket")
-        to_id = link_spec.get("to")
-        to_socket_name = link_spec.get("to_socket") or link_spec.get("socket")
-
-        # Handle second socket name for "to" side if specified differently
-        if "to_socket" in link_spec:
-            to_socket_name = link_spec["to_socket"]
-
-        from_node = result["nodes"].get(from_id)
-        to_node = result["nodes"].get(to_id)
-
-        if not from_node:
-            result["errors"].append(f"Link from unknown node: {from_id}")
-            continue
-        if not to_node:
-            result["errors"].append(f"Link to unknown node: {to_id}")
-            continue
-
-        # Find sockets by name
-        from_socket = None
-        for out in from_node.outputs:
-            if out.name == from_socket_name:
-                from_socket = out
-                break
-
-        if not from_socket:
-            result["errors"].append(
-                f"Output socket '{from_socket_name}' not found on {from_id}. "
-                f"Available: {[o.name for o in from_node.outputs]}"
-            )
-            continue
-
-        to_socket = None
-        for inp in to_node.inputs:
-            if inp.name == to_socket_name:
-                to_socket = inp
-                break
-
-        if not to_socket:
-            result["errors"].append(
-                f"Input socket '{to_socket_name}' not found on {to_id}. "
-                f"Available: {[i.name for i in to_node.inputs]}"
-            )
-            continue
-
-        # Create and validate link
-        try:
-            link = safe_link(ng, from_socket, to_socket)
-        except RuntimeError as e:
-            result["errors"].append(str(e))
+    _apply_links(ng, result["nodes"], graph_json, result["errors"])
 
     result["success"] = len(result["errors"]) == 0
     return result
@@ -1166,7 +1281,15 @@ def validate_geometry_metrics(obj, tolerance=0.001):
     return result
 
 
-def full_geo_nodes_validation(obj_name, modifier_name, capture_screenshot=True, include_report=False, node_id_map=None):
+def full_geo_nodes_validation(
+    obj_name,
+    modifier_name,
+    capture_screenshot=True,
+    include_report=False,
+    node_id_map=None,
+    last_graph_json=None,
+    last_diff_summary=None,
+):
     """Complete validation with graph checks, metrics, and screenshot."""
     result = {
         "status": "UNKNOWN",
@@ -1216,13 +1339,18 @@ def full_geo_nodes_validation(obj_name, modifier_name, capture_screenshot=True, 
             exit_local_view()
 
     if include_report:
-        result["full_report"] = generate_full_graph_report(ng, node_id_map=node_id_map)
+        result["full_report"] = generate_full_graph_report(
+            ng,
+            node_id_map=node_id_map,
+            last_graph_json=last_graph_json,
+            last_diff_summary=last_diff_summary,
+        )
 
     result["status"] = "ISSUES_FOUND" if result["issues"] else "VALID"
     return result
 
 
-def full_graph_report(obj_name, modifier_name, node_id_map=None):
+def full_graph_report(obj_name, modifier_name, node_id_map=None, last_graph_json=None, last_diff_summary=None):
     """Generate a full graph report for a specific object/modifier."""
     result = {
         "status": "UNKNOWN",
@@ -1244,7 +1372,12 @@ def full_graph_report(obj_name, modifier_name, node_id_map=None):
         result["status"] = "ERROR"
         return result
 
-    result["report"] = generate_full_graph_report(mod.node_group, node_id_map=node_id_map)
+    result["report"] = generate_full_graph_report(
+        mod.node_group,
+        node_id_map=node_id_map,
+        last_graph_json=last_graph_json,
+        last_diff_summary=last_diff_summary,
+    )
     result["status"] = "OK"
     return result
 
