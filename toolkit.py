@@ -31,18 +31,30 @@ from mathutils import Euler
 # ============================================================================
 
 TOOLKIT_VERSION = "0.1.0"
-CATALOGUE_VERSION = os.environ.get("GN_MCP_CATALOGUE_VERSION", "4.4")
 
 # Resolve toolkit root so reference files can be located when exec'd via MCP
 _TOOLKIT_DIR = os.path.dirname(__file__) if "__file__" in globals() else os.getcwd()
 _REFERENCE_DIR = os.path.join(_TOOLKIT_DIR, "reference")
 _ARCHIVE_REFERENCE_DIR = os.path.join(_TOOLKIT_DIR, "_GN-LLM-References")
 _CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
+_SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
+_SOCKET_COMPAT_FILENAME = "socket_compat.csv"
+
+def _detect_catalogue_version():
+    """Auto-detect catalogue version: env var > bpy.app.version > fallback."""
+    env_ver = os.environ.get("GN_MCP_CATALOGUE_VERSION")
+    if env_ver:
+        return env_ver
+    try:
+        v = bpy.app.version
+        return f"{v[0]}.{v[1]}"
+    except Exception:
+        return "4.4"  # fallback when running outside Blender
+
+CATALOGUE_VERSION = _detect_catalogue_version()
 _DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
 _DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
-_SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
 _SOCKET_COMPAT_VERSIONED = f"socket_compat_{CATALOGUE_VERSION.replace('.', '_')}.csv"
-_SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 
 _NODE_CATALOGUE = None
 _NODE_CATALOGUE_INDEX = {}
@@ -1651,6 +1663,7 @@ def print_validation_report(result):
 print("=" * 60)
 print(f"Geometry Nodes MCP Toolkit v{TOOLKIT_VERSION}")
 print(f"Blender version: {get_blender_version()[1]}")
+print(f"Catalogue version: {CATALOGUE_VERSION}")
 print("=" * 60)
 print("\nAvailable functions:")
 print("  Building:")
