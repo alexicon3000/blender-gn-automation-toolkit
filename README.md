@@ -1,4 +1,4 @@
-# Geo Nodes MCP Toolkit
+# Blender Geometry Nodes Automation Toolkit
 
 Utilities and reference data for building Blender Geometry Nodes graphs through
 LLM- or MCP-driven workflows. The repo packages a portable `toolkit.py` for
