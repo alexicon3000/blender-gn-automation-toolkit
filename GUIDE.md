@@ -106,7 +106,7 @@ print_validation_report(result)
 
 **Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
 
-**Field Support Limitation:** The catalogue in `reference/` still exports `supports_field=false` everywhere. The exporter now instantiates nodes at runtime to capture true field support values, so refresh the catalogue to enable field-aware validation.
+**Field Support Status:** The catalogue now includes runtime-derived `supports_field` values (via socket display shapes). Field-aware validation is active and will block field outputs connected to non-field inputs.
 
 ## Available Functions
 
@@ -185,6 +185,8 @@ If using a new Blender version:
 2. Run `GeoNodes_Exporter_Complete.py` in Blender's scripting workspace
 3. Output saved to `~/Downloads/geometry_nodes_complete_X_X.json`
 4. Copy to `reference/` folder
+    - The exporter records `blender_version`, `version_string`, build hash,
+      and build date in the JSON header for traceability.
 
 After refreshing the catalogue, you can verify field support counts:
 
@@ -221,7 +223,7 @@ socket_compat.csv                       # Socket compatibility matrix
 - Added fail-fast preflight validation for graph_json builds
 - Added full graph report helpers for diagnostics
 - print_validation_report now prints preflight checklists
-- Began scaffolding field-awareness (requires refreshed catalogue data)
+- Field-awareness guard now active using refreshed runtime catalogue data
 - Updated Mermaid/graph_json docs to always include GroupInput/GroupOutput
 
 **Next steps**
@@ -237,6 +239,10 @@ socket_compat.csv                       # Socket compatibility matrix
 If a Blender MCP session is active, prefer running the MCP-first smoke payload
 instead of launching a new Blender process. Copy the contents of
 `mcp_smoke_test_payload.py` into your MCP `execute_blender_code` call.
+
+**Targeted field-mismatch test (MCP)**: Copy
+`scripts/field_mismatch_test_payload.py` into `execute_blender_code`. It should
+fail with a field-compatibility error, confirming the guard is active.
 
 Fallback (standalone Blender):
 `blender --background --python smoke_test_mermaid.py`

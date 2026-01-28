@@ -206,6 +206,9 @@ nodes.sort(key=lambda d: d["identifier"])
 # -------------------------------------------------------------
 output = {
     "blender_version": f"{bpy.app.version[0]}.{bpy.app.version[1]}.{bpy.app.version[2]}",
+    "blender_version_string": getattr(bpy.app, "version_string", ""),
+    "blender_build_hash": getattr(bpy.app, "build_hash", ""),
+    "blender_build_date": getattr(bpy.app, "build_date", ""),
     "total_nodes": len(nodes),
     "breakdown": stats,
     "skipped": skipped,
