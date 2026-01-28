@@ -5,6 +5,16 @@ LLM- or MCP-driven workflows. The repo packages a portable `toolkit.py` for
 in-Blender use plus a `geo_nodes_mcp` module for agents or scripts that need to
 load catalogues, validate socket compatibility, or snapshot node graphs.
 
+**Key ideas**
+- Plan visually: sketch Mermaid flow charts (with GroupInput/GroupOutput) so
+  humans can sanity-check topology before executing anything.
+- Catalog-driven safety: builders load Blender 4.4 node definitions and the
+  socket compatibility matrix before linking, catching wrong directions or
+  types early.
+- Pre-flight validation: `safe_link()` checks direction + types before
+  `links.new()`, and the validation suite captures both structural metrics and
+  screenshots so MCP runs surface issues immediately.
+
 ## Getting Started
 1. Open Blender 4.4+ and run:
    ```python
