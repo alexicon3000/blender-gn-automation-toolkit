@@ -928,9 +928,13 @@ def full_geo_nodes_validation(obj_name, modifier_name, capture_screenshot=True):
     if capture_screenshot:
         switch_to_mcp_workspace()
         configure_validation_views(obj_name, modifier_name)
+        local_view_before = is_local_view_active()
+        frame_object_in_viewport(obj_name, use_local_view=True)
         path = os.path.join(tempfile.gettempdir(), "geo_nodes_validation.png")
         bpy.ops.screen.screenshot(filepath=path)
         result["screenshot_path"] = path
+        if not local_view_before:
+            exit_local_view()
 
     result["status"] = "ISSUES_FOUND" if result["issues"] else "VALID"
     return result
@@ -990,14 +994,16 @@ def capture_node_graph(obj_name, modifier_name):
     return path
 
 
-def frame_object_in_viewport(obj_name):
+def frame_object_in_viewport(obj_name, use_local_view=True):
     """Frame the viewport on an object before taking screenshots.
 
     Call this before taking viewport screenshots to ensure the object
-    is visible and centered. Returns True if successful.
+    is visible and centered. Optionally enters local view to isolate
+    the object from the rest of the scene.
 
     Args:
         obj_name: Name of the object to frame
+        use_local_view: If True, enter local view to isolate the object
 
     Returns:
         True if framing succeeded, False otherwise
@@ -1006,16 +1012,53 @@ def frame_object_in_viewport(obj_name):
     if not obj:
         return False
 
+    # Deselect all, then select and activate target object
+    bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
 
     for area in bpy.context.screen.areas:
         if area.type == 'VIEW_3D':
+            space = area.spaces.active
             for region in area.regions:
                 if region.type == 'WINDOW':
                     with bpy.context.temp_override(area=area, region=region):
+                        if use_local_view:
+                            # Enter local view to isolate the object if not already
+                            if not getattr(space, 'local_view', False):
+                                bpy.ops.view3d.localview()
                         bpy.ops.view3d.view_selected()
                     return True
+    return False
+
+
+def is_local_view_active():
+    """Return True if any 3D Viewport is currently in local view."""
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            space = area.spaces.active
+            if getattr(space, 'local_view', False):
+                return True
+    return False
+
+
+def exit_local_view():
+    """Exit local view if currently active.
+
+    Call this after taking screenshots to return to normal view.
+
+    Returns:
+        True if exited local view, False if not in local view
+    """
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            space = area.spaces.active
+            if getattr(space, 'local_view', False):
+                for region in area.regions:
+                    if region.type == 'WINDOW':
+                        with bpy.context.temp_override(area=area, region=region):
+                            bpy.ops.view3d.localview()
+                        return True
     return False
 
 
