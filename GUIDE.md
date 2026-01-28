@@ -78,6 +78,8 @@ Notes:
 - `remove_extras=True` only removes nodes/links (not interface sockets).
 - The result includes `diff_summary` with created/updated/removed nodes and
   added/removed links.
+- Random Value in Blender 5.0 emits fields by default. Set its data type to
+  `FLOAT` (or capture the field) before wiring into Set Position Offset.
 
 ### Option 3: Manual with Safe Helpers
 
