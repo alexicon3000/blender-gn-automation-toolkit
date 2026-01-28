@@ -5,6 +5,11 @@ LLM- or MCP-driven workflows. The repo packages a portable `toolkit.py` for
 in-Blender use plus a `geo_nodes_mcp` module for agents or scripts that need to
 load catalogues, validate socket compatibility, or snapshot node graphs.
 
+You can drive it entirely via Mermaid + `graph_json`: sketch a flowchart, feed
+it to `mermaid_to_blender()`, and the toolkit/builders do the rest—even if
+you’re not using MCP. This makes it easy to pair any LLM (or your own scripts)
+with Geometry Nodes automation.
+
 **Key ideas**
 - Plan visually: sketch Mermaid flow charts (with GroupInput/GroupOutput) so
   humans can sanity-check topology before executing anything.
