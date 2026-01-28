@@ -43,7 +43,7 @@ group.
 - `geo_nodes_mcp/` – Installable module mirroring toolkit functionality for
   agents/servers.
 - `reference/` – Source-of-truth catalogues generated from Blender exporters.
-- `_archive/` – Legacy assets kept for historical reference (ignored by git).
+- `_archive/` – Legacy or other assets for internal reference (ignored by git).
 
 ## Contributing / Next Steps
 High-level roadmap items live near the end of `GUIDE.md`. Briefly:
