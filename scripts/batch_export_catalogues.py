@@ -15,12 +15,14 @@ DOWNLOADS = Path.home() / "Downloads"
 
 CAT_PATTERN = "geometry_nodes_complete"
 MIN_PATTERN = "geometry_nodes_min"
+COMPAT_PATTERN = "socket_compat"
 
 
-def versioned_catalogue_exists(version: str) -> bool:
+def required_files_exist(version: str) -> bool:
     major, minor = version.split('.')[:2]
-    target = REFERENCE_DIR / f"geometry_nodes_complete_{major}_{minor}.json"
-    return target.exists()
+    complete = REFERENCE_DIR / f"geometry_nodes_complete_{major}_{minor}.json"
+    compat = REFERENCE_DIR / f"socket_compat_{major}_{minor}.csv"
+    return complete.exists() and compat.exists()
 
 
 def find_blender_execs(root: Path):
@@ -36,10 +38,12 @@ def find_blender_execs(root: Path):
 
 
 def newest_download(pattern: str, before: float) -> Path | None:
-    candidates = [
-        p for p in DOWNLOADS.glob(f"{pattern}_*.json")
-        if p.stat().st_mtime >= before
-    ]
+    candidates = []
+    for ext in (".json", ".csv"):
+        candidates.extend(
+            p for p in DOWNLOADS.glob(f"{pattern}_*{ext}")
+            if p.stat().st_mtime >= before
+        )
     if not candidates:
         return None
     return max(candidates, key=lambda p: p.stat().st_mtime)
@@ -72,6 +76,14 @@ def run_export(blender_exec: Path, version: str | None = None):
     else:
         print("  (no minimal file detected)")
 
+    compat = newest_download(COMPAT_PATTERN, before)
+    if compat:
+        target = REFERENCE_DIR / compat.name
+        shutil.move(str(compat), target)
+        print(f"  → copied {compat.name} to reference/")
+    else:
+        print("  (no socket compat file detected)")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Export Geo Nodes catalogues from Blender builds")
@@ -79,6 +91,11 @@ def main():
         "--root",
         required=True,
         help="Path to Blender Launcher 'stable' folder (e.g., /Users/.../_Blender_Builds/stable)",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-export even if catalogue/compat files already exist",
     )
     args = parser.parse_args()
 
@@ -105,8 +122,8 @@ def main():
         except Exception as exc:
             print(f"Could not determine version for {exec_path}: {exc}")
 
-        if version and versioned_catalogue_exists(version):
-            print(f"Skipping {exec_path} (catalogue for Blender {version} already exists)")
+        if not args.force and version and required_files_exist(version):
+            print(f"Skipping {exec_path} (files for Blender {version} already exist)")
             continue
 
         run_export(exec_path, version=version)
