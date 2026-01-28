@@ -9,6 +9,9 @@ This test validates:
 3. Group Output is properly connected
 4. Node names display naturally (Grid, Mesh to Points, etc.)
 5. Validation pipeline works end-to-end
+
+Uses a dedicated collection (MCP_Smoke_Test) to isolate test objects
+without destroying the user's scene.
 """
 
 import json
@@ -26,6 +29,16 @@ if "GN_MCP_CATALOGUE_PATH" not in os.environ:
 with open(TOOLKIT_PATH, "r", encoding="utf-8") as fh:
     code = compile(fh.read(), str(TOOLKIT_PATH), "exec")
 exec(code, globals())
+
+# Use a dedicated collection for smoke tests (safe - doesn't destroy user's scene)
+SMOKE_TEST_COLLECTION = "MCP_Smoke_Test"
+OBJECT_NAME = "MCP_Smoke_Object"
+MODIFIER_NAME = "MCP_Smoke_Mod"
+
+# Clear any previous smoke test objects
+cleared = clear_collection(SMOKE_TEST_COLLECTION)
+if cleared:
+    print(f"Cleared {cleared} objects from {SMOKE_TEST_COLLECTION} collection")
 
 # Use graph_json directly for precise control over Group I/O connections
 GRAPH_JSON = {
@@ -50,14 +63,12 @@ GRAPH_JSON = {
     },
 }
 
-OBJECT_NAME = "MCP_Smoke_Object"
-MODIFIER_NAME = "MCP_Smoke_Mod"
-
 print("Running graph_json smoke test via MCP session...", flush=True)
 build_result = build_graph_from_json(
     OBJECT_NAME,
     MODIFIER_NAME,
     GRAPH_JSON,
+    collection=SMOKE_TEST_COLLECTION,  # Isolate to dedicated collection
 )
 
 if not build_result.get("success", False):
@@ -78,6 +89,7 @@ group_output = ng.nodes.get("Group Output")
 go_connected = any(link.to_node == group_output for link in ng.links)
 
 print(f"\nGroup Output connected: {go_connected}")
+print(f"Object in collection: {SMOKE_TEST_COLLECTION}")
 
 # Show node names (should be natural Blender names, no labels)
 print("\nNode names (should be natural Blender names):")
@@ -89,6 +101,7 @@ summary = {
     "build_success": build_result.get("success", False),
     "validation_status": validation.get("status"),
     "group_output_connected": go_connected,
+    "collection": SMOKE_TEST_COLLECTION,
     "issues": validation.get("issues", []),
     "graph_nodes": validation.get("graph", {}).get("node_count"),
     "graph_links": validation.get("graph", {}).get("link_count"),

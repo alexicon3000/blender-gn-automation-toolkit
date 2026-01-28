@@ -473,10 +473,82 @@ def set_node_input(node, input_name, value):
 
 
 # ============================================================================
+# COLLECTION HELPERS - Safe isolation for testing
+# ============================================================================
+
+def get_or_create_collection(name, parent=None):
+    """Get or create a collection by name.
+
+    Args:
+        name: Collection name
+        parent: Parent collection (defaults to scene collection)
+
+    Returns:
+        The collection
+    """
+    if name in bpy.data.collections:
+        return bpy.data.collections[name]
+
+    coll = bpy.data.collections.new(name)
+    if parent is None:
+        bpy.context.scene.collection.children.link(coll)
+    else:
+        parent.children.link(coll)
+    return coll
+
+
+def clear_collection(name, remove_orphans=True):
+    """Remove all objects from a collection without affecting other collections.
+
+    Args:
+        name: Collection name
+        remove_orphans: If True, also purge orphan data after clearing
+
+    Returns:
+        Number of objects removed
+    """
+    if name not in bpy.data.collections:
+        return 0
+
+    coll = bpy.data.collections[name]
+    count = len(coll.objects)
+
+    # Remove objects from this collection
+    for obj in list(coll.objects):
+        bpy.data.objects.remove(obj, do_unlink=True)
+
+    if remove_orphans:
+        bpy.ops.outliner.orphans_purge(do_recursive=True)
+
+    return count
+
+
+def link_object_to_collection(obj, collection_name):
+    """Link an object to a specific collection, removing from others.
+
+    Args:
+        obj: The object to link
+        collection_name: Target collection name (created if needed)
+
+    Returns:
+        The collection
+    """
+    coll = get_or_create_collection(collection_name)
+
+    # Unlink from all current collections
+    for c in obj.users_collection:
+        c.objects.unlink(obj)
+
+    # Link to target collection
+    coll.objects.link(obj)
+    return coll
+
+
+# ============================================================================
 # GRAPH JSON BUILDER - Declarative node graph creation
 # ============================================================================
 
-def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=True):
+def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=True, collection=None):
     """
     Build a geometry node graph from a JSON specification.
 
@@ -485,6 +557,7 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
         modifier_name: Name for the geometry nodes modifier
         graph_json: Dict with 'nodes', 'links', and optional 'node_settings'
         clear_existing: If True, clear any existing nodes in the group
+        collection: Optional collection name to place object in (created if needed)
 
     Returns:
         Dict with:
@@ -522,6 +595,10 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
         bpy.ops.mesh.primitive_plane_add(size=1, location=(0, 0, 0))
         obj = bpy.context.active_object
         obj.name = obj_name
+
+    # Link to collection if specified
+    if collection:
+        link_object_to_collection(obj, collection)
 
     # Get or create modifier
     mod = obj.modifiers.get(modifier_name)
@@ -1085,6 +1162,10 @@ print("    - capture_node_graph(obj, mod)")
 print("    - frame_object_in_viewport(obj)  # Call before screenshots!")
 print("    - switch_to_mcp_workspace()")
 print("    - configure_validation_views(obj, mod)")
+print("  Collections:")
+print("    - get_or_create_collection(name)")
+print("    - clear_collection(name)  # Safe cleanup without destroying scene")
+print("    - link_object_to_collection(obj, collection_name)")
 print("  Utilities:")
 print("    - list_available_nodes()")
 print("    - inspect_node_sockets(node_type)")
