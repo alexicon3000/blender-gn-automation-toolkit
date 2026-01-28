@@ -1293,10 +1293,10 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
         "RealizeInstances": "GeometryNodeRealizeInstances",
         # Function nodes
         "RandomValue": "FunctionNodeRandomValue",
-        "CombineXYZ": "ShaderNodeCombineXYZ",
-        "SeparateXYZ": "ShaderNodeSeparateXYZ",
-        "Math": "ShaderNodeMath",
-        "VectorMath": "ShaderNodeVectorMath",
+        "CombineXYZ": "FunctionNodeCombineXYZ",
+        "SeparateXYZ": "FunctionNodeSeparateXYZ",
+        "Math": "FunctionNodeFloatMath",
+        "VectorMath": "FunctionNodeVectorMath",
         "Compare": "FunctionNodeCompare",
         "BooleanMath": "FunctionNodeBooleanMath",
         # Special nodes
