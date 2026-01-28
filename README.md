@@ -64,9 +64,8 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
   both successfully build nodes, connect to Group Output, and validate.
 
 **Still to build/validate**
-- Refresh catalogues with accurate `supports_field` data to enable the new
-  field-awareness guard (exporter now captures runtime field support; the repo
-  JSON still needs a refresh).
+- Field-aware validation is now active using refreshed catalogue data (check
+  graph_json links for field compatibility).
 - Catalogue-driven node-setting validation (enum/mode properties).
 - Automated enforcement of the 22-step LLM checklist.
 - Extend the full graph report with per-link data payloads once the exporter
@@ -77,6 +76,10 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 **MCP-first (recommended)**: Copy contents of `mcp_smoke_test_payload.py` into
 your MCP `execute_blender_code` call. This validates the full chain:
 `graph_json → build → validation`.
+
+**Targeted field-mismatch test (MCP)**: Copy
+`scripts/field_mismatch_test_payload.py` into `execute_blender_code`. It should
+fail with a field-compatibility error, confirming the guard is active.
 
 **Standalone Blender**: `blender --background --python smoke_test_mermaid.py`
 

@@ -718,7 +718,7 @@ def validate_graph_json_preflight(graph_json):
             continue
         resolved_type = _node_type_for_id(node_id, node_type)
         node_types[node_id] = resolved_type
-        if not get_node_spec(resolved_type):
+        if resolved_type not in {"NodeGroupInput", "NodeGroupOutput"} and not get_node_spec(resolved_type):
             unknown_types.append((node_id, resolved_type))
 
     _add_check(
@@ -742,6 +742,7 @@ def validate_graph_json_preflight(graph_json):
 
     link_node_errors = []
     socket_errors = []
+    field_errors = []
     for link in links:
         from_id = link.get("from")
         to_id = link.get("to")
@@ -769,10 +770,20 @@ def validate_graph_json_preflight(graph_json):
                 f"Unknown input socket '{to_socket}' on node '{to_id}'"
             )
 
+        if from_names is not None and to_names is not None:
+            source_field = get_socket_field_support(from_type, from_socket, is_output=True)
+            dest_field = get_socket_field_support(to_type, to_socket, is_output=False)
+            if source_field and dest_field is False:
+                field_errors.append(
+                    f"Field output cannot connect to non-field input: {from_id}.{from_socket} -> {to_id}.{to_socket}"
+                )
+
     _add_check("links_reference_known_nodes", not link_node_errors,
                "; ".join(link_node_errors) if link_node_errors else None)
     _add_check("link_sockets_exist", not socket_errors,
                "; ".join(socket_errors) if socket_errors else None)
+    _add_check("link_field_compat", not field_errors,
+               "; ".join(field_errors) if field_errors else None)
 
     settings_errors = []
     for node_id, settings in node_settings.items():
