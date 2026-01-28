@@ -1,51 +1,72 @@
 # Geometry Nodes MCP Workflow
 
-This project provides tools for creating and validating Blender Geometry Nodes via Claude Code and the Blender MCP.
+This project provides tools for creating and validating Blender Geometry Nodes via Claude Code, ChatGPT Pro, RooCode, Cline, or any LLM tool with Blender MCP access.
 
 ## Quick Start
 
-At the start of any geometry nodes session, load the validation toolkit:
+At the start of any geometry nodes session, load the portable toolkit:
 
 ```python
-# Read and execute the loader
-exec(open("/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP/geo_nodes_mcp/loader.py").read().split("LOADER_CODE = '''")[1].split("'''")[0])
+exec(open("/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP/toolkit.py").read())
 ```
 
-Or use the Blender MCP to read and execute the loader code.
+This loads all functions into Blender's Python environment.
 
-## Reference Data
+## Workflow Options
 
-### Node Catalogue
-- **File:** `geometry_nodes_min_4_4.json`
-- **Version:** Blender 4.4
-- **Contains:** 202 geometry node definitions with inputs/outputs and socket types
+### Option 1: Mermaid → Blender (Recommended for Complex Graphs)
 
-### Socket Compatibility
-- **File:** `socket_compat.csv`
-- **Contains:** 58 allowed socket type pairs for link validation
-
-**Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
-
-## Workflow
-
-### 1. Build Geometry Nodes
-
-When creating nodes, use safe helpers:
+Plan in Mermaid first, then build:
 
 ```python
-# Get output by TYPE not index (avoids wrong socket errors)
+mermaid_graph = '''
+flowchart LR
+  n1["MeshGrid"] -->|Mesh| n2["MeshToPoints"]
+  n2 -->|Points| n3["InstanceOnPoints"]
+  n4["MeshCone"] -->|Mesh| n3
+'''
+
+result = mermaid_to_blender("MyObject", "MyModifier", mermaid_graph,
+    node_settings={"n1": {"Size X": 10}, "n4": {"Depth": 0.5}})
+```
+
+### Option 2: graph_json (Precise Control)
+
+Build from explicit JSON specification:
+
+```python
+graph_json = {
+    "nodes": [
+        {"id": "grid", "type": "GeometryNodeMeshGrid"},
+        {"id": "instance", "type": "GeometryNodeInstanceOnPoints"}
+    ],
+    "links": [
+        {"from": "grid", "from_socket": "Mesh", "to": "instance", "to_socket": "Points"}
+    ],
+    "node_settings": {"grid": {"Size X": 10}}
+}
+result = build_graph_from_json("MyObject", "MyModifier", graph_json)
+```
+
+### Option 3: Manual with Safe Helpers
+
+For fine-grained control:
+
+```python
+# Get socket by TYPE (not index!)
 vector_out = get_output_by_type(random_node, 'VECTOR')
 
 # Validate links immediately
 safe_link(node_group, from_socket, to_socket)  # Raises if invalid
 ```
 
-### 2. Validate
+## Always Validate
 
 After building, always validate:
 
 ```python
 result = full_geo_nodes_validation("ObjectName", "ModifierName")
+print_validation_report(result)
 
 # result contains:
 # - status: "VALID" or "ISSUES_FOUND" or "ERROR"
@@ -55,31 +76,60 @@ result = full_geo_nodes_validation("ObjectName", "ModifierName")
 # - screenshot_path: path to workspace screenshot
 ```
 
-### 3. Visual Inspection
+## Reference Data
 
-The validation automatically:
-- Switches to "MCP Validation" workspace
-- Configures 2 viewports (perspective + front ortho)
-- Frames all nodes in node editor
-- Takes a full screenshot
+### Node Catalogue
+- **Complete:** `reference/geometry_nodes_complete_4_4.json` (257 nodes)
+- **Minimal:** `geometry_nodes_min_4_4.json` (202 nodes, GeometryNode* only)
+- **Version:** Blender 4.4
+- **Contains:** Node definitions with inputs/outputs, socket types, categories
 
-For detailed node graph inspection:
-```python
-path = capture_node_graph("ObjectName", "ModifierName")
-# Returns path to fullscreen node graph screenshot
-```
+### Socket Compatibility
+- **File:** `socket_compat.csv`
+- **Contains:** 58 allowed socket type pairs for link validation
+
+**Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
 
 ## Available Functions
 
+### Building
 | Function | Purpose |
 |----------|---------|
-| `full_geo_nodes_validation(obj, mod)` | Complete validation with screenshot |
-| `capture_node_graph(obj, mod)` | Fullscreen node graph screenshot |
+| `mermaid_to_blender(obj, mod, mermaid)` | One-step: Mermaid → Blender |
+| `parse_mermaid_to_graph_json(mermaid)` | Convert Mermaid to graph_json |
+| `build_graph_from_json(obj, mod, json)` | Build from JSON spec |
+| `set_node_input(node, name, value)` | Set input default value |
+| `safe_link(ng, from_sock, to_sock)` | Create validated link |
+
+### Socket Helpers
+| Function | Purpose |
+|----------|---------|
+| `get_output_by_type(node, type)` | Find output by socket type |
+| `get_input_by_type(node, type)` | Find input by socket type |
+| `get_output_by_name(node, name)` | Find output by name |
+| `get_input_by_name(node, name)` | Find input by name |
+
+### Validation
+| Function | Purpose |
+|----------|---------|
+| `full_geo_nodes_validation(obj, mod)` | Complete validation + screenshot |
 | `validate_graph_structure(node_group)` | Check for invalid links |
-| `validate_geometry_metrics(obj)` | Check ground contact, bounds |
-| `safe_link(ng, from_sock, to_sock)` | Create link with validation |
-| `get_output_by_type(node, type)` | Find socket by type not index |
+| `validate_geometry_metrics(obj)` | Check bounds, ground contact |
+| `print_validation_report(result)` | Pretty-print validation result |
+
+### Visual
+| Function | Purpose |
+|----------|---------|
+| `capture_node_graph(obj, mod)` | Fullscreen node graph screenshot |
 | `switch_to_mcp_workspace()` | Switch to validation workspace |
+| `configure_validation_views(obj, mod)` | Set up viewports |
+
+### Utilities
+| Function | Purpose |
+|----------|---------|
+| `list_available_nodes()` | List all geo node types |
+| `inspect_node_sockets(type)` | Show node's inputs/outputs |
+| `layout_nodes(node_group)` | Auto-layout nodes |
 | `check_catalogue_version(ver)` | Verify Blender version match |
 
 ## Common Mistakes to Avoid
@@ -89,25 +139,49 @@ path = capture_node_graph("ObjectName", "ModifierName")
 3. **Local Space on transforms:** Explicitly set `Local Space = False` for world-space translation
 4. **Visual-only validation:** Always run numerical checks, don't trust screenshots alone
 5. **Unchecked defaults:** Audit node parameters after creation
+6. **Mismatched socket names:** Output "Mesh" may go to input "Instance" - use graph_json for precision
+
+## Mermaid Conventions
+
+When using Mermaid for planning:
+
+```mermaid
+flowchart LR
+  n1["MeshCone"] -->|Mesh| n2["SetPosition"]
+  n2 -->|Geometry| n3["Viewer"]
+```
+
+- Use `flowchart LR` (left-to-right)
+- Node syntax: `n1["Label"]` or `n1(Label)`
+- Edge label = output socket name: `-->|Mesh|`
+- Use short labels (MeshCone) or full types (GeometryNodeMeshCone)
 
 ## Regenerating the Catalogue
 
-If using a new Blender version, regenerate the catalogue:
+If using a new Blender version:
 
 1. Open Blender with the target version
-2. Run `GeoNodes_Exporter_BlenderScript.txt` in Blender's scripting workspace
-3. Update `geometry_nodes_min_4_4.json` with the output
-4. Rename file to match version (e.g., `geometry_nodes_min_4_5.json`)
+2. Run `GeoNodes_Exporter_Complete.py` in Blender's scripting workspace
+3. Output saved to `~/Downloads/geometry_nodes_complete_X_X.json`
+4. Copy to `reference/` folder
 
 ## Files
 
 ```
-geo_nodes_mcp/
-├── __init__.py      # Package marker
-├── loader.py        # Code to inject into Blender
-├── validator.py     # Validation functions (standalone)
-└── workspace.py     # Workspace management (standalone)
+toolkit.py                              # Portable single-file toolkit
+CLAUDE.md                               # This documentation
 
-geometry_nodes_min_4_4.json  # Node catalogue
-socket_compat.csv            # Socket compatibility matrix
+geo_nodes_mcp/                          # Module version (same functions)
+├── __init__.py
+├── loader.py
+├── builder.py
+├── validator.py
+└── workspace.py
+
+reference/
+└── geometry_nodes_complete_4_4.json    # Full catalogue (257 nodes)
+
+GeoNodes_Exporter_Complete.py           # Catalogue generator script
+geometry_nodes_min_4_4.json             # Original minimal catalogue
+socket_compat.csv                       # Socket compatibility matrix
 ```
