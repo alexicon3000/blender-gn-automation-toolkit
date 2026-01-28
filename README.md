@@ -67,3 +67,14 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
   manual reconstruction when automation fails.
 - Run Blender MCP smoke tests (Mermaid → graph_json → build → validation) to
   confirm the new safety checks behave as expected end-to-end.
+
+## MCP-First Smoke Test (Recommended)
+If a Blender MCP session is already running, use the MCP-first smoke payload
+instead of launching a new Blender process. Copy the contents of
+`mcp_smoke_test_payload.py` into your MCP `execute_blender_code` call.
+
+This validates the full chain in the active MCP session:
+Mermaid → graph_json → build → `full_geo_nodes_validation`.
+
+Fallback (standalone Blender):
+`blender --background --python smoke_test_mermaid.py`

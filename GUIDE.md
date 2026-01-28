@@ -212,3 +212,11 @@ socket_compat.csv                       # Socket compatibility matrix
    each wire for manual reconstruction when needed.
 6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
    `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.
+
+## MCP-First Smoke Test
+If a Blender MCP session is active, prefer running the MCP-first smoke payload
+instead of launching a new Blender process. Copy the contents of
+`mcp_smoke_test_payload.py` into your MCP `execute_blender_code` call.
+
+Fallback (standalone Blender):
+`blender --background --python smoke_test_mermaid.py`
