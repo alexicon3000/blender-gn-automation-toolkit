@@ -21,9 +21,11 @@ Plan in Mermaid first, then build:
 ```python
 mermaid_graph = '''
 flowchart LR
+  gi["GroupInput"] -->|Instance| n3["InstanceOnPoints"]
   n1["MeshGrid"] -->|Mesh| n2["MeshToPoints"]
-  n2 -->|Points| n3["InstanceOnPoints"]
+  n2 -->|Points| n3
   n4["MeshCone"] -->|Mesh| n3
+  n3 -->|Geometry| go["GroupOutput"]
 '''
 
 result = mermaid_to_blender("MyObject", "MyModifier", mermaid_graph,
@@ -37,11 +39,15 @@ Build from explicit JSON specification:
 ```python
 graph_json = {
     "nodes": [
+        {"id": "group_in", "type": "NodeGroupInput"},
         {"id": "grid", "type": "GeometryNodeMeshGrid"},
-        {"id": "instance", "type": "GeometryNodeInstanceOnPoints"}
+        {"id": "instance", "type": "GeometryNodeInstanceOnPoints"},
+        {"id": "group_out", "type": "NodeGroupOutput"}
     ],
     "links": [
-        {"from": "grid", "from_socket": "Mesh", "to": "instance", "to_socket": "Points"}
+        {"from": "group_in", "from_socket": "Geometry", "to": "instance", "to_socket": "Instance"},
+        {"from": "grid", "from_socket": "Mesh", "to": "instance", "to_socket": "Points"},
+        {"from": "instance", "from_socket": "Instances", "to": "group_out", "to_socket": "Geometry"}
     ],
     "node_settings": {"grid": {"Size X": 10}}
 }
@@ -147,14 +153,16 @@ When using Mermaid for planning:
 
 ```mermaid
 flowchart LR
-  n1["MeshCone"] -->|Mesh| n2["SetPosition"]
-  n2 -->|Geometry| n3["Viewer"]
+  gi["GroupInput"] -->|Geometry| n2["SetPosition"]
+  n1["MeshCone"] -->|Mesh| n2
+  n2 -->|Geometry| go["GroupOutput"]
 ```
 
-- Use `flowchart LR` (left-to-right)
-- Node syntax: `n1["Label"]` or `n1(Label)`
++ Use `flowchart LR` (left-to-right)
++ Node syntax: `n1["Label"]` with double quotes. Avoid parentheses in labels—they confuse Mermaid's parser.
 - Edge label = output socket name: `-->|Mesh|`
 - Use short labels (MeshCone) or full types (GeometryNodeMeshCone)
+- Always include `GroupInput` and `GroupOutput` nodes in the plan so the builder knows how the graph interfaces with the modifier.
 
 ## Regenerating the Catalogue
 

@@ -24,16 +24,18 @@
 | Rule | Rationale |
 |------|-----------|
 | `flowchart LR` only | left→right means output→input direction |
-| Node syntax | Prefer `n1["MeshCone"]` or `n1(MeshCone)` — avoid parentheses/brackets *inside* labels to prevent Mermaid routing bugs; full Blender type can be preserved in a `%% comment` or later JSON. |
+| Node syntax | Use `n1["MeshCone"]` with double quotes. Avoid parentheses entirely—they often break Mermaid routing; full Blender type can be preserved in a `%% comment` or later JSON. |
 | Edge label = socket name | e.g. `n1 --> |Mesh| n2` |
 | Unique IDs (`n1`, `n2` …) | ensures clean mapping to JSON |
+| Include IO nodes | Always sketch `GroupInput` and `GroupOutput` so modifier interfaces stay explicit. |
 
 **Example sketch**
 
 ```mermaid
 flowchart LR
-  n1["MeshCone"] --> |Mesh| n2["SetPosition"]
-  n2 --> |Geometry| n3["Viewer"]
+  gi["GroupInput"] --> |Geometry| n2["SetPosition"]
+  n1["MeshCone"] --> |Mesh| n2
+  n2 --> |Geometry| go["GroupOutput"]
 ```
 
 ## Corresponding graph_json
@@ -41,13 +43,15 @@ flowchart LR
 ```json
 {
   "nodes":[
+    {"id":"gi","type":"NodeGroupInput"},
     {"id":"n1","type":"GeometryNodeMeshCone"},
     {"id":"n2","type":"GeometryNodeSetPosition"},
-    {"id":"n3","type":"GeometryNodeViewer"}
+    {"id":"go","type":"NodeGroupOutput"}
   ],
   "links":[
+    {"from":"gi","socket":"Geometry","to":"n2","socket":"Geometry"},
     {"from":"n1","socket":"Mesh","to":"n2","socket":"Geometry"},
-    {"from":"n2","socket":"Geometry","to":"n3","socket":"Geometry"}
+    {"from":"n2","socket":"Geometry","to":"go","socket":"Geometry"}
   ],
   "node_settings":{
     "n1":{"Vertices":32},
@@ -181,4 +185,3 @@ If any rule fails → status: ERRORS_FOUND + list issues; else GRAPH_OK.
 ## MCP ACTION AFTER GRAPH_OK
 Feed graph_json to your MCP builder to instantiate the node tree.
 Optionally run a headless‑Blender validator for extra certainty.
-
