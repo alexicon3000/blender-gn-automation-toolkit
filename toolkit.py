@@ -848,6 +848,8 @@ def _normalize_link_spec(link_spec):
 def _link_key(from_id, from_socket_name, to_id, to_socket_name):
     return (from_id, from_socket_name, to_id, to_socket_name)
 
+_NODE_ID_PROP = "gn_mcp_id"
+
 
 def _gather_existing_nodes(node_group):
     """Map node.name to node for existing nodes (excluding group IO)."""
@@ -855,7 +857,8 @@ def _gather_existing_nodes(node_group):
     for node in node_group.nodes:
         if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput"}:
             continue
-        mapping[node.name] = node
+        key = node.get(_NODE_ID_PROP, node.name)
+        mapping[key] = node
     return mapping
 
 
@@ -997,7 +1000,7 @@ def build_graph_from_json(
     Returns:
         Dict with:
             - success: bool
-            - node_group: The created/modified node group
+            - node_group_name: Name of the created/modified node group
             - nodes: Dict mapping node IDs to actual nodes
             - errors: List of any errors encountered
 
@@ -1018,7 +1021,7 @@ def build_graph_from_json(
     """
     result = {
         "success": False,
-        "node_group": None,
+        "node_group_name": None,
         "nodes": {},
         "errors": [],
         "preflight": None,
@@ -1054,7 +1057,7 @@ def build_graph_from_json(
         ng = bpy.data.node_groups.new(name=modifier_name, type='GeometryNodeTree')
         mod.node_group = ng
 
-    result["node_group"] = ng
+    result["node_group_name"] = ng.name
 
     if merge_existing:
         clear_existing = False
@@ -1099,15 +1102,15 @@ def build_graph_from_json(
 
         if merge_existing and node_id in existing_nodes:
             node = existing_nodes[node_id]
-            node.name = node_id
             node.label = node_id
+            node[_NODE_ID_PROP] = node_id
             result["nodes"][node_id] = node
             continue
 
         try:
             node = ng.nodes.new(node_type)
-            node.name = node_id
             node.label = node_id
+            node[_NODE_ID_PROP] = node_id
 
             # Auto-layout (simple horizontal arrangement)
             node.location = (x_offset, y_offset)

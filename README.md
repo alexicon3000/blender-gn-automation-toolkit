@@ -49,6 +49,10 @@ merge_existing=True, remove_extras=True)` to diff and merge by node ID.
 - **Minimal catalogue:** `reference/geometry_nodes_min_5_0.json`
 - **Socket compatibility:** `reference/socket_compat_5_0.csv`
 
+**Field/random note:** In Blender 5.0 the default `FunctionNodeRandomValue` emits
+fields (vectors). `Set Position.Offset` expects plain vectors, so set the node’s
+data type to `FLOAT` (or capture the field) before wiring it.
+
 ## Documentation
 - `GUIDE.md` – Hands-on quick start, helper catalog, project notes, and common
   pitfalls.
