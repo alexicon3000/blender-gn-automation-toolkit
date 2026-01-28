@@ -17,6 +17,12 @@ CAT_PATTERN = "geometry_nodes_complete"
 MIN_PATTERN = "geometry_nodes_min"
 
 
+def versioned_catalogue_exists(version: str) -> bool:
+    major, minor = version.split('.')[:2]
+    target = REFERENCE_DIR / f"geometry_nodes_complete_{major}_{minor}.json"
+    return target.exists()
+
+
 def find_blender_execs(root: Path):
     """Yield Blender executables under the given root."""
     for app in root.rglob("Blender.app"):
@@ -39,7 +45,7 @@ def newest_download(pattern: str, before: float) -> Path | None:
     return max(candidates, key=lambda p: p.stat().st_mtime)
 
 
-def run_export(blender_exec: Path):
+def run_export(blender_exec: Path, version: str | None = None):
     print(f"\n=== Exporting with {blender_exec} ===")
     before = time.time()
     env = os.environ.copy()
@@ -82,7 +88,28 @@ def main():
         raise SystemExit(f"No Blender executables found under {root}")
 
     for exec_path in execs:
-        run_export(exec_path)
+        version = None
+        try:
+            proc = subprocess.run(
+                [str(exec_path), "--version"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            for line in proc.stdout.splitlines():
+                if line.startswith("Blender"):
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        version = parts[1]
+                        break
+        except Exception as exc:
+            print(f"Could not determine version for {exec_path}: {exc}")
+
+        if version and versioned_catalogue_exists(version):
+            print(f"Skipping {exec_path} (catalogue for Blender {version} already exists)")
+            continue
+
+        run_export(exec_path, version=version)
 
 
 if __name__ == "__main__":
