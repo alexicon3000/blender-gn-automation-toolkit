@@ -64,6 +64,7 @@ _NODE_CATALOGUE_MIN_INDEX = {}
 _NODE_CATALOGUE_MIN_SOURCE = None
 _SOCKET_COMPAT = None
 _SOCKET_COMPAT_SOURCE = None
+_MERMAID_TYPE_MAP = None
 
 def get_blender_version():
     """Return Blender version tuple and string."""
@@ -1702,6 +1703,62 @@ print("=" * 60)
 # MERMAID PARSER - Convert Mermaid flowchart to graph_json
 # ============================================================================
 
+# Prefixes stripped from identifiers to create short Mermaid names.
+# Order matters: longest/most-specific first to avoid partial matches.
+_MERMAID_IDENT_PREFIXES = ["GeometryNode", "FunctionNode", "ShaderNode"]
+
+# Manual overrides for nodes not in the catalogue (or special pseudo-nodes).
+_MERMAID_MANUAL_OVERRIDES = {
+    "GroupInput": "NodeGroupInput",
+    "GroupOutput": "NodeGroupOutput",
+}
+
+
+def _build_mermaid_type_map():
+    """Build a short-name → identifier map from the loaded node catalogue.
+
+    Keys are generated two ways (both stored, no conflicts in practice):
+    1. Label with spaces removed  ("Combine XYZ" → "CombineXYZ")
+    2. Identifier with known prefix stripped ("GeometryNodeMeshCone" → "MeshCone")
+
+    Full identifiers are also accepted as keys (identity mapping).
+    The result is cached in ``_MERMAID_TYPE_MAP`` after the first call.
+    """
+    global _MERMAID_TYPE_MAP
+    if _MERMAID_TYPE_MAP is not None:
+        return _MERMAID_TYPE_MAP
+
+    type_map = dict(_MERMAID_MANUAL_OVERRIDES)
+
+    try:
+        catalogue = load_node_catalogue()
+    except FileNotFoundError:
+        _MERMAID_TYPE_MAP = type_map
+        return _MERMAID_TYPE_MAP
+
+    for node in catalogue:
+        ident = node["identifier"]
+        label = node.get("label", "")
+
+        # Key from label (spaces removed)
+        if label:
+            key_label = label.replace(" ", "")
+            type_map.setdefault(key_label, ident)
+
+        # Key from identifier with prefix stripped
+        for pfx in _MERMAID_IDENT_PREFIXES:
+            if ident.startswith(pfx):
+                key_stripped = ident[len(pfx):]
+                type_map.setdefault(key_stripped, ident)
+                break
+
+        # Full identifier always valid (identity)
+        type_map[ident] = ident
+
+    _MERMAID_TYPE_MAP = type_map
+    return _MERMAID_TYPE_MAP
+
+
 def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
     """
     Parse a Mermaid flowchart into graph_json format.
@@ -1748,45 +1805,9 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
         "parse_warnings": []
     }
 
-    # Default type mappings for common short names
-    default_type_map = {
-        # Geometry nodes (short names)
-        "MeshCone": "GeometryNodeMeshCone",
-        "MeshCube": "GeometryNodeMeshCube",
-        "MeshCylinder": "GeometryNodeMeshCylinder",
-        "MeshGrid": "GeometryNodeMeshGrid",
-        "MeshIcoSphere": "GeometryNodeMeshIcoSphere",
-        "MeshLine": "GeometryNodeMeshLine",
-        "MeshUVSphere": "GeometryNodeMeshUVSphere",
-        "MeshCircle": "GeometryNodeMeshCircle",
-        "SetPosition": "GeometryNodeSetPosition",
-        "Transform": "GeometryNodeTransform",
-        "JoinGeometry": "GeometryNodeJoinGeometry",
-        "InstanceOnPoints": "GeometryNodeInstanceOnPoints",
-        "MeshToPoints": "GeometryNodeMeshToPoints",
-        "PointsToVertices": "GeometryNodePointsToVertices",
-        "SubdivideMesh": "GeometryNodeSubdivideMesh",
-        "SetMaterial": "GeometryNodeSetMaterial",
-        "Viewer": "GeometryNodeViewer",
-        "BoundingBox": "GeometryNodeBoundBox",
-        "TranslateInstances": "GeometryNodeTranslateInstances",
-        "RotateInstances": "GeometryNodeRotateInstances",
-        "ScaleInstances": "GeometryNodeScaleInstances",
-        "RealizeInstances": "GeometryNodeRealizeInstances",
-        # Function nodes
-        "RandomValue": "FunctionNodeRandomValue",
-        "CombineXYZ": "FunctionNodeCombineXYZ",
-        "SeparateXYZ": "FunctionNodeSeparateXYZ",
-        "Math": "FunctionNodeFloatMath",
-        "VectorMath": "FunctionNodeVectorMath",
-        "Compare": "FunctionNodeCompare",
-        "BooleanMath": "FunctionNodeBooleanMath",
-        # Special nodes
-        "GroupInput": "NodeGroupInput",
-        "GroupOutput": "NodeGroupOutput",
-    }
-
-    type_map = {**default_type_map, **(node_type_map or {})}
+    # Build type map from catalogue (cached after first call).
+    # User-supplied node_type_map overrides take precedence.
+    type_map = {**_build_mermaid_type_map(), **(node_type_map or {})}
 
     # Track seen nodes and links
     seen_nodes = {}
