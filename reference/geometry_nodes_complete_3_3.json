@@ -1,0 +1,6803 @@
+{
+  "blender_version": "3.3.21",
+  "blender_version_string": "3.3.21",
+  "blender_build_hash": "e016c21db151",
+  "blender_build_date": "2024-07-15",
+  "total_nodes": 161,
+  "breakdown": {
+    "GeometryNode": 130,
+    "FunctionNode": 18,
+    "ShaderNode": 13
+  },
+  "skipped": [
+    {
+      "identifier": "GeometryNodeCustomGroup",
+      "error": "Error: Node type GeometryNodeCustomGroup undefined\n"
+    }
+  ],
+  "nodes": [
+    {
+      "identifier": "FunctionNodeAlignEulerToVector",
+      "label": "Align Euler to Vector",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Factor",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeBooleanMath",
+      "label": "Boolean Math",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Boolean",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Boolean",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Boolean",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeCombineColor",
+      "label": "Combine Color",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Red",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Green",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Blue",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Alpha",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeCompare",
+      "label": "Compare",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "A",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "A",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "A",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "A",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "A",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "C",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Angle",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Epsilon",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Result",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeFloatToInt",
+      "label": "Float to Integer",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Float",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Integer",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputBool",
+      "label": "Boolean",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Boolean",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputColor",
+      "label": "Color",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputInt",
+      "label": "Integer",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Integer",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputSpecialCharacters",
+      "label": "Special Characters",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Line Break",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Tab",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputString",
+      "label": "String",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeInputVector",
+      "label": "Vector",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeRandomValue",
+      "label": "Random Value",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Probability",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "ID",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Seed",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeReplaceString",
+      "label": "Replace String",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Find",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Replace",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeRotateEuler",
+      "label": "Rotate Euler",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Rotate By",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Axis",
+          "idname": "NodeSocketVectorXYZ",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Angle",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeSeparateColor",
+      "label": "Separate Color",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Red",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Green",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Blue",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Alpha",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeSliceString",
+      "label": "Slice String",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeStringLength",
+      "label": "String Length",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Length",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "FunctionNodeValueToString",
+      "label": "Value to String",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Decimals",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeAccumulateField",
+      "label": "Accumulate Field",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Group Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Leading",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Leading",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Leading",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Trailing",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Trailing",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Trailing",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Total",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Total",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Total",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeAttributeDomainSize",
+      "label": "Domain Size",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Point Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Edge Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Face Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Face Corner Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Spline Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Instance Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeAttributeStatistic",
+      "label": "Attribute Statistic",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mean",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Median",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Sum",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Range",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Standard Deviation",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Variance",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Mean",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Median",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Sum",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Range",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Standard Deviation",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Variance",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeAttributeTransfer",
+      "label": "Transfer Attribute",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Source",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Source Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeBoundBox",
+      "label": "Bounding Box",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Bounding Box",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCaptureAttribute",
+      "label": "Capture Attribute",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCollectionInfo",
+      "label": "Collection Info",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Collection",
+          "idname": "NodeSocketCollection",
+          "type": "COLLECTION",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Separate Children",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Reset Children",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeConvexHull",
+      "label": "Convex Hull",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Convex Hull",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveArc",
+      "label": "Arc",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketIntUnsigned",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Middle",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start Angle",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Sweep Angle",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Offset Angle",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Connect Center",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Invert Arc",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Center",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveEndpointSelection",
+      "label": "Endpoint Selection",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Start Size",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "End Size",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveHandleTypeSelection",
+      "label": "Handle Type Selection",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveLength",
+      "label": "Curve Length",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurvePrimitiveBezierSegment",
+      "label": "Bezier Segment",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketIntUnsigned",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start Handle",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End Handle",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurvePrimitiveCircle",
+      "label": "Curve Circle",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 1",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 2",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 3",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Center",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurvePrimitiveLine",
+      "label": "Curve Line",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Start",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Direction",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurvePrimitiveQuadrilateral",
+      "label": "Quadrilateral",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Height",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Bottom Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Top Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Offset",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Bottom Height",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Top Height",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 1",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 2",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 3",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Point 4",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveQuadraticBezier",
+      "label": "Quadratic Bezier",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketIntUnsigned",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Middle",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveSetHandles",
+      "label": "Set Handle Type",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveSpiral",
+      "label": "Spiral",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketIntUnsigned",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Rotations",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "End Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Height",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Reverse",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveSplineType",
+      "label": "Set Spline Type",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveStar",
+      "label": "Star",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketIntUnsigned",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Inner Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Outer Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Twist",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Outer Points",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveToMesh",
+      "label": "Curve to Mesh",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Profile Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Fill Caps",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeCurveToPoints",
+      "label": "Curve to Points",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Tangent",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeDeformCurvesOnSurface",
+      "label": "Deform Curves on Surface",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curves",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curves",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeDeleteGeometry",
+      "label": "Delete Geometry",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeDistributePointsOnFaces",
+      "label": "Distribute Points on Faces",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Distance Min",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Density Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Density",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Density Factor",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Seed",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeDualMesh",
+      "label": "Dual Mesh",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Keep Boundaries",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Dual Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeDuplicateElements",
+      "label": "Duplicate Elements",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Amount",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Duplicate Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeEdgePathsToCurves",
+      "label": "Edge Paths to Curves",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start Vertices",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Next Vertex Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curves",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeEdgePathsToSelection",
+      "label": "Edge Paths to Selection",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Start Vertices",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Next Vertex Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeExtrudeMesh",
+      "label": "Extrude Mesh",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Offset",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Offset Scale",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Individual",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Top",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Side",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeFieldAtIndex",
+      "label": "Field at Index",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeFieldOnDomain",
+      "label": "Interpolate Domain",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeFillCurve",
+      "label": "Fill Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeFilletCurve",
+      "label": "Fillet Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Limit Radius",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeFlipFaces",
+      "label": "Flip Faces",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeGeometryToInstance",
+      "label": "Geometry to Instance",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeGroup",
+      "label": "Group",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "identifier": "GeometryNodeImageTexture",
+      "label": "Image Texture",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Image",
+          "idname": "NodeSocketImage",
+          "type": "IMAGE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Frame",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Alpha",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputCurveHandlePositions",
+      "label": "Curve Handle Positions",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Relative",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Left",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Right",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputCurveTilt",
+      "label": "Curve Tilt",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Tilt",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputID",
+      "label": "ID",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "ID",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputIndex",
+      "label": "Index",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputInstanceRotation",
+      "label": "Instance Rotation",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputInstanceScale",
+      "label": "Instance Scale",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Scale",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMaterial",
+      "label": "Material",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Material",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMaterialIndex",
+      "label": "Material Index",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Material Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshEdgeAngle",
+      "label": "Edge Angle",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Unsigned Angle",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Signed Angle",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshEdgeNeighbors",
+      "label": "Edge Neighbors",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Face Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshEdgeVertices",
+      "label": "Edge Vertices",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Vertex Index 1",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Vertex Index 2",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Position 1",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Position 2",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshFaceArea",
+      "label": "Face Area",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Area",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshFaceIsPlanar",
+      "label": "Face is Planar",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Threshold",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Planar",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshFaceNeighbors",
+      "label": "Face Neighbors",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Vertex Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Face Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshIsland",
+      "label": "Mesh Island",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Island Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Island Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputMeshVertexNeighbors",
+      "label": "Vertex Neighbors",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Vertex Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Face Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputNamedAttribute",
+      "label": "Named Attribute",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Name",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputNormal",
+      "label": "Normal",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputPosition",
+      "label": "Position",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputRadius",
+      "label": "Radius",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputSceneTime",
+      "label": "Scene Time",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Seconds",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Frame",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputShadeSmooth",
+      "label": "Is Shade Smooth",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Smooth",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputShortestEdgePaths",
+      "label": "Shortest Edge Paths",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "End Vertex",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Edge Cost",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Next Vertex Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Total Cost",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputSplineCyclic",
+      "label": "Is Spline Cyclic",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Cyclic",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputSplineResolution",
+      "label": "Spline Resolution",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInputTangent",
+      "label": "Curve Tangent",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Tangent",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInstanceOnPoints",
+      "label": "Instance on Points",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Instance",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Pick Instance",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Instance Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketVectorXYZ",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeInstancesToPoints",
+      "label": "Instances to Points",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeIsViewport",
+      "label": "Is Viewport",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Is Viewport",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeJoinGeometry",
+      "label": "Join Geometry",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMaterialSelection",
+      "label": "Material Selection",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Material",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMergeByDistance",
+      "label": "Merge by Distance",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Distance",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshBoolean",
+      "label": "Mesh Boolean",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh 1",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Mesh 2",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Self Intersection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Hole Tolerant",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Intersecting Edges",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshCircle",
+      "label": "Mesh Circle",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Vertices",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshCone",
+      "label": "Cone",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Vertices",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Side Segments",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Fill Segments",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius Top",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius Bottom",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Depth",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Top",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Bottom",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Side",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshCube",
+      "label": "Cube",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Size",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vertices X",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vertices Y",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vertices Z",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshCylinder",
+      "label": "Cylinder",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Vertices",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Side Segments",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Fill Segments",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Depth",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Top",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Side",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Bottom",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshGrid",
+      "label": "Grid",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Size X",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Size Y",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vertices X",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Vertices Y",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshIcoSphere",
+      "label": "Ico Sphere",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Subdivisions",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshLine",
+      "label": "Mesh Line",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start Location",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Offset",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshToCurve",
+      "label": "Mesh to Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshToPoints",
+      "label": "Mesh to Points",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshToVolume",
+      "label": "Mesh to Volume",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Density",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Size",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Amount",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Exterior Band Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Interior Band Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Fill Volume",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Volume",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeMeshUVSphere",
+      "label": "UV Sphere",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Segments",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Rings",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeObjectInfo",
+      "label": "Object Info",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Object",
+          "idname": "NodeSocketObject",
+          "type": "OBJECT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "As Instance",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Location",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodePoints",
+      "label": "Points",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodePointsToVertices",
+      "label": "Points to Vertices",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodePointsToVolume",
+      "label": "Points to Volume",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Density",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Size",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Amount",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Volume",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeProximity",
+      "label": "Geometry Proximity",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Target",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Source Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Distance",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeRaycast",
+      "label": "Raycast",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Target Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Source Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Ray Direction",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Ray Length",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Is Hit",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Hit Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Hit Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Hit Distance",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Attribute",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeRealizeInstances",
+      "label": "Realize Instances",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeRemoveAttribute",
+      "label": "Remove Named Attribute",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Name",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeReplaceMaterial",
+      "label": "Replace Material",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Old",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "New",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeResampleCurve",
+      "label": "Resample Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeReverseCurve",
+      "label": "Reverse Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeRotateInstances",
+      "label": "Rotate Instances",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Pivot Point",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Local Space",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSampleCurve",
+      "label": "Sample Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Factor",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Tangent",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Normal",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeScaleElements",
+      "label": "Scale Elements",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Center",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Axis",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeScaleInstances",
+      "label": "Scale Instances",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketVectorXYZ",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Center",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Local Space",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSeparateComponents",
+      "label": "Separate Components",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Point Cloud",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Volume",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSeparateGeometry",
+      "label": "Separate Geometry",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Inverted",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetCurveHandlePositions",
+      "label": "Set Handle Positions",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Offset",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetCurveRadius",
+      "label": "Set Curve Radius",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetCurveTilt",
+      "label": "Set Curve Tilt",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Tilt",
+          "idname": "NodeSocketFloatAngle",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetID",
+      "label": "Set ID",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "ID",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetMaterial",
+      "label": "Set Material",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Material",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetMaterialIndex",
+      "label": "Set Material Index",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Material Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetPointRadius",
+      "label": "Set Point Radius",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Radius",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Points",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetPosition",
+      "label": "Set Position",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Position",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Offset",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetShadeSmooth",
+      "label": "Set Shade Smooth",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Shade Smooth",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetSplineCyclic",
+      "label": "Set Spline Cyclic",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Cyclic",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSetSplineResolution",
+      "label": "Set Spline Resolution",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Resolution",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSplineLength",
+      "label": "Spline Length",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Point Count",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSplineParameter",
+      "label": "Spline Parameter",
+      "category": "UNSORTED",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "Factor",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Length",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Index",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSplitEdges",
+      "label": "Split Edges",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeStoreNamedAttribute",
+      "label": "Store Named Attribute",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Name",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeStringJoin",
+      "label": "Join Strings",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Delimiter",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Strings",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeStringToCurves",
+      "label": "String to Curves",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "String",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Size",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Character Spacing",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Word Spacing",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Line Spacing",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Text Box Width",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Text Box Height",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Remainder",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Line",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Pivot Point",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSubdivideCurve",
+      "label": "Subdivide Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Cuts",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSubdivideMesh",
+      "label": "Subdivide Mesh",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Level",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSubdivisionSurface",
+      "label": "Subdivision Surface",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Level",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Edge Crease",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vertex Crease",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeSwitch",
+      "label": "Switch",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Switch",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Switch",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketObject",
+          "type": "OBJECT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketObject",
+          "type": "OBJECT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketCollection",
+          "type": "COLLECTION",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketCollection",
+          "type": "COLLECTION",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketTexture",
+          "type": "TEXTURE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketTexture",
+          "type": "TEXTURE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "False",
+          "idname": "NodeSocketImage",
+          "type": "IMAGE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "True",
+          "idname": "NodeSocketImage",
+          "type": "IMAGE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Output",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketString",
+          "type": "STRING",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketObject",
+          "type": "OBJECT",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketCollection",
+          "type": "COLLECTION",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketTexture",
+          "type": "TEXTURE",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketMaterial",
+          "type": "MATERIAL",
+          "is_output": true,
+          "supports_field": false
+        },
+        {
+          "name": "Output",
+          "idname": "NodeSocketImage",
+          "type": "IMAGE",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeTransform",
+      "label": "Transform",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Translation",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Rotation",
+          "idname": "NodeSocketVectorEuler",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketVectorXYZ",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeTranslateInstances",
+      "label": "Translate Instances",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Translation",
+          "idname": "NodeSocketVectorTranslation",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Local Space",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Instances",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeTriangulate",
+      "label": "Triangulate",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Minimum Vertices",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeTrimCurve",
+      "label": "Trim Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Start",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Start",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "End",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Curve",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeUVPackIslands",
+      "label": "Pack UV Islands",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "UV",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Margin",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Rotate",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UV",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeUVUnwrap",
+      "label": "UV Unwrap",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Selection",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Seam",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Margin",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Fill Holes",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "UV",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeViewer",
+      "label": "Viewer",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Geometry",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketBool",
+          "type": "BOOLEAN",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "identifier": "GeometryNodeVolumeCube",
+      "label": "Volume Cube",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Density",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Background",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Resolution X",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Resolution Y",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Resolution Z",
+          "idname": "NodeSocketInt",
+          "type": "INT",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Volume",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "GeometryNodeVolumeToMesh",
+      "label": "Volume to Mesh",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Volume",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Size",
+          "idname": "NodeSocketFloatDistance",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Voxel Amount",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Threshold",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        },
+        {
+          "name": "Adaptivity",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Mesh",
+          "idname": "NodeSocketGeometry",
+          "type": "GEOMETRY",
+          "is_output": true,
+          "supports_field": false
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeClamp",
+      "label": "Clamp",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Min",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Result",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeCombineRGB",
+      "label": "Combine RGB",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "R",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "G",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Image",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeCombineXYZ",
+      "label": "Combine XYZ",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "X",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Y",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Z",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeFloatCurve",
+      "label": "Float Curve",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Factor",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeMapRange",
+      "label": "Map Range",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "From Min",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "From Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "To Min",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "To Max",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Steps",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "From Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "From Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "To Min",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "To Max",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Steps",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Result",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeMath",
+      "label": "Math",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeMixRGB",
+      "label": "Mix",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Fac",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Color1",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Color2",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeRGBCurve",
+      "label": "RGB Curves",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Fac",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeSeparateRGB",
+      "label": "Separate RGB",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Image",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "R",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "G",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "B",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeSeparateXYZ",
+      "label": "Separate XYZ",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "X",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Y",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Z",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeValToRGB",
+      "label": "ColorRamp",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Fac",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Color",
+          "idname": "NodeSocketColor",
+          "type": "RGBA",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Alpha",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeVectorCurve",
+      "label": "Vector Curves",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Fac",
+          "idname": "NodeSocketFloatFactor",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    },
+    {
+      "identifier": "ShaderNodeVectorMath",
+      "label": "Vector Math",
+      "category": "UNSORTED",
+      "inputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": false,
+          "supports_field": true
+        },
+        {
+          "name": "Scale",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": false,
+          "supports_field": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Vector",
+          "idname": "NodeSocketVector",
+          "type": "VECTOR",
+          "is_output": true,
+          "supports_field": true
+        },
+        {
+          "name": "Value",
+          "idname": "NodeSocketFloat",
+          "type": "VALUE",
+          "is_output": true,
+          "supports_field": true
+        }
+      ]
+    }
+  ]
+}
