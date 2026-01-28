@@ -95,16 +95,17 @@ print_validation_report(result)
 ## Reference Data
 
 ### Node Catalogue
-- **Complete:** `reference/geometry_nodes_complete_4_4.json` (257 nodes)
-- **Minimal:** `geometry_nodes_min_4_4.json` (202 nodes, GeometryNode* only)
-- **Version:** Blender 4.4
+- **Complete:** `reference/geometry_nodes_complete_5_0.json` (297 nodes)
+- **Minimal:** `geometry_nodes_min_5_0.json` (236 nodes, GeometryNode* only)
+- **Version:** Blender 5.0
+- **Build:** version_string 5.0.1 · build_hash a3db93c5b259 · build_date 2025-12-16
 - **Contains:** Node definitions with inputs/outputs, socket types, categories
 
 ### Socket Compatibility
-- **File:** `socket_compat.csv`
+- **File:** `reference/socket_compat_5_0.csv`
 - **Contains:** 58 allowed socket type pairs for link validation
 
-**Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
+**Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("5.0")` to verify compatibility.
 
 **Field Support Status:** The catalogue now includes runtime-derived `supports_field` values (via socket display shapes). Field-aware validation is active and will block field outputs connected to non-field inputs.
 
@@ -191,7 +192,7 @@ If using a new Blender version:
 After refreshing the catalogue, you can verify field support counts:
 
 ```bash
-python scripts/verify_supports_field.py reference/geometry_nodes_complete_4_4.json
+python scripts/verify_supports_field.py reference/geometry_nodes_complete_5_0.json
 ```
 
 ## Files
@@ -208,11 +209,12 @@ geo_nodes_mcp/                          # Module version (same functions)
 └── workspace.py
 
 reference/
-└── geometry_nodes_complete_4_4.json    # Full catalogue (257 nodes)
+├── geometry_nodes_complete_5_0.json    # Full catalogue (297 nodes)
+├── geometry_nodes_min_5_0.json         # Minimal catalogue (236 nodes)
+└── socket_compat_5_0.csv               # Socket compatibility matrix
 
 GeoNodes_Exporter_Complete.py           # Catalogue generator script
-geometry_nodes_min_4_4.json             # Original minimal catalogue
-socket_compat.csv                       # Socket compatibility matrix
+socket_compat.csv                       # Legacy socket compatibility matrix
 ```
 
 ## Project Notes

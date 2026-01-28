@@ -13,7 +13,7 @@ with Geometry Nodes automation.
 **Key ideas**
 - Plan visually: sketch Mermaid flow charts (with GroupInput/GroupOutput) so
   humans can sanity-check topology before executing anything.
-- Catalog-driven safety: builders load Blender 4.4 node definitions and the
+- Catalog-driven safety: builders load Blender 5.0 node definitions and the
   socket compatibility matrix before linking, catching wrong directions or
   types early.
 - Pre-flight validation: `build_graph_from_json()` now runs a fail-fast
@@ -23,7 +23,7 @@ with Geometry Nodes automation.
   and links to aid manual reconstruction when automation fails.
 
 ## Getting Started
-1. Open Blender 4.4+ and run:
+1. Open Blender 5.0+ and run:
    ```python
    exec(open("/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP/toolkit.py").read())
    ```
@@ -35,12 +35,20 @@ group.
 3. Run `full_geo_nodes_validation()` to capture screenshots and structural/
    metric reports. Pass `include_report=True` to include a full graph report.
 
+## Catalogue Snapshot (Blender 5.0)
+- **version_string:** 5.0.1
+- **build_hash:** a3db93c5b259
+- **build_date:** 2025-12-16
+- **Complete catalogue:** `reference/geometry_nodes_complete_5_0.json`
+- **Minimal catalogue:** `reference/geometry_nodes_min_5_0.json`
+- **Socket compatibility:** `reference/socket_compat_5_0.csv`
+
 ## Documentation
 - `GUIDE.md` – Hands-on quick start, helper catalog, project notes, and common
   pitfalls.
 - `WORKFLOW.md` – MCP-centric process covering Mermaid rules, response format,
   and the 22-step checklist the LLM must satisfy before building.
-- `reference/` – Blender 4.4 catalogue JSON and socket compatibility CSV (the
+- `reference/` – Blender 5.0 catalogue JSON and socket compatibility CSV (the
   files loader utilities rely on).
 
 ## Repository Layout
@@ -63,10 +71,9 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 **Works today**
 - Catalogue/socket loaders, Mermaid→graph_json parsing, graph builders, and
   validation helpers (`toolkit.py`, `geo_nodes_mcp/`).
-- Pre-link safety checks (direction/type) using Blender 4.4 metadata.
-- Post-build validation with metrics + screenshots.
-- ✅ **MCP smoke tests pass** (2026-01-28): graph_json and Mermaid workflows
-  both successfully build nodes, connect to Group Output, and validate.
+- Pre-link safety checks (direction/type) using Blender 5.0 metadata.
+- ✅ **MCP smoke tests pass (Blender 5.0)** (2026-01-29): graph_json workflow
+  builds nodes, connects to Group Output, and validates under the 5.0 catalogue.
 
 **Still to build/validate**
 - Field-aware validation is now active using refreshed catalogue data (check

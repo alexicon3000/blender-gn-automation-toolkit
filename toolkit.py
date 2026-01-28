@@ -31,7 +31,7 @@ from mathutils import Euler
 # ============================================================================
 
 TOOLKIT_VERSION = "0.1.0"
-CATALOGUE_VERSION = "4.4"
+CATALOGUE_VERSION = os.environ.get("GN_MCP_CATALOGUE_VERSION", "4.4")
 
 # Resolve toolkit root so reference files can be located when exec'd via MCP
 _TOOLKIT_DIR = os.path.dirname(__file__) if "__file__" in globals() else os.getcwd()
@@ -41,6 +41,7 @@ _CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
 _DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
 _DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
 _SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
+_SOCKET_COMPAT_VERSIONED = f"socket_compat_{CATALOGUE_VERSION.replace('.', '_')}.csv"
 _SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 
 _NODE_CATALOGUE = None
@@ -238,6 +239,7 @@ def _candidate_socket_paths(preferred_path=None):
         candidates.append(env_path)
     for base in bases:
         if base:
+            candidates.append(os.path.join(base, _SOCKET_COMPAT_VERSIONED))
             candidates.append(os.path.join(base, _SOCKET_COMPAT_FILENAME))
 
     seen = set()

@@ -17,6 +17,7 @@ _DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.
 _DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
 _CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
 _SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
+_SOCKET_COMPAT_VERSIONED = f"socket_compat_{CATALOGUE_VERSION.replace('.', '_')}.csv"
 _SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 
 _PACKAGE_DIR = Path(__file__).resolve().parent
@@ -198,6 +199,7 @@ def _candidate_socket_paths(preferred_path: Optional[str]) -> Iterable[Path]:
 
     for base in bases:
         if base:
+            candidates.append(Path(base) / _SOCKET_COMPAT_VERSIONED)
             candidates.append(Path(base) / _SOCKET_COMPAT_FILENAME)
 
     seen: set = set()
