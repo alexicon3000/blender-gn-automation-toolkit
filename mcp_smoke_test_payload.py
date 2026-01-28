@@ -5,11 +5,17 @@ It assumes Blender MCP is already connected to a running Blender session.
 """
 
 import json
+import os
 import textwrap
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent
-TOOLKIT_PATH = REPO_ROOT / "toolkit.py"
+REPO_ROOT = Path(os.environ.get("GN_MCP_BASE_PATH", "/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP"))
+TOOLKIT_PATH = Path(os.environ.get("GN_MCP_TOOLKIT_PATH", REPO_ROOT / "toolkit.py"))
+
+if "GN_MCP_SOCKET_COMPAT_PATH" not in os.environ:
+    os.environ["GN_MCP_SOCKET_COMPAT_PATH"] = str(REPO_ROOT / "reference" / "socket_compat.csv")
+if "GN_MCP_CATALOGUE_PATH" not in os.environ:
+    os.environ["GN_MCP_CATALOGUE_PATH"] = str(REPO_ROOT / "reference" / "geometry_nodes_complete_4_4.json")
 
 with open(TOOLKIT_PATH, "r", encoding="utf-8") as fh:
     code = compile(fh.read(), str(TOOLKIT_PATH), "exec")
