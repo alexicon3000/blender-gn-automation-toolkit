@@ -330,17 +330,17 @@ def validate_socket_link(from_socket, to_socket):
     from_id = _socket_idname(from_socket)
     to_id = _socket_idname(to_socket)
 
-    if not are_socket_types_compatible(from_id, to_id):
-        return False, (
-            "Socket types are incompatible: "
-            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
-        )
-
     source_field = _socket_supports_field(from_socket, is_output=True)
     dest_field = _socket_supports_field(to_socket, is_output=False)
     if source_field and dest_field is False:
         return False, (
             "Field output cannot connect to non-field input: "
+            f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
+        )
+
+    if not are_socket_types_compatible(from_id, to_id):
+        return False, (
+            "Socket types are incompatible: "
             f"{_describe_socket(from_socket)} -> {_describe_socket(to_socket)}"
         )
 
