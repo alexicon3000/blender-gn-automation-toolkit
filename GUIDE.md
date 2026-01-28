@@ -210,3 +210,5 @@ socket_compat.csv                       # Socket compatibility matrix
 5. Add a "full fat" graph report generator that lists each node's sockets,
    the specific inputs/outputs used, their values, and data flowing through
    each wire for manual reconstruction when needed.
+6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
+   `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.

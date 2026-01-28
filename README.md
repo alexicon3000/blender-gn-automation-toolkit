@@ -65,3 +65,5 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 - Automated enforcement of the 22-step LLM checklist.
 - "Full fat" graph reporting (nodes, sockets, settings, wire payloads) for
   manual reconstruction when automation fails.
+- Run Blender MCP smoke tests (Mermaid → graph_json → build → validation) to
+  confirm the new safety checks behave as expected end-to-end.
