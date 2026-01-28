@@ -270,6 +270,14 @@ socket_compat.csv                       # Legacy socket compatibility matrix
 5. Extend full graph reports with node settings/summaries for manual rebuilds
 6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
    `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.
+7. Catalogue cleanup: mark/remove nodes that fail instantiation in GN context
+   (e.g., FunctionNodeCombineXYZ in Blender 5.0) and document allowed Shader
+   node fallbacks.
+8. Add interface-socket support (describe Group Input/Output sockets in
+   graph_json so modifier parameters can be added automatically).
+9. Sanitise builder results for JSON output and clarify field vs non-field
+   constraints (e.g., Random Value outputs fields; Set Position Offset expects
+   plain vectors).
 7. Longer term: consider packaging the toolkit as a Blender add-on so users can
    paste Mermaid text directly inside Blender and build/validate graphs without
    MCP.
