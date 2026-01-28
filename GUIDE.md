@@ -207,3 +207,6 @@ socket_compat.csv                       # Socket compatibility matrix
 2. Use catalogue metadata to validate node settings (enum/mode properties)
 3. Automate the LLM checklist (Rules 1‑22) so MCP can fail fast before building
 4. Document how to annotate Mermaid nodes with key parameter hints for human review
+5. Add a "full fat" graph report generator that lists each node's sockets,
+   the specific inputs/outputs used, their values, and data flowing through
+   each wire for manual reconstruction when needed.
