@@ -59,7 +59,7 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
   validation helpers (`toolkit.py`, `geo_nodes_mcp/`).
 - Pre-link safety checks (direction/type) using Blender 4.4 metadata.
 - Post-build validation with metrics + screenshots.
-- ✅ **MCP smoke tests pass** (2025-01-28): graph_json and Mermaid workflows
+- ✅ **MCP smoke tests pass** (2026-01-28): graph_json and Mermaid workflows
   both successfully build nodes, connect to Group Output, and validate.
 
 **Still to build/validate**
