@@ -4,3 +4,7 @@
 # when working with Claude Code via the Blender MCP.
 
 __version__ = "0.1.0"
+
+from . import catalogue
+
+__all__ = ["catalogue"]

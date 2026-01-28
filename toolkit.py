@@ -22,6 +22,7 @@ import bpy
 import os
 import tempfile
 import math
+import json
 from mathutils import Euler
 
 # ============================================================================
@@ -30,6 +31,18 @@ from mathutils import Euler
 
 TOOLKIT_VERSION = "0.1.0"
 CATALOGUE_VERSION = "4.4"
+
+# Resolve toolkit root so reference files can be located when exec'd via MCP
+_TOOLKIT_DIR = os.path.dirname(__file__) if "__file__" in globals() else os.getcwd()
+_REFERENCE_DIR = os.path.join(_TOOLKIT_DIR, "reference")
+_ARCHIVE_REFERENCE_DIR = os.path.join(_TOOLKIT_DIR, "_GN-LLM-References")
+_CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
+_DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
+_DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
+
+_NODE_CATALOGUE = None
+_NODE_CATALOGUE_INDEX = {}
+_NODE_CATALOGUE_SOURCE = None
 
 def get_blender_version():
     """Return Blender version tuple and string."""
@@ -46,6 +59,105 @@ def check_catalogue_version(catalogue_version=CATALOGUE_VERSION):
               f"but running {version_str}. Socket names may differ!")
         return False
     return True
+
+
+# ============================================================================
+# CATALOGUE HELPERS - Lazy loading of reference data
+# ============================================================================
+
+def _candidate_catalogue_paths(preferred_path=None, prefer_complete=True):
+    """Yield candidate catalogue paths in priority order."""
+    names = [_DEFAULT_COMPLETE_NAME, _DEFAULT_MIN_NAME]
+    if not prefer_complete:
+        names.reverse()
+
+    env_path = os.environ.get(_CATALOGUE_ENV_VAR)
+    archive_dir = _ARCHIVE_REFERENCE_DIR if os.path.isdir(_ARCHIVE_REFERENCE_DIR) else None
+
+    candidates = []
+    if preferred_path:
+        candidates.append(preferred_path)
+    if env_path:
+        candidates.append(env_path)
+
+    for base in (_REFERENCE_DIR, _TOOLKIT_DIR, archive_dir):
+        if not base:
+            continue
+        for name in names:
+            path = os.path.join(base, name)
+            candidates.append(path)
+
+    # Also allow matching files located beside the toolkit file
+    for name in names:
+        candidates.append(os.path.join(_TOOLKIT_DIR, name))
+
+    seen = set()
+    for path in candidates:
+        if path and path not in seen:
+            seen.add(path)
+            yield path
+
+
+def _resolve_catalogue_path(preferred_path=None, prefer_complete=True):
+    """Return the first catalogue path that exists on disk."""
+    for path in _candidate_catalogue_paths(preferred_path, prefer_complete):
+        if os.path.exists(path):
+            return path
+    return None
+
+
+def load_node_catalogue(path=None, prefer_complete=True, force_reload=False):
+    """Load node catalogue JSON (complete or minimal) and cache the result."""
+    global _NODE_CATALOGUE, _NODE_CATALOGUE_INDEX, _NODE_CATALOGUE_SOURCE
+
+    if _NODE_CATALOGUE and not force_reload and not path:
+        return _NODE_CATALOGUE
+
+    resolved = _resolve_catalogue_path(path, prefer_complete)
+    if not resolved:
+        raise FileNotFoundError(
+            "Could not locate geometry node catalogue. Set GN_MCP_CATALOGUE_PATH or "
+            "place geometry_nodes_complete/min files next to toolkit.py."
+        )
+
+    with open(resolved, 'r', encoding='utf-8') as fh:
+        data = json.load(fh)
+
+    if isinstance(data, dict):
+        nodes = data.get('nodes', [])
+    elif isinstance(data, list):
+        nodes = data
+    else:
+        raise ValueError(f"Unsupported catalogue format in {resolved}")
+
+    _NODE_CATALOGUE = nodes
+    _NODE_CATALOGUE_INDEX = {entry.get('identifier'): entry for entry in nodes if entry.get('identifier')}
+    _NODE_CATALOGUE_SOURCE = resolved
+    return _NODE_CATALOGUE
+
+
+def get_node_spec(node_type, path=None):
+    """Return the catalogue entry for a node identifier, or None."""
+    load_node_catalogue(path)
+    return _NODE_CATALOGUE_INDEX.get(node_type)
+
+
+def get_catalogue_source():
+    """Return the resolved catalogue path currently in use."""
+    return _NODE_CATALOGUE_SOURCE
+
+
+def get_socket_spec(node_type, socket_name, is_output=True):
+    """Return metadata for a socket from the catalogue."""
+    spec = get_node_spec(node_type)
+    if not spec:
+        return None
+
+    sockets = spec.get('outputs' if is_output else 'inputs', [])
+    for socket in sockets:
+        if socket.get('name') == socket_name:
+            return socket
+    return None
 
 
 # ============================================================================

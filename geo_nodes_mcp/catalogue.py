@@ -1,0 +1,131 @@
+"""Catalogue helpers for Geometry Nodes MCP tools.
+
+Provides lazy loading of the reference JSON/CSV data so builders and
+validators can query node metadata without duplicating IO logic.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional
+
+CATALOGUE_VERSION = os.environ.get("GN_MCP_CATALOGUE_VERSION", "4.4")
+_DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
+_DEFAULT_MIN_NAME = f"geometry_nodes_min_{CATALOGUE_VERSION.replace('.', '_')}.json"
+_CATALOGUE_ENV_VAR = "GN_MCP_CATALOGUE_PATH"
+
+_PACKAGE_DIR = Path(__file__).resolve().parent
+_PROJECT_ROOT = _PACKAGE_DIR.parent
+_REFERENCE_DIR = _PROJECT_ROOT / "reference"
+_ARCHIVE_REFERENCE_DIR = _PROJECT_ROOT / "_GN-LLM-References"
+
+
+_NODE_CATALOGUE: Optional[List[Dict]] = None
+_NODE_INDEX: Dict[str, Dict] = {}
+_NODE_SOURCE: Optional[str] = None
+
+
+def _candidate_catalogue_paths(preferred_path: Optional[str], prefer_complete: bool) -> Iterable[Path]:
+    names: List[str] = [_DEFAULT_COMPLETE_NAME, _DEFAULT_MIN_NAME]
+    if not prefer_complete:
+        names.reverse()
+
+    env_path = os.environ.get(_CATALOGUE_ENV_VAR)
+    archive_dir = _ARCHIVE_REFERENCE_DIR if _ARCHIVE_REFERENCE_DIR.is_dir() else None
+
+    candidates: List[Path] = []
+    if preferred_path:
+        candidates.append(Path(preferred_path))
+    if env_path:
+        candidates.append(Path(env_path))
+
+    for base in (_REFERENCE_DIR, _PROJECT_ROOT, archive_dir):
+        if not base:
+            continue
+        for name in names:
+            candidates.append(base / name)
+
+    # As a final fallback, allow locating beside the package file itself
+    for name in names:
+        candidates.append(_PACKAGE_DIR / name)
+
+    seen: set = set()
+    for path in candidates:
+        if not path:
+            continue
+        resolved = path.expanduser()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        yield resolved
+
+
+def _resolve_catalogue_path(preferred_path: Optional[str], prefer_complete: bool) -> Optional[Path]:
+    for path in _candidate_catalogue_paths(preferred_path, prefer_complete):
+        if path.exists():
+            return path
+    return None
+
+
+def load_node_catalogue(path: Optional[str] = None, prefer_complete: bool = True, force_reload: bool = False):
+    """Load and cache the node catalogue data structure."""
+    global _NODE_CATALOGUE, _NODE_INDEX, _NODE_SOURCE
+
+    if _NODE_CATALOGUE and not force_reload and not path:
+        return _NODE_CATALOGUE
+
+    resolved = _resolve_catalogue_path(path, prefer_complete)
+    if not resolved:
+        raise FileNotFoundError(
+            "Could not locate geometry node catalogue. Set GN_MCP_CATALOGUE_PATH or "
+            "place geometry_nodes_complete/min files in the repository."
+        )
+
+    with resolved.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+
+    if isinstance(data, dict):
+        nodes = data.get("nodes", [])
+    elif isinstance(data, list):
+        nodes = data
+    else:
+        raise ValueError(f"Unsupported catalogue format in {resolved}")
+
+    _NODE_CATALOGUE = nodes
+    _NODE_INDEX = {entry.get("identifier"): entry for entry in nodes if entry.get("identifier")}
+    _NODE_SOURCE = str(resolved)
+    return _NODE_CATALOGUE
+
+
+def get_node_spec(node_type: str) -> Optional[Dict]:
+    """Return the catalogue entry for a node identifier, or None."""
+    load_node_catalogue()
+    return _NODE_INDEX.get(node_type)
+
+
+def get_socket_spec(node_type: str, socket_name: str, is_output: bool = True) -> Optional[Dict]:
+    """Return socket metadata for the given node."""
+    spec = get_node_spec(node_type)
+    if not spec:
+        return None
+
+    sockets = spec.get("outputs" if is_output else "inputs", [])
+    for socket in sockets:
+        if socket.get("name") == socket_name:
+            return socket
+    return None
+
+
+def get_catalogue_source() -> Optional[str]:
+    """Return the resolved catalogue path currently in use."""
+    return _NODE_SOURCE
+
+
+__all__ = [
+    "load_node_catalogue",
+    "get_node_spec",
+    "get_socket_spec",
+    "get_catalogue_source",
+]
