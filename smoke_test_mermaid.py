@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
-"""Headless Blender MCP smoke test for the Geometry Nodes toolkit."""
+"""Headless Blender smoke test for the Geometry Nodes toolkit.
+
+Run with: blender --background --python smoke_test_mermaid.py
+
+This test validates:
+1. Toolkit loads correctly in Blender
+2. graph_json builds nodes and links
+3. Group Output is properly connected
+4. Node names display naturally (Grid, Mesh to Points, etc.)
+5. Validation pipeline works end-to-end
+"""
 
 import json
-import textwrap
 from pathlib import Path
 
 import bpy  # type: ignore
@@ -10,37 +19,42 @@ import bpy  # type: ignore
 REPO_ROOT = Path(__file__).resolve().parent
 TOOLKIT_PATH = REPO_ROOT / "toolkit.py"
 
-# Load the toolkit into Blender's Python environment (mirrors in-Blender exec).
+# Load the toolkit into Blender's Python environment
 with open(TOOLKIT_PATH, "r", encoding="utf-8") as fh:
     code = compile(fh.read(), str(TOOLKIT_PATH), "exec")
 exec(code, globals())
 
-MERMAID_PLAN = textwrap.dedent(
-    """
-    flowchart LR
-      gi["GroupInput"] -->|Geometry| n1["MeshToPoints"]
-      n2["MeshGrid"] -->|Mesh| n1
-      n1 -->|Points| n3["InstanceOnPoints"]
-      n4["MeshCone"] -->|Mesh| n3
-      n3 -->|Geometry| go["GroupOutput"]
-    """
-).strip()
-
-NODE_SETTINGS = {
-    "n2": {"Vertices X": 10, "Vertices Y": 10, "Size X": 5.0, "Size Y": 5.0},
-    "n4": {"Vertices": 32, "Radius Top": 0.0, "Radius Bottom": 0.5, "Depth": 1.5},
-    "n3": {"Scale": 0.5},
+# Use graph_json directly for precise control over Group I/O connections
+GRAPH_JSON = {
+    "nodes": [
+        {"id": "grid", "type": "GeometryNodeMeshGrid"},
+        {"id": "to_points", "type": "GeometryNodeMeshToPoints"},
+        {"id": "instance", "type": "GeometryNodeInstanceOnPoints"},
+        {"id": "cone", "type": "GeometryNodeMeshCone"},
+    ],
+    "links": [
+        {"from": "grid", "from_socket": "Mesh", "to": "to_points", "to_socket": "Mesh"},
+        {"from": "to_points", "from_socket": "Points", "to": "instance", "to_socket": "Points"},
+        {"from": "cone", "from_socket": "Mesh", "to": "instance", "to_socket": "Instance"},
+        # CRITICAL: Connect to Group Output using special __GROUP_OUTPUT__ ID
+        {"from": "instance", "from_socket": "Instances", "to": "__GROUP_OUTPUT__", "to_socket": "Geometry"},
+    ],
+    "node_settings": {
+        "grid": {"Vertices X": 10, "Vertices Y": 10, "Size X": 5.0, "Size Y": 5.0},
+        "cone": {"Vertices": 32, "Radius Top": 0.0, "Radius Bottom": 0.5, "Depth": 1.5},
+        # Scale is a vector input, not a float
+        "instance": {"Scale": [0.5, 0.5, 0.5]},
+    },
 }
 
-OBJECT_NAME = "MCP_Smoke_Object"
-MODIFIER_NAME = "MCP_Smoke_Mod"
+OBJECT_NAME = "Smoke_Test_Object"
+MODIFIER_NAME = "Smoke_Test_Mod"
 
-print("Running Mermaid smoke test via toolkit.py...", flush=True)
-build_result = mermaid_to_blender(
+print("Running graph_json smoke test via toolkit.py...", flush=True)
+build_result = build_graph_from_json(
     OBJECT_NAME,
     MODIFIER_NAME,
-    MERMAID_PLAN,
-    node_settings=NODE_SETTINGS,
+    GRAPH_JSON,
 )
 
 if not build_result.get("success", False):
@@ -53,19 +67,39 @@ print("Graph built successfully; running validation...", flush=True)
 validation = full_geo_nodes_validation(OBJECT_NAME, MODIFIER_NAME, capture_screenshot=False)
 print_validation_report(validation)
 
+# Additional checks
+obj = bpy.data.objects.get(OBJECT_NAME)
+ng = obj.modifiers.get(MODIFIER_NAME).node_group
+group_output = ng.nodes.get("Group Output")
+go_connected = any(link.to_node == group_output for link in ng.links)
+
+print(f"\nGroup Output connected: {go_connected}")
+
+# Show node names (should be natural Blender names, no labels)
+print("\nNode names (should be natural Blender names):")
+for node in ng.nodes:
+    label_info = f" [label: '{node.label}']" if node.label else ""
+    print(f"  {node.name}{label_info}")
+
 summary = {
     "build_success": build_result.get("success", False),
     "validation_status": validation.get("status"),
+    "group_output_connected": go_connected,
     "issues": validation.get("issues", []),
     "graph_nodes": validation.get("graph", {}).get("node_count"),
     "graph_links": validation.get("graph", {}).get("link_count"),
-    "metrics": validation.get("metrics", {}),
 }
 
-print("SMOKE_TEST_SUMMARY")
+print("\nSMOKE_TEST_SUMMARY")
 print(json.dumps(summary, indent=2))
 
-if validation.get("status") != "VALID":
+# Fail if Group Output not connected or validation issues
+if not go_connected:
+    print("\nFAILED: Group Output not connected!")
     raise SystemExit(2)
 
-print("Smoke test completed without issues.", flush=True)
+if validation.get("status") != "VALID":
+    print("\nFAILED: Validation issues detected!")
+    raise SystemExit(2)
+
+print("\nSmoke test PASSED!", flush=True)

@@ -57,6 +57,8 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
   validation helpers (`toolkit.py`, `geo_nodes_mcp/`).
 - Pre-link safety checks (direction/type) using Blender 4.4 metadata.
 - Post-build validation with metrics + screenshots.
+- ✅ **MCP smoke tests pass** (2025-01-28): graph_json and Mermaid workflows
+  both successfully build nodes, connect to Group Output, and validate.
 
 **Still to build/validate**
 - Refresh catalogues with accurate `supports_field` data to enable the new
@@ -65,16 +67,32 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 - Automated enforcement of the 22-step LLM checklist.
 - "Full fat" graph reporting (nodes, sockets, settings, wire payloads) for
   manual reconstruction when automation fails.
-- Run Blender MCP smoke tests (Mermaid → graph_json → build → validation) to
-  confirm the new safety checks behave as expected end-to-end.
 
-## MCP-First Smoke Test (Recommended)
-If a Blender MCP session is already running, use the MCP-first smoke payload
-instead of launching a new Blender process. Copy the contents of
-`mcp_smoke_test_payload.py` into your MCP `execute_blender_code` call.
+## Smoke Tests
 
-This validates the full chain in the active MCP session:
-Mermaid → graph_json → build → `full_geo_nodes_validation`.
+**MCP-first (recommended)**: Copy contents of `mcp_smoke_test_payload.py` into
+your MCP `execute_blender_code` call. This validates the full chain:
+`graph_json → build → validation`.
 
-Fallback (standalone Blender):
-`blender --background --python smoke_test_mermaid.py`
+**Standalone Blender**: `blender --background --python smoke_test_mermaid.py`
+
+Both tests verify:
+1. Toolkit loads correctly
+2. Nodes and links build without errors
+3. Group Output is properly connected (critical!)
+4. Validation pipeline returns `"status": "VALID"`
+
+### Using `__GROUP_OUTPUT__` in Mermaid
+
+To connect your graph to the modifier's output, use the special ID
+`__GROUP_OUTPUT__` (with underscores) in your Mermaid plan:
+
+```mermaid
+flowchart LR
+  n1["MeshGrid"] -->|Mesh| n2["MeshToPoints"]
+  n2 -->|Points| n3["InstanceOnPoints"]
+  n4["MeshCone"] -->|Mesh| n3
+  n3 -->|Instances| __GROUP_OUTPUT__
+```
+
+The parser automatically maps socket names (e.g., `Instances` → `Geometry`).

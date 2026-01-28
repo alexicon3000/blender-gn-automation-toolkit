@@ -567,8 +567,9 @@ def build_graph_from_json(obj_name, modifier_name, graph_json, clear_existing=Tr
 
         try:
             node = ng.nodes.new(node_type)
-            node.name = node_id
-            node.label = node_id
+            # Keep Blender's natural node name and don't set a label
+            # This ensures nodes display as "Grid", "Mesh to Points", etc.
+            # The node_id is only used internally for the result["nodes"] lookup
 
             # Auto-layout (simple horizontal arrangement)
             node.location = (x_offset, y_offset)
@@ -912,6 +913,35 @@ def capture_node_graph(obj_name, modifier_name):
     return path
 
 
+def frame_object_in_viewport(obj_name):
+    """Frame the viewport on an object before taking screenshots.
+
+    Call this before taking viewport screenshots to ensure the object
+    is visible and centered. Returns True if successful.
+
+    Args:
+        obj_name: Name of the object to frame
+
+    Returns:
+        True if framing succeeded, False otherwise
+    """
+    obj = bpy.data.objects.get(obj_name)
+    if not obj:
+        return False
+
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+
+    for area in bpy.context.screen.areas:
+        if area.type == 'VIEW_3D':
+            for region in area.regions:
+                if region.type == 'WINDOW':
+                    with bpy.context.temp_override(area=area, region=region):
+                        bpy.ops.view3d.view_selected()
+                    return True
+    return False
+
+
 # ============================================================================
 # LAYOUT HELPERS
 # ============================================================================
@@ -1052,6 +1082,7 @@ print("    - validate_geometry_metrics(obj)")
 print("    - print_validation_report(result)")
 print("  Visual:")
 print("    - capture_node_graph(obj, mod)")
+print("    - frame_object_in_viewport(obj)  # Call before screenshots!")
 print("    - switch_to_mcp_workspace()")
 print("    - configure_validation_views(obj, mod)")
 print("  Utilities:")
@@ -1155,6 +1186,9 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
     seen_nodes = {}
     seen_links = set()
 
+    # Special IDs that reference auto-created nodes (don't create new nodes for these)
+    SPECIAL_NODE_IDS = {"__GROUP_INPUT__", "__GROUP_OUTPUT__"}
+
     lines = mermaid_text.strip().split('\n')
 
     for line in lines:
@@ -1172,6 +1206,11 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
             label = match.group(2).strip()
 
             if node_id in seen_nodes:
+                continue
+
+            # Skip special node IDs - they reference auto-created Group I/O nodes
+            if node_id in SPECIAL_NODE_IDS:
+                seen_nodes[node_id] = None  # Mark as seen but don't create
                 continue
 
             # Try to resolve the Blender type
@@ -1219,11 +1258,15 @@ def parse_mermaid_to_graph_json(mermaid_text, node_type_map=None):
             # Determine the input socket name
             to_socket = socket_name
             if socket_name in socket_input_map:
-                # Look up the target node's expected input name
-                to_node_type = seen_nodes.get(to_id, "")
-                short_type = to_node_type.replace("GeometryNode", "").replace("NodeGroup", "")
-                if short_type in socket_input_map[socket_name]:
-                    to_socket = socket_input_map[socket_name][short_type]
+                # Check for special IDs first
+                if to_id in socket_input_map[socket_name]:
+                    to_socket = socket_input_map[socket_name][to_id]
+                else:
+                    # Look up the target node's expected input name
+                    to_node_type = seen_nodes.get(to_id, "") or ""
+                    short_type = to_node_type.replace("GeometryNode", "").replace("NodeGroup", "")
+                    if short_type in socket_input_map[socket_name]:
+                        to_socket = socket_input_map[socket_name][short_type]
 
             link_key = (from_id, socket_name, to_id)
             if link_key not in seen_links:
