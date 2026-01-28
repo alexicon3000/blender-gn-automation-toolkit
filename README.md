@@ -1,9 +1,9 @@
 # Blender Geometry Nodes Automation Toolkit
 
 Utilities and reference data for building Blender Geometry Nodes graphs through
-LLM- or MCP-driven workflows. The repo packages a portable `toolkit.py` for
-in-Blender use plus a `geo_nodes_mcp` module for agents or scripts that need to
-load catalogues, validate socket compatibility, or snapshot node graphs.
+LLM- or MCP-driven workflows. The single-file `toolkit.py` is designed to be
+`exec()`'d inside Blender — it loads all helpers for building, validating, and
+inspecting geometry node graphs.
 
 You can drive it entirely via Mermaid + `graph_json`: sketch a flowchart, feed
 it to `mermaid_to_blender()`, and the toolkit/builders do the rest—even if
@@ -59,11 +59,12 @@ merge_existing=True, remove_extras=True)` to diff and merge by node ID.
   files loader utilities rely on).
 
 ## Repository Layout
-- `toolkit.py` – Single-file toolkit intended to be exec'd inside Blender.
-- `geo_nodes_mcp/` – Installable module mirroring toolkit functionality for
-  agents/servers.
-- `reference/` – Source-of-truth catalogues generated from Blender exporters.
-- `_archive/` – Legacy or other assets for internal reference (ignored by git).
+- `toolkit.py` – Single-file toolkit, the source of truth. Exec'd inside Blender.
+- `reference/` – Node catalogues (4.4, 5.0) and socket compatibility CSVs.
+  To generate catalogues for other Blender versions, run
+  `GeoNodes_Exporter_Complete.py` inside the target Blender.
+- `scripts/` – Smoke tests and utility scripts.
+- `_archive/` – Legacy assets (ignored by git).
 
 ## Contributing / Next Steps
 High-level roadmap items live near the end of `GUIDE.md`. Briefly:
@@ -77,7 +78,7 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 ## Status at a Glance
 **Works today**
 - Catalogue/socket loaders, Mermaid→graph_json parsing, graph builders, and
-  validation helpers (`toolkit.py`, `geo_nodes_mcp/`).
+  validation helpers (`toolkit.py`).
 - Pre-link safety checks (direction/type) using Blender 5.0 metadata.
 - ✅ **MCP smoke tests pass (Blender 5.0)** (2026-01-29): graph_json workflow
   builds nodes, connects to Group Output, and validates under the 5.0 catalogue.
