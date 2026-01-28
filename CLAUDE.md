@@ -193,3 +193,17 @@ GeoNodes_Exporter_Complete.py           # Catalogue generator script
 geometry_nodes_min_4_4.json             # Original minimal catalogue
 socket_compat.csv                       # Socket compatibility matrix
 ```
+
+## Project Notes
+
+**Recent work**
+- Added catalogue + socket-compat loaders shared by toolkit & package
+- Enforced pre-link socket validation (direction + type)
+- Began scaffolding field-awareness (requires refreshed catalogue data)
+- Updated Mermaid/graph_json docs to always include GroupInput/GroupOutput
+
+**Next steps**
+1. Refresh catalogue export so `supports_field` flags reflect Blender truth
+2. Use catalogue metadata to validate node settings (enum/mode properties)
+3. Automate the LLM checklist (Rules 1‑22) so MCP can fail fast before building
+4. Document how to annotate Mermaid nodes with key parameter hints for human review
