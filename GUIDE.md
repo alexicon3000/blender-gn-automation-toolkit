@@ -234,6 +234,9 @@ socket_compat.csv                       # Socket compatibility matrix
 5. Extend full graph reports with node settings/summaries for manual rebuilds
 6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
    `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.
+7. Longer term: consider packaging the toolkit as a Blender add-on so users can
+   paste Mermaid text directly inside Blender and build/validate graphs without
+   MCP.
 
 ## MCP-First Smoke Test
 If a Blender MCP session is active, prefer running the MCP-first smoke payload
