@@ -106,7 +106,7 @@ print_validation_report(result)
 
 **Important:** If using a different Blender version, socket names may differ. Run `check_catalogue_version("4.4")` to verify compatibility.
 
-**Field Support Limitation:** The catalogue currently exports `supports_field=false` for every socket. Field-aware validation is limited until the catalogue is refreshed.
+**Field Support Limitation:** The catalogue in `reference/` still exports `supports_field=false` everywhere. The exporter now instantiates nodes at runtime to capture true field support values, so refresh the catalogue to enable field-aware validation.
 
 ## Available Functions
 
@@ -186,6 +186,12 @@ If using a new Blender version:
 3. Output saved to `~/Downloads/geometry_nodes_complete_X_X.json`
 4. Copy to `reference/` folder
 
+After refreshing the catalogue, you can verify field support counts:
+
+```bash
+python scripts/verify_supports_field.py reference/geometry_nodes_complete_4_4.json
+```
+
 ## Files
 
 ```
@@ -219,7 +225,7 @@ socket_compat.csv                       # Socket compatibility matrix
 - Updated Mermaid/graph_json docs to always include GroupInput/GroupOutput
 
 **Next steps**
-1. Refresh catalogue export so `supports_field` flags reflect Blender truth
+1. Refresh catalogue export so `supports_field` flags reflect Blender truth (exporter now reads runtime field support)
 2. Use catalogue metadata to validate node settings (enum/mode properties)
 3. Automate the LLM checklist (Rules 1‑22) so MCP can fail fast before building
 4. Document how to annotate Mermaid nodes with key parameter hints for human review

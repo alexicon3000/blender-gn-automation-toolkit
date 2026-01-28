@@ -70,68 +70,91 @@ for cat in cats or []:
 # -------------------------------------------------------------
 # Socket payload (essential info only)
 # -------------------------------------------------------------
+def _infer_supports_field(sock):
+    if hasattr(sock, "supports_field"):
+        return bool(getattr(sock, "supports_field"))
+    display_shape = getattr(sock, "display_shape", "")
+    return display_shape in {"DIAMOND", "DIAMOND_DOT"}
+
+
 def extract_socket_info(sock):
-    """Extract minimal socket information."""
+    """Extract minimal socket information from a socket instance."""
     return {
         "name": sock.name,
         "idname": getattr(sock, "bl_idname", sock.__class__.__name__),
         "type": sock.type,  # VECTOR, FLOAT, INT, etc.
         "is_output": sock.is_output,
-        "supports_field": getattr(sock, "supports_field", False),
+        "supports_field": _infer_supports_field(sock),
     }
 
-# -------------------------------------------------------------
-# Test if a node type can be instantiated in GeometryNodeTree
-# -------------------------------------------------------------
+
+def extract_socket_info_from_node(node):
+    """Extract socket info from a node instance."""
+    return {
+        "inputs": [extract_socket_info(s) for s in node.inputs],
+        "outputs": [extract_socket_info(s) for s in node.outputs],
+    }
+
+
+def instantiate_node(cls_name):
+    """Instantiate a node in a temporary GeometryNodeTree and return (node, tree)."""
+    nt = bpy.data.node_groups.new("_GN_MCP_EXPORT_", "GeometryNodeTree")
+    node = nt.nodes.new(cls_name)
+    return node, nt
+
+
+def remove_node_tree(node_tree):
+    """Safely remove a temporary node tree."""
+    if node_tree and node_tree.name in bpy.data.node_groups:
+        bpy.data.node_groups.remove(node_tree, do_unlink=True)
+
+
 def can_instantiate_in_geo_nodes(cls_name):
     """Test if a node type works in Geometry Nodes context."""
+    node_tree = None
     try:
-        nt = bpy.data.node_groups.new("_TEST_", "GeometryNodeTree")
-        node = nt.nodes.new(cls_name)
-        bpy.data.node_groups.remove(nt, do_unlink=True)
+        _node, node_tree = instantiate_node(cls_name)
         return True
-    except:
-        try:
-            bpy.data.node_groups.remove(nt, do_unlink=True)
-        except:
-            pass
+    except Exception:
         return False
+    finally:
+        remove_node_tree(node_tree)
 
 # -------------------------------------------------------------
 # Extract node specification
 # -------------------------------------------------------------
-def extract_node_spec(cls_name):
+def extract_node_spec(cls_name, skipped_nodes):
     """Extract full specification for a node type."""
+    node_tree = None
     try:
-        nt = bpy.data.node_groups.new("_TEST_", "GeometryNodeTree")
-        node = nt.nodes.new(cls_name)
+        node, node_tree = instantiate_node(cls_name)
+        socket_payload = extract_socket_info_from_node(node)
 
         spec = {
             "identifier": cls_name,
             "label": node.bl_label if hasattr(node, 'bl_label') else node.name,
             "category": CATEGORY_MAP.get(cls_name, "UNSORTED"),
-            "inputs": [extract_socket_info(s) for s in node.inputs],
-            "outputs": [extract_socket_info(s) for s in node.outputs],
+            "inputs": socket_payload["inputs"],
+            "outputs": socket_payload["outputs"],
         }
 
         # Add bl_description if available (tooltip)
         if hasattr(node, 'bl_description') and node.bl_description:
             spec["description"] = node.bl_description
 
-        bpy.data.node_groups.remove(nt, do_unlink=True)
         return spec
     except Exception as e:
-        try:
-            bpy.data.node_groups.remove(nt, do_unlink=True)
-        except:
-            pass
+        skipped_nodes.append({"identifier": cls_name, "error": str(e)})
         return None
+    finally:
+        remove_node_tree(node_tree)
 
 # -------------------------------------------------------------
 # Main collection
 # -------------------------------------------------------------
 nodes = []
 stats = {"GeometryNode": 0, "FunctionNode": 0, "ShaderNode": 0}
+skipped = []
 
 print("Scanning node types...")
 
@@ -143,7 +166,7 @@ for name in dir(bpy.types):
     if not (inspect.isclass(cls) and issubclass(cls, bpy.types.Node)):
         continue
 
-    spec = extract_node_spec(name)
+    spec = extract_node_spec(name, skipped)
     if spec:
         nodes.append(spec)
         stats["GeometryNode"] += 1
@@ -158,7 +181,7 @@ for name in dir(bpy.types):
     if not (inspect.isclass(cls) and issubclass(cls, bpy.types.Node)):
         continue
 
-    spec = extract_node_spec(name)
+    spec = extract_node_spec(name, skipped)
     if spec:
         nodes.append(spec)
         stats["FunctionNode"] += 1
@@ -168,7 +191,7 @@ print(f"  FunctionNode: {stats['FunctionNode']}")
 # 3. Collect valid ShaderNode* types
 for name in SHADER_NODES_TO_TEST:
     if can_instantiate_in_geo_nodes(name):
-        spec = extract_node_spec(name)
+        spec = extract_node_spec(name, skipped)
         if spec:
             nodes.append(spec)
             stats["ShaderNode"] += 1
@@ -185,6 +208,7 @@ output = {
     "blender_version": f"{bpy.app.version[0]}.{bpy.app.version[1]}.{bpy.app.version[2]}",
     "total_nodes": len(nodes),
     "breakdown": stats,
+    "skipped": skipped,
     "nodes": nodes
 }
 
@@ -197,4 +221,5 @@ print(f"\nBreakdown:")
 print(f"  GeometryNode: {stats['GeometryNode']}")
 print(f"  FunctionNode: {stats['FunctionNode']}")
 print(f"  ShaderNode:   {stats['ShaderNode']}")
+print(f"  Skipped:      {len(skipped)}")
 print(f"{'='*50}")

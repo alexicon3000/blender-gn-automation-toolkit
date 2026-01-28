@@ -48,7 +48,8 @@ group.
 ## Contributing / Next Steps
 High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 1. Regenerate catalogues so `supports_field` flags are accurate for field-aware
-   validation (currently exported values are all false).
+   validation (exporter now captures runtime values; refresh the catalogue to
+   apply).
 2. Expand node-setting validation using catalogue metadata (enum/mode rules).
 3. Automate the LLM checklist in code so MCP workflows can fail fast before
    building.
@@ -64,7 +65,8 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 
 **Still to build/validate**
 - Refresh catalogues with accurate `supports_field` data to enable the new
-  field-awareness guard (current export returns false everywhere).
+  field-awareness guard (exporter now captures runtime field support; the repo
+  JSON still needs a refresh).
 - Catalogue-driven node-setting validation (enum/mode properties).
 - Automated enforcement of the 22-step LLM checklist.
 - Extend the full graph report with per-link data payloads once the exporter

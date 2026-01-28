@@ -6,6 +6,12 @@
     "FunctionNode": 44,
     "ShaderNode": 14
   },
+  "skipped": [
+    {
+      "identifier": "GeometryNodeCustomGroup",
+      "error": "Error: Node type GeometryNodeCustomGroup undefined\n"
+    }
+  ],
   "nodes": [
     {
       "identifier": "FunctionNodeAlignEulerToVector",
@@ -17,21 +23,21 @@
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Factor",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -40,7 +46,7 @@
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -54,21 +60,21 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Factor",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -77,7 +83,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -91,14 +97,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Secondary Axis",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -107,7 +113,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Create a rotation from a primary and (ideally orthogonal) secondary axis"
@@ -122,14 +128,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Angle",
           "idname": "NodeSocketFloatAngle",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -138,7 +144,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -152,14 +158,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Boolean",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -168,7 +174,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -182,28 +188,28 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Green",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Blue",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Alpha",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -212,7 +218,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -226,112 +232,112 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -340,7 +346,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Construct a 4x4 matrix from its individual values"
@@ -355,21 +361,21 @@
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -378,7 +384,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -392,56 +398,56 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
@@ -462,21 +468,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Angle",
           "idname": "NodeSocketFloatAngle",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Epsilon",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -485,7 +491,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -499,7 +505,7 @@
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -508,7 +514,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -559,7 +565,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -568,7 +574,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -582,14 +588,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Seed",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -598,7 +604,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -724,21 +730,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -747,7 +753,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -761,7 +767,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -770,14 +776,14 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Invertible",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -791,7 +797,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -800,7 +806,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -814,7 +820,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -823,7 +829,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -837,14 +843,14 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Matrix",
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -853,7 +859,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -867,14 +873,14 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Transform",
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -883,7 +889,7 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Project a point using a matrix, using location, rotation, scale, and perspective divide"
@@ -898,28 +904,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "X",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Y",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Z",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -928,7 +934,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -942,63 +948,63 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Max",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Min",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Max",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Min",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Max",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Probability",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Seed",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1007,28 +1013,28 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1079,28 +1085,28 @@
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotate By",
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Axis",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Angle",
           "idname": "NodeSocketFloatAngle",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1109,7 +1115,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1123,14 +1129,14 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotate By",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1139,7 +1145,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1153,14 +1159,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1169,7 +1175,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1183,7 +1189,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1192,14 +1198,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Angle",
           "idname": "NodeSocketFloatAngle",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1213,7 +1219,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1222,7 +1228,7 @@
           "idname": "NodeSocketVectorEuler",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1236,7 +1242,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1245,28 +1251,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "X",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Y",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Z",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1280,7 +1286,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1289,28 +1295,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Green",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Blue",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Alpha",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1324,7 +1330,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1333,112 +1339,112 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 1 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 2 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 3 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 1",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 2",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 3",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Column 4 Row 4",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Split a 4x4 matrix into its individual values"
@@ -1453,7 +1459,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1462,21 +1468,21 @@
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1550,14 +1556,14 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Transform",
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1566,7 +1572,7 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1580,14 +1586,14 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Transform",
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1596,7 +1602,7 @@
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1610,7 +1616,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1619,7 +1625,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -1663,14 +1669,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1679,21 +1685,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Trailing",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Add the values of an evaluated field together and output the running total for each element"
@@ -1781,14 +1787,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Attribute",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1899,7 +1905,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Iterations",
@@ -1913,7 +1919,7 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -1922,7 +1928,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Mix attribute values of neighboring elements"
@@ -2075,21 +2081,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weights",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2098,14 +2104,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve face corners connected to edges"
@@ -2120,21 +2126,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weights",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2143,14 +2149,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve corners that make up a face"
@@ -2165,21 +2171,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weights",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2188,14 +2194,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve face corners connected to vertices"
@@ -2318,14 +2324,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "End Size",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2334,7 +2340,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Provide a selection for an arbitrary number of endpoints in each spline"
@@ -2350,7 +2356,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Provide a selection based on the handle types of Bézier control points"
@@ -2389,7 +2395,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2398,14 +2404,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Index in Curve",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the curve a control point is part of"
@@ -2722,7 +2728,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2812,7 +2818,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -2873,7 +2879,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a poly spline in a star pattern by connecting alternating points of two circles"
@@ -2933,7 +2939,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Length",
@@ -2956,21 +2962,21 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Normal",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a point cloud by sampling positions along curves"
@@ -2992,7 +2998,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Instances as Layers",
@@ -3054,7 +3060,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3189,7 +3195,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Distance Min",
@@ -3210,14 +3216,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Density Factor",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Seed",
@@ -3240,14 +3246,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate points spread out on the surface of a mesh"
@@ -3300,14 +3306,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Amount",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3323,7 +3329,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate an arbitrary number copies of each selected input element"
@@ -3345,14 +3351,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Next Vertex Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3376,14 +3382,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Next Vertex Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3392,7 +3398,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Output a selection of edges by following paths across mesh edges"
@@ -3407,7 +3413,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3416,14 +3422,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Previous Edge Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the edges on both sides of a face corner"
@@ -3438,21 +3444,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weights",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3461,14 +3467,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the edges connected to each vertex"
@@ -3483,7 +3489,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3492,7 +3498,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Group faces into regions surrounded by the selected boundary edges"
@@ -3514,21 +3520,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset Scale",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Individual",
@@ -3551,14 +3557,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Side",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate new vertices, edges, or faces from selected elements and move them based on an offset while keeping them connected by their boundary"
@@ -3573,7 +3579,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3582,14 +3588,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Index in Face",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the face each face corner is part of"
@@ -3604,14 +3610,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3620,7 +3626,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve data of other elements in the context's geometry"
@@ -3635,7 +3641,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3644,7 +3650,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve values from a field on a different domain besides the domain from the context"
@@ -3666,7 +3672,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3697,14 +3703,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Limit Radius",
@@ -3742,7 +3748,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -3773,7 +3779,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "",
@@ -4079,7 +4085,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Layers as Instances",
@@ -4221,7 +4227,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Frame",
@@ -4237,14 +4243,14 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Alpha",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Sample values from an image texture"
@@ -4331,14 +4337,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -4347,14 +4353,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Has Neighbor",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Find the nearest element in a group. Similar to the \"Sample Nearest\" node"
@@ -4446,7 +4452,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -4455,14 +4461,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Right",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the position of each Bézier control point's handles"
@@ -4478,7 +4484,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the angle at each control point used to twist the curve's normal around its tangent"
@@ -4494,7 +4500,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve whether each edge is marked for smooth or split normals"
@@ -4510,7 +4516,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve a stable random identifier value from the \"id\" attribute on the point domain, or the index if the attribute does not exist"
@@ -4542,7 +4548,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve an integer value indicating the position of each element in the list, starting at zero"
@@ -4558,7 +4564,7 @@
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the rotation of each instance in the geometry"
@@ -4574,7 +4580,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the scale of each instance in the geometry"
@@ -4606,7 +4612,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the index of the material used for each element in the geometry's list of materials"
@@ -4622,14 +4628,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Signed Angle",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "The angle between the normals of connected manifold faces"
@@ -4645,7 +4651,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the number of faces that use each edge as one of their sides"
@@ -4661,28 +4667,28 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vertex Index 2",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position 1",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position 2",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve topology information relating to each edge of a mesh"
@@ -4698,7 +4704,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Calculate the surface area of a mesh's faces"
@@ -4713,7 +4719,7 @@
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -4722,7 +4728,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve whether all triangles in a face are on the same plane, i.e. whether they have the same normal"
@@ -4738,14 +4744,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Face Count",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve topology information relating to each face of a mesh"
@@ -4761,14 +4767,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Island Count",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve information about separate connected regions in a mesh"
@@ -4784,14 +4790,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Face Count",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve topology information relating to each vertex of a mesh"
@@ -4815,14 +4821,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Exists",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the data of a specified attribute"
@@ -4846,7 +4852,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Output a selection of a Grease Pencil layer"
@@ -4862,7 +4868,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve a unit length vector indicating the direction pointing away from the geometry at each element"
@@ -4894,7 +4900,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve a vector indicating the location of each element"
@@ -4910,7 +4916,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the radius at each point on curve or point cloud geometry"
@@ -4949,7 +4955,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve whether each face is marked for smooth or sharp normals"
@@ -4964,14 +4970,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Edge Cost",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -4980,14 +4986,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total Cost",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Find the shortest paths along mesh edges to selected end vertices, with customizable cost per edge"
@@ -5003,7 +5009,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve whether each spline endpoint connects to the beginning"
@@ -5019,7 +5025,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the number of evaluated points that will be generated for every control point on curves"
@@ -5035,7 +5041,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the direction of curves at each control point"
@@ -5057,7 +5063,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Instance",
@@ -5071,28 +5077,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Instance Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -5117,7 +5123,7 @@
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the full transformation of each instance in the geometry"
@@ -5139,21 +5145,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -5184,14 +5190,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Guide Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Points",
@@ -5205,14 +5211,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Point Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Max Neighbors",
@@ -5235,14 +5241,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Closest Weight",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate new curves on points by interpolating between existing curves"
@@ -5306,7 +5312,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Provide a selection of faces that use the specified material"
@@ -5373,7 +5379,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Distance",
@@ -5411,14 +5417,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -5479,7 +5485,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Cut, subtract, or join multiple mesh inputs"
@@ -5576,28 +5582,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Bottom",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Side",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "UV Map",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a cone mesh"
@@ -5649,7 +5655,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a cuboid mesh with variable side lengths and subdivisions"
@@ -5708,28 +5714,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Side",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Bottom",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "UV Map",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a cylinder mesh"
@@ -5744,7 +5750,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -5753,7 +5759,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Find edges on the boundaries between groups of faces with the same ID value"
@@ -5805,7 +5811,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a planar mesh on the XY plane"
@@ -5843,7 +5849,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a spherical mesh that consists of equally sized triangles"
@@ -5910,7 +5916,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -5986,21 +5992,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6144,7 +6150,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a spherical mesh with quads, except for triangles at the top and bottom"
@@ -6218,14 +6224,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6234,7 +6240,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve corners in the same face as another"
@@ -6249,14 +6255,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6265,14 +6271,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Point Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Offset a control point index within its curve"
@@ -6294,14 +6300,14 @@
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6325,21 +6331,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weights",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6348,14 +6354,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Total",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve a point index within a curve"
@@ -6377,14 +6383,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Weight",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6415,7 +6421,7 @@
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Voxel Size",
@@ -6453,7 +6459,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6505,7 +6511,7 @@
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6536,21 +6542,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sample Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sample Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6559,21 +6565,21 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Distance",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Is Valid",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Compute the closest location on the target geometry"
@@ -6595,28 +6601,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Source Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Ray Direction",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Ray Length",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6625,35 +6631,35 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Hit Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Hit Normal",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Hit Distance",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Attribute",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Cast rays from the context geometry onto a target geometry, and retrieve information from each hit point"
@@ -6675,21 +6681,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Realize All",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Depth",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6863,21 +6869,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Count",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Length",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6908,7 +6914,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -6939,28 +6945,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Rotation",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Pivot Point",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Local Space",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7022,28 +7028,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Factor",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Length",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Curve Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7052,28 +7058,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Tangent",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Normal",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve data from a point on a curve at a certain distance from its start"
@@ -7095,7 +7101,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7104,7 +7110,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ]
     },
@@ -7125,21 +7131,21 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Y",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Z",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7148,7 +7154,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve volume grid values at specific voxels"
@@ -7170,14 +7176,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7186,7 +7192,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve values from specific geometry elements"
@@ -7208,7 +7214,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7217,7 +7223,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Find the element of a geometry closest to a position. Similar to the \"Index of Nearest\" node"
@@ -7239,28 +7245,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sample Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sample Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7269,14 +7275,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Is Valid",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Calculate the interpolated value of a mesh attribute on the closest point of its surface"
@@ -7298,21 +7304,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "UV Map",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sample UV",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7321,14 +7327,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Is Valid",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Calculate the interpolated values of a mesh attribute at a UV coordinate"
@@ -7350,28 +7356,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Center",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Axis",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7402,28 +7408,28 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Center",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Local Space",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7529,7 +7535,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7567,21 +7573,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7612,14 +7618,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Normal",
           "idname": "NodeSocketVectorXYZ",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7650,14 +7656,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7688,14 +7694,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Tilt",
           "idname": "NodeSocketFloatAngle",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7757,14 +7763,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7795,14 +7801,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Transform",
           "idname": "NodeSocketMatrix",
           "type": "MATRIX",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7833,7 +7839,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Material",
@@ -7871,14 +7877,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Material Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7909,14 +7915,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Radius",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7947,21 +7953,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Position",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Offset",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -7992,14 +7998,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Shade Smooth",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8030,14 +8036,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Cyclic",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8068,14 +8074,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Resolution",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8167,21 +8173,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Sort Weight",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8206,14 +8212,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Point Count",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the total length of each spline, as a distance or as a number of points"
@@ -8229,21 +8235,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Length",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Index",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve how far along each spline a control point is"
@@ -8265,7 +8271,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8296,14 +8302,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Group ID",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8319,7 +8325,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Create separate geometries containing the elements from the same group"
@@ -8341,7 +8347,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Name",
@@ -8355,7 +8361,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8513,14 +8519,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Pivot Point",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a paragraph of text with a specific font, using a curve instance to store each character"
@@ -8542,7 +8548,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8611,14 +8617,14 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vertex Crease",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Limit Surface",
@@ -8734,14 +8740,14 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Exists",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Each face's sculpt face set value"
@@ -8794,14 +8800,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Float",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "User selection of the edited geometry, for tool execution"
@@ -8823,14 +8829,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Face Set",
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8861,7 +8867,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8944,21 +8950,21 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Translation",
           "idname": "NodeSocketVectorTranslation",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Local Space",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -8989,7 +8995,7 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9020,35 +9026,35 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Start",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "End",
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Start",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "End",
           "idname": "NodeSocketFloatDistance",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9072,14 +9078,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Selection",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Margin",
@@ -9102,7 +9108,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Scale islands of a UV map and move them so they fill the UV space as much as possible"
@@ -9117,14 +9123,14 @@
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Seam",
           "idname": "NodeSocketBool",
           "type": "BOOLEAN",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Margin",
@@ -9147,7 +9153,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Generate a UV map based on seam edges"
@@ -9162,7 +9168,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9171,7 +9177,7 @@
           "idname": "NodeSocketInt",
           "type": "INT",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Retrieve the vertex each face corner is attached to"
@@ -9193,7 +9199,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [],
@@ -9239,7 +9245,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Background",
@@ -9388,21 +9394,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Min",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Max",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9411,7 +9417,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Clamp a value between a minimum and a maximum"
@@ -9426,21 +9432,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "G",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9449,7 +9455,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Deprecated"
@@ -9464,21 +9470,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Y",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Z",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9487,7 +9493,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Create a vector from X, Y, and Z components"
@@ -9502,14 +9508,14 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9518,7 +9524,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Map an input float to a curve and outputs a float value"
@@ -9533,84 +9539,84 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "From Min",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "From Max",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "To Min",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "To Max",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Steps",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "From Min",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "From Max",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "To Min",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "To Max",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Steps",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9619,14 +9625,14 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Remap a value from a range to a target range"
@@ -9641,21 +9647,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9664,7 +9670,7 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Perform math operations"
@@ -9679,70 +9685,70 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Factor",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "A",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9751,28 +9757,28 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Result",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Result",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Result",
           "idname": "NodeSocketRotation",
           "type": "ROTATION",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Mix values by a factor"
@@ -9787,21 +9793,21 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Color1",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Color2",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9810,7 +9816,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Mix two input colors"
@@ -9825,14 +9831,14 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Color",
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9841,7 +9847,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Apply color corrections for each color channel"
@@ -9856,7 +9862,7 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9865,21 +9871,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "G",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "B",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Deprecated"
@@ -9894,7 +9900,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9903,21 +9909,21 @@
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Y",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Z",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Split a vector into its X, Y, and Z components"
@@ -9932,7 +9938,7 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9941,14 +9947,14 @@
           "idname": "NodeSocketColor",
           "type": "RGBA",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Alpha",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Map values to colors with the use of a gradient"
@@ -9963,14 +9969,14 @@
           "idname": "NodeSocketFloatFactor",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -9979,7 +9985,7 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Map input vector components with curves"
@@ -9994,28 +10000,28 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Vector",
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Scale",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": false,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "outputs": [
@@ -10024,14 +10030,14 @@
           "idname": "NodeSocketVector",
           "type": "VECTOR",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         },
         {
           "name": "Value",
           "idname": "NodeSocketFloat",
           "type": "VALUE",
           "is_output": true,
-          "supports_field": false
+          "supports_field": true
         }
       ],
       "description": "Perform vector math operation"
