@@ -52,6 +52,18 @@ def test_socket_spec_nonexistent(toolkit):
     assert spec is None
 
 
+def test_get_node_metadata(toolkit):
+    meta = toolkit["get_node_metadata"]("GeometryNodeMeshCone")
+    assert meta["identifier"] == "GeometryNodeMeshCone"
+    assert meta["label"] == "Cone"
+    assert isinstance(meta.get("description"), str)
+
+
+def test_find_nodes_by_keyword(toolkit):
+    matches = toolkit["find_nodes_by_keyword"]("switch between")
+    assert any("Switch" in (m.get("label") or "") for m in matches)
+
+
 def test_socket_compat_loads(toolkit):
     compat = toolkit["load_socket_compatibility"]()
     assert isinstance(compat, set)
