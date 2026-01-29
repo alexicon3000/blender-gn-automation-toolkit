@@ -8,6 +8,7 @@ Before doing any work:
 
 1. **Verify Blender is running** with MCP addon enabled
 2. **Load the toolkit** via `exec(open("toolkit.py").read())`
+3. **Health-check MCP**: `uvx blender-mcp call blender get_scene_info` should return the scene name; if it fails, relaunch Blender via `./blender-launcher.sh`.
 3. **Check the handoff notes** in `_archive/session_notes_YYYYMMDD.md` for recent context
 4. **Run tests** if you've made code changes: `python3 -m pytest tests/ -q`
 
@@ -60,6 +61,8 @@ The toolkit prints available functions on load. Verify you see the banner.
 ### 3. Build Graphs Incrementally
 
 **Critical:** Split work into multiple small MCP calls. Large monolithic scripts crash Blender 5.0.1.
+
+Stay in the **build loop** (add_node → auto_link → describe_node_group) while constructing the graph. Only when describe_node_group reports no warnings should you enter the **evaluation loop** (run MCP validation, capture screenshots, log results).
 
 **Good pattern:**
 ```

@@ -83,9 +83,88 @@ Notes:
 
 **Note:** For detailed subgraphs (asset modeling, curve networks), you may skip Mermaid and go straight to `graph_json` or scripted helpers. Mermaid shines for topology sketches but gets unwieldy for intricate procedural assets. Use whichever approach keeps the graph readable.
 
-### Option 3: Manual with Safe Helpers
+### Option 3: Incremental API (Recommended for LLMs)
 
-For fine-grained control:
+The Incremental API provides imperative node building with immediate validation at each step. This is the recommended approach for LLM agents because:
+
+- **Immediate feedback** — Each statement validates on execution, no need to debug entire JSON blobs
+- **Auto-detection** — Socket connections are inferred by type, no need to memorize exact socket names
+- **Aliases work** — Use "scatter" instead of "GeometryNodeDistributePointsOnFaces"
+- **Settings inline** — Configure nodes at creation time with keyword arguments
+
+```python
+# Get node group from modifier
+obj = bpy.data.objects["Cube"]
+mod = obj.modifiers.new("Test", "NODES")
+ng = mod.node_group
+
+# Build nodes incrementally (aliases and labels work!)
+grid = add_node(ng, "Grid", size_x=5, size_y=5)
+points = add_node(ng, "scatter", density=10)      # "scatter" is an alias
+cone = add_node(ng, "Cone", radius_bottom=0.3)
+instance = add_node(ng, "Instance on Points")
+
+# Link with auto-detection (finds compatible sockets automatically)
+auto_link(ng, grid, points)                       # Mesh → Mesh
+auto_link(ng, points, instance)                   # Points → Points
+auto_link(ng, cone, instance, "Instance")         # Explicit: Mesh → Instance socket
+
+# Connect to output
+connect_to_output(ng, instance)
+
+# Layout for visual clarity
+layout_nodes(ng)
+```
+
+**Node Resolution:** `resolve_node_type()` accepts:
+- Full identifiers: `"GeometryNodeMeshCone"`
+- Labels: `"Mesh Cone"`, `"Set Position"`
+- Labels without spaces: `"MeshCone"`, `"SetPosition"`
+- Aliases: `"scatter"`, `"instance"`, `"box"`, `"random"`, etc.
+
+**Common Aliases:** scatter, instance, box, plane, sphere, random, math, mix, remap, extrude, subdivide, boolean, join, transform, raycast, position, index, normal
+
+**Build → Describe → Adjust Loop:** Use `describe_node_group()` to inspect the current state after each change:
+
+```python
+# Build incrementally
+grid = add_node(ng, "Grid", size_x=5)
+points = add_node(ng, "scatter")
+
+# Check state — what's missing?
+state = describe_node_group(ng)
+print(f"Output connected: {state['has_output']}")  # False
+for warn in state["warnings"]:
+    print(f"  Fix: {warn}")
+
+# Link and check again
+auto_link(ng, grid, points)
+connect_to_output(ng, points)
+
+state = describe_node_group(ng)
+print(f"Output connected: {state['has_output']}")  # True
+print(f"Warnings: {len(state['warnings'])}")       # 0
+
+# Or use the pretty-print helper
+print_node_group_state(ng)
+```
+
+**Two-loop cadence:** Stay in the **build loop** (add_node → auto_link → describe_node_group/print_node_group_state) until the snapshot shows no warnings and all required geometry inputs/output are connected. Then switch to the **evaluation loop**: run the MCP validation payload (or `full_geo_nodes_validation()`), capture screenshots/metrics, and log results. If validation uncovers issues, drop back into the build loop, fix them, and re-run evaluation.
+
+This tight feedback loop lets LLMs fix issues one at a time without running expensive full validation.
+
+### Debugging Playbook (When Things Go Wrong)
+
+1. **Snapshot first:** Call `describe_node_group()` (or `print_node_group_state()`) to see current nodes, links, warnings, and unlinked geometry inputs.
+2. **Setting/Sockets won't apply:** Re-run `python3 scripts/query_node_metadata.py --node "<label>"` to confirm socket names and properties. `add_node(..., data_type='FLOAT_VECTOR')` now sets safe node attributes automatically.
+3. **Link issues:** Use `auto_link(from_node, to_node)`; if it fails, call `auto_link(..., "Socket Name")` with the exact input. Inspect describe_node_group again to confirm the connection.
+4. **Nodes crash when setting inputs:** Build the node with defaults first, then set values in a separate MCP call (as done in `scripts/frame_validation_payload.py`).
+5. **Graph drifted too far:** Use describe_node_group to list existing nodes/links; either delete problem nodes or rerun `build_graph_from_json(..., merge_existing=True)` to realign with desired JSON.
+6. **Validation still fails:** Run `full_geo_nodes_validation()` or the capture smoke test to get richer diagnostics, then drop back into the build loop and fix the specific issue before re-validating.
+
+### Option 4: Manual with Safe Helpers
+
+For fine-grained control when the Incremental API doesn't fit:
 
 ```python
 # Get socket by TYPE (not index!)
@@ -182,6 +261,16 @@ report = full_graph_report(
 | `switch_to_mcp_workspace()` | Switch to validation workspace |
 | `configure_validation_views(obj, mod)` | Set up viewports |
 
+### Incremental API (New)
+| Function | Purpose |
+|----------|---------|
+| `resolve_node_type(name)` | Resolve label/alias/identifier to Blender type |
+| `add_node(ng, name, **settings)` | Create node by name with optional settings |
+| `auto_link(ng, from_node, to_node, socket?)` | Link nodes with auto socket detection |
+| `connect_to_output(ng, node, socket?)` | Wire node to Group Output |
+| `describe_node_group(ng)` | Get compact state snapshot (nodes, links, warnings) |
+| `print_node_group_state(ng)` | Pretty-print current state to console |
+
 ### Utilities
 | Function | Purpose |
 |----------|---------|
@@ -230,7 +319,7 @@ If the PNG fails to appear in `_archive/`, rerun just the export step—capture_
 
 ### If Blender Crashes Mid-Session (Agent Checklist)
 
-1. Ask the user to relaunch Blender via `./blender-launcher.sh` (or the configured wrapper) so the sandbox scene and MCP add-on reload in a clean session.
+1. If Blender crashed or isn’t running with the MCP add-on, ask the user to relaunch via `./blender-launcher.sh`. Otherwise skip.
 2. Wait until Blender is back online, then re-run `exec(open("/path/to/toolkit.py").read())` to reload the toolkit module.
 3. Resume from the last confirmed step: rebuild the graph, reapply frames, or rerun the MCP payload in smaller chunks as needed.
 4. Record the incident (commands, errors, follow-up steps) in `_archive/session_notes_YYYYMMDD.md` so future agents know what occurred.

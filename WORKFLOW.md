@@ -80,6 +80,8 @@ status: GRAPH_OK | ERRORS_FOUND
 errors: [ list ]      # empty if GRAPH_OK
 ```
 
+**Before running validation:** stay in the incremental build loop (add_node → auto_link → describe_node_group) until the graph has no describe warnings and Group Output is wired. Only then proceed to the checklist and final validation.
+
 ## CHECKLIST (LLM MUST PASS BEFORE status = GRAPH_OK)
   1.  Every node.type exists in CATALOGUE.
   2.  For each link:
@@ -206,9 +208,58 @@ Optionally run a headless-Blender validator for extra certainty.
 - **Expose modifier controls near the frame.** When you add Group Input sockets for parameters (e.g., “Leaf Length”), park the input node inside the related frame so the interface and implementation stay synchronized.
 - **Note on validation:** Current frame support has unit coverage, but a live Blender validation pass is still pending. Keep an eye on layout quirks after MCP builds until that manual verification is complete.
 
-### Node Discovery Helpers (new)
-- Use `get_node_metadata("GeometryNodeMeshToPoints")` to surface the catalogue label/category/description for any identifier. The metadata mirrors Blender’s manual, so you can quote it directly when explaining tweaks.
-- Call `find_nodes_by_keyword("scatter")` (limited list) to search labels/descriptions for a phrase when the exact node name isn’t obvious. This helps map “flip normals” → Align Euler, or “switch between meshes” → Switch node, without guessing.
+### Node Discovery Helpers
+- Use `get_node_metadata("GeometryNodeMeshToPoints")` to surface the catalogue label/category/description for any identifier. The metadata mirrors Blender's manual, so you can quote it directly when explaining tweaks.
+- Call `find_nodes_by_keyword("scatter")` (limited list) to search labels/descriptions for a phrase when the exact node name isn't obvious. This helps map "flip normals" → Align Euler, or "switch between meshes" → Switch node, without guessing.
+- Use `resolve_node_type("scatter")` to convert aliases/labels to Blender identifiers. This powers the Incremental API but is also useful standalone.
+
+### Incremental API (Alternative to graph_json)
+
+For LLM agents that struggle with large JSON blobs, the **Incremental API** offers imperative building with per-statement validation:
+
+```python
+# Setup
+obj = bpy.data.objects["Cube"]
+mod = obj.modifiers.new("Test", "NODES")
+ng = mod.node_group
+
+# Build (aliases work!)
+grid = add_node(ng, "Grid", size_x=5, size_y=5)
+points = add_node(ng, "scatter", density=10)
+cone = add_node(ng, "Cone", radius_bottom=0.3)
+instance = add_node(ng, "Instance on Points")
+
+# Link (auto-detects compatible sockets)
+auto_link(ng, grid, points)
+auto_link(ng, points, instance)
+auto_link(ng, cone, instance, "Instance")
+
+# Connect to output and layout
+connect_to_output(ng, instance)
+layout_nodes(ng)
+```
+
+**Benefits over graph_json:**
+- Errors are specific to the failing line (not "somewhere in the JSON")
+- No need to memorize exact socket names — `auto_link()` finds compatible pairs
+- Aliases like "scatter", "instance", "box" resolve automatically
+- Settings are applied inline at node creation
+- Use `describe_node_group(ng)` for instant state feedback — see warnings, unlinked inputs, and output status without running full validation
+
+**Build → Describe → Adjust loop:**
+```python
+# Check state after changes
+state = describe_node_group(ng)
+if not state["has_output"]:
+    connect_to_output(ng, instance)
+for warn in state["warnings"]:
+    print(f"Fix: {warn}")
+```
+
+**When to use which:**
+- **Incremental API**: Best for iterative building, debugging, or when socket names are uncertain
+- **graph_json**: Best for reproducible builds, version control, or when the full topology is known upfront
+- **Mermaid**: Best for planning/sketching topology before committing to either approach
 
 ### Utility / Meta Nodes Guidance
 - **Repeat Zone / Simulation Zone:** Reach for these when you need loops or stateful simulation. Remember to wire the “Repeat Output” or “Simulation Output” back into the main flow. Document the intent in a frame.

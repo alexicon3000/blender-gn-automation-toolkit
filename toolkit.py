@@ -2797,5 +2797,505 @@ def mermaid_to_blender(obj_name, modifier_name, mermaid_text, node_type_map=None
     return result
 
 
+# ============================================================================
+# INCREMENTAL API - Imperative node building with auto-linking
+# ============================================================================
+
+def resolve_node_type(name_or_alias):
+    """Resolve a label, alias, or identifier to a Blender node type.
+
+    Tries in order:
+    1. Exact identifier match (from Mermaid type map, which includes full identifiers)
+    2. Label with spaces removed (e.g., "Mesh Cone" -> "MeshCone" -> identifier)
+    3. Alias lookup (e.g., "scatter" -> GeometryNodeDistributePointsOnFaces)
+    4. Case-insensitive alias match
+
+    Args:
+        name_or_alias: Node label, alias, or full Blender identifier
+
+    Returns:
+        Blender node identifier string, or None if not found
+
+    Examples:
+        >>> resolve_node_type("Grid")
+        'GeometryNodeMeshGrid'
+        >>> resolve_node_type("scatter")
+        'GeometryNodeDistributePointsOnFaces'
+        >>> resolve_node_type("GeometryNodeMeshCone")
+        'GeometryNodeMeshCone'
+    """
+    if not name_or_alias:
+        return None
+
+    # Build type map from catalogue (includes identifiers, labels, stripped prefixes)
+    type_map = _build_mermaid_type_map()
+
+    # 1. Direct match in type map (exact case)
+    if name_or_alias in type_map:
+        return type_map[name_or_alias]
+
+    # 2. Try with spaces removed (label form)
+    no_spaces = name_or_alias.replace(" ", "")
+    if no_spaces in type_map:
+        return type_map[no_spaces]
+
+    # 3. Try aliases (exact match first)
+    aliases = load_node_aliases()
+    for identifier, alias_list in aliases.items():
+        if name_or_alias in alias_list:
+            return identifier
+
+    # 4. Case-insensitive alias match
+    name_lower = name_or_alias.lower()
+    for identifier, alias_list in aliases.items():
+        if name_lower in [a.lower() for a in alias_list]:
+            return identifier
+
+    return None
+
+
+def _normalize_setting_name(name):
+    """Normalize a setting name for matching.
+
+    Converts: data_type -> datatype, Size X -> sizex, radius-bottom -> radiusbottom
+    """
+    return name.lower().replace(" ", "").replace("_", "").replace("-", "")
+
+
+# Node attributes that are safe to set directly (not via inputs)
+# These are common enum/mode properties on geometry nodes
+_SAFE_NODE_ATTRIBUTES = {
+    "operation",      # ShaderNodeMath, ShaderNodeVectorMath
+    "data_type",      # FunctionNodeRandomValue, GeometryNodeSwitch, etc.
+    "mode",           # Various nodes
+    "domain",         # Attribute nodes
+    "input_type",     # Various nodes
+    "blend_type",     # ShaderNodeMix
+    "clamp_result",   # ShaderNodeMath
+    "use_clamp",      # Various nodes
+}
+
+
+def add_node(node_group, name, **settings):
+    """Add a node by name/alias and apply optional settings.
+
+    This is the primary function for incremental graph building. It resolves
+    the node type from labels, aliases, or full identifiers, creates the node,
+    and optionally sets input values or node attributes.
+
+    Args:
+        node_group: The node tree to add to (from modifier.node_group)
+        name: Node label, alias, or identifier (e.g., "Grid", "scatter",
+              "GeometryNodeMeshCone")
+        **settings: Values to set. Tries in order:
+            1. Input socket by exact name
+            2. Input socket by normalized name (data_type -> "Data Type")
+            3. Node attribute (operation, data_type, mode, etc.)
+
+    Returns:
+        The created Blender node
+
+    Raises:
+        ValueError: If node type cannot be resolved or setting cannot be applied
+
+    Examples:
+        >>> grid = add_node(ng, "Grid", size_x=5, size_y=5)
+        >>> points = add_node(ng, "scatter", density=10)  # alias works
+        >>> math = add_node(ng, "Math", operation='ADD', value=2.0)
+        >>> rand = add_node(ng, "Random Value", data_type='FLOAT_VECTOR')
+    """
+    node_type = resolve_node_type(name)
+    if not node_type:
+        # Provide helpful error with suggestions
+        suggestions = find_nodes_by_keyword(name, limit=3)
+        suggestion_text = ""
+        if suggestions:
+            labels = [s["label"] for s in suggestions]
+            suggestion_text = f" Did you mean: {', '.join(labels)}?"
+        raise ValueError(f"Unknown node type: '{name}'.{suggestion_text}")
+
+    node = node_group.nodes.new(node_type)
+
+    # Apply settings to node inputs or attributes
+    for key, value in settings.items():
+        setting_applied = False
+        key_normalized = _normalize_setting_name(key)
+
+        # 1. Try exact input name match
+        for inp in node.inputs:
+            if inp.name == key:
+                try:
+                    set_node_input(node, inp.name, value)
+                    setting_applied = True
+                    break
+                except (KeyError, TypeError) as e:
+                    raise ValueError(f"Failed to set input '{key}' on {node.name}: {e}")
+
+        # 2. Try normalized input name match
+        if not setting_applied:
+            for inp in node.inputs:
+                inp_normalized = _normalize_setting_name(inp.name)
+                if inp_normalized == key_normalized:
+                    try:
+                        set_node_input(node, inp.name, value)
+                        setting_applied = True
+                        break
+                    except (KeyError, TypeError) as e:
+                        raise ValueError(f"Failed to set input '{inp.name}' on {node.name}: {e}")
+
+        # 3. Try node attribute (for enums like operation, data_type, mode)
+        if not setting_applied:
+            # Check if it's a known safe attribute or exists on the node
+            attr_name = key.lower().replace("-", "_")
+            if attr_name in _SAFE_NODE_ATTRIBUTES or hasattr(node, attr_name):
+                if hasattr(node, attr_name):
+                    try:
+                        setattr(node, attr_name, value)
+                        setting_applied = True
+                    except (AttributeError, TypeError) as e:
+                        raise ValueError(f"Failed to set attribute '{attr_name}' on {node.name}: {e}")
+
+        if not setting_applied:
+            available_inputs = [inp.name for inp in node.inputs if inp.name]
+            available_attrs = [a for a in _SAFE_NODE_ATTRIBUTES if hasattr(node, a)]
+            raise ValueError(
+                f"Setting '{key}' not found on {node.name} ({node_type}). "
+                f"Available inputs: {available_inputs}. "
+                f"Available attributes: {available_attrs}"
+            )
+
+    return node
+
+
+def auto_link(node_group, from_node, to_node, to_socket=None):
+    """Link two nodes, auto-detecting compatible sockets.
+
+    When to_socket is not specified, finds the best compatible unlinked
+    socket pair. Prefers sockets with matching names (e.g., Geometry→Geometry)
+    before falling back to the first compatible pair.
+
+    Args:
+        node_group: The node tree
+        from_node: Source node (output side)
+        to_node: Destination node (input side)
+        to_socket: Optional specific input socket name on to_node
+
+    Returns:
+        The created link
+
+    Raises:
+        ValueError: If no compatible sockets found or socket name invalid
+
+    Examples:
+        >>> auto_link(ng, grid, points)          # finds Mesh -> Mesh
+        >>> auto_link(ng, points, instance)      # finds Points -> Points
+        >>> auto_link(ng, cone, instance, "Instance")  # explicit input
+    """
+    if to_socket:
+        # Find the specific input socket (try exact match, then normalized)
+        to_sock = None
+        to_socket_normalized = _normalize_setting_name(to_socket)
+        for inp in to_node.inputs:
+            if inp.name == to_socket:
+                to_sock = inp
+                break
+            if _normalize_setting_name(inp.name) == to_socket_normalized:
+                to_sock = inp
+                # Don't break - prefer exact match if found later
+
+        if not to_sock:
+            available = [inp.name for inp in to_node.inputs if inp.name]
+            raise ValueError(
+                f"Input socket '{to_socket}' not found on {to_node.name}. "
+                f"Available: {available}"
+            )
+
+        # Find a compatible output socket, preferring name match
+        best_output = None
+        for out in from_node.outputs:
+            valid, _ = validate_socket_link(out, to_sock)
+            if valid:
+                if out.name == to_sock.name:
+                    # Perfect name match - use immediately
+                    return safe_link(node_group, out, to_sock)
+                if best_output is None:
+                    best_output = out
+
+        if best_output:
+            return safe_link(node_group, best_output, to_sock)
+
+        # No compatible output found
+        available_outputs = [f"{o.name} ({_socket_idname(o)})" for o in from_node.outputs]
+        raise ValueError(
+            f"No compatible output on {from_node.name} for input '{to_socket}' "
+            f"({_socket_idname(to_sock)}). Available outputs: {available_outputs}"
+        )
+
+    # Auto-detect: find best compatible unlinked pair
+    # Priority: 1) Same name match, 2) First compatible pair
+    candidates = []
+
+    for out in from_node.outputs:
+        for inp in to_node.inputs:
+            if inp.is_linked:
+                continue
+            valid, _ = validate_socket_link(out, inp)
+            if valid:
+                # Score: 2 for exact name match, 1 for compatible
+                score = 2 if out.name == inp.name else 1
+                candidates.append((score, out, inp))
+
+    if candidates:
+        # Sort by score descending, pick best
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        _, best_out, best_inp = candidates[0]
+        return safe_link(node_group, best_out, best_inp)
+
+    # Build diagnostic message
+    from_sockets = [f"{o.name} ({_socket_idname(o)})" for o in from_node.outputs]
+    to_sockets = [f"{i.name} ({_socket_idname(i)})" for i in to_node.inputs if not i.is_linked]
+    raise ValueError(
+        f"No compatible sockets between {from_node.name} and {to_node.name}. "
+        f"Outputs: {from_sockets}. Unlinked inputs: {to_sockets}"
+    )
+
+
+def connect_to_output(node_group, node, socket_name="Geometry"):
+    """Connect a node to the Group Output.
+
+    Finds the Group Output node and wires the specified output socket
+    to a compatible input on it.
+
+    Args:
+        node_group: The node tree
+        node: Source node to connect
+        socket_name: Output socket name on source node (default: "Geometry")
+
+    Returns:
+        The created link
+
+    Raises:
+        ValueError: If Group Output not found, socket not found, or no compatible input
+
+    Examples:
+        >>> connect_to_output(ng, instance)                # default Geometry
+        >>> connect_to_output(ng, math_node, "Value")      # specific socket
+    """
+    # Find Group Output node
+    output_node = None
+    for n in node_group.nodes:
+        if n.bl_idname == "NodeGroupOutput":
+            output_node = n
+            break
+
+    if not output_node:
+        raise ValueError("No Group Output node found in node group")
+
+    # Find the specified output socket
+    out_socket = None
+    for out in node.outputs:
+        if out.name == socket_name:
+            out_socket = out
+            break
+
+    if not out_socket:
+        available = [o.name for o in node.outputs]
+        raise ValueError(
+            f"Output socket '{socket_name}' not found on {node.name}. "
+            f"Available: {available}"
+        )
+
+    # Find matching input on Group Output (prefer unlinked)
+    for inp in output_node.inputs:
+        valid, _ = validate_socket_link(out_socket, inp)
+        if valid and not inp.is_linked:
+            return safe_link(node_group, out_socket, inp)
+
+    # Try any compatible input (even if linked)
+    for inp in output_node.inputs:
+        valid, _ = validate_socket_link(out_socket, inp)
+        if valid:
+            return safe_link(node_group, out_socket, inp)
+
+    raise ValueError(
+        f"No compatible input on Group Output for {node.name}.{socket_name} "
+        f"({_socket_idname(out_socket)})"
+    )
+
+
+def describe_node_group(node_group, include_defaults=False):
+    """Return a compact snapshot of the node group's current state.
+
+    Designed for the "build → describe → adjust" loop with LLM agents.
+    Much lighter than full_geo_nodes_validation() — no screenshots, no metrics.
+
+    Args:
+        node_group: The Blender node tree to describe
+        include_defaults: If True, include current default values for unlinked inputs
+
+    Returns:
+        Dict with:
+        - nodes: List of {name, type, label, inputs_set, outputs_linked}
+        - links: List of {from_node, from_socket, to_node, to_socket}
+        - warnings: List of issues detected (missing output, invalid links, etc.)
+        - unlinked_required: List of inputs that have no link and no non-default value
+        - has_output: Whether Group Output has a geometry connection
+        - node_count: Total number of nodes
+        - link_count: Total number of links
+
+    Examples:
+        >>> state = describe_node_group(ng)
+        >>> if not state["has_output"]:
+        ...     print("Warning: Graph has no output connection")
+        >>> for warn in state["warnings"]:
+        ...     print(f"Issue: {warn}")
+    """
+    result = {
+        "nodes": [],
+        "links": [],
+        "warnings": [],
+        "unlinked_required": [],
+        "has_output": False,
+        "node_count": 0,
+        "link_count": 0,
+    }
+
+    if not node_group:
+        result["warnings"].append("No node group provided")
+        return result
+
+    # Track nodes
+    group_output = None
+    group_input = None
+
+    for node in node_group.nodes:
+        node_info = {
+            "name": node.name,
+            "type": node.bl_idname,
+            "label": node.label or node.name,
+        }
+
+        # Track which inputs have been set (linked or non-default value)
+        inputs_set = []
+        for inp in node.inputs:
+            if inp.is_linked:
+                inputs_set.append(inp.name)
+            elif include_defaults and hasattr(inp, 'default_value'):
+                inputs_set.append(f"{inp.name}={_serialize_value(inp.default_value)}")
+
+        # Track which outputs are connected
+        outputs_linked = [out.name for out in node.outputs if out.is_linked]
+
+        node_info["inputs_set"] = inputs_set
+        node_info["outputs_linked"] = outputs_linked
+
+        result["nodes"].append(node_info)
+
+        # Identify special nodes
+        if node.bl_idname == "NodeGroupOutput":
+            group_output = node
+        elif node.bl_idname == "NodeGroupInput":
+            group_input = node
+
+    result["node_count"] = len(result["nodes"])
+
+    # Track links
+    for link in node_group.links:
+        link_info = {
+            "from_node": link.from_node.name,
+            "from_socket": link.from_socket.name,
+            "to_node": link.to_node.name,
+            "to_socket": link.to_socket.name,
+        }
+        result["links"].append(link_info)
+
+        # Check link validity
+        if not link.is_valid:
+            result["warnings"].append(
+                f"Invalid link: {link.from_node.name}.{link.from_socket.name} → "
+                f"{link.to_node.name}.{link.to_socket.name}"
+            )
+
+    result["link_count"] = len(result["links"])
+
+    # Check Group Output connectivity
+    if group_output:
+        geometry_connected = False
+        for inp in group_output.inputs:
+            if inp.is_linked and "Geometry" in inp.name:
+                geometry_connected = True
+                break
+        result["has_output"] = geometry_connected
+        if not geometry_connected:
+            result["warnings"].append(
+                "Group Output has no Geometry connection — modifier will produce nothing"
+            )
+    else:
+        result["warnings"].append("No Group Output node found")
+
+    # Find unlinked required inputs
+    # Only flag the FIRST unlinked geometry input per node (the primary one)
+    # Skip nodes that explicitly accept optional geometry (Join Geometry, Switch, etc.)
+    _OPTIONAL_GEOMETRY_NODES = {
+        "GeometryNodeJoinGeometry",  # All inputs are optional
+        "GeometryNodeSwitch",        # Conditional - may not use both
+        "GeometryNodeIndexSwitch",   # Only one active at a time
+        "GeometryNodeMenuSwitch",    # Only one active at a time
+        "GeometryNodeViewer",        # Debug node, geometry optional
+    }
+
+    for node in node_group.nodes:
+        if node.bl_idname in ("NodeGroupInput", "NodeGroupOutput"):
+            continue
+        if node.bl_idname in _OPTIONAL_GEOMETRY_NODES:
+            continue
+
+        # Find the first geometry input - if unlinked, flag it
+        for inp in node.inputs:
+            socket_type = _socket_idname(inp)
+            if "Geometry" in socket_type:
+                if not inp.is_linked:
+                    result["unlinked_required"].append(f"{node.name}.{inp.name}")
+                break  # Only check the first geometry input
+
+    return result
+
+
+def print_node_group_state(node_group, include_defaults=False):
+    """Pretty-print the current state of a node group.
+
+    Convenience wrapper around describe_node_group() for console output.
+
+    Args:
+        node_group: The Blender node tree to describe
+        include_defaults: If True, include current default values
+    """
+    state = describe_node_group(node_group, include_defaults)
+
+    print(f"\n=== Node Group State ===")
+    print(f"Nodes: {state['node_count']}  Links: {state['link_count']}  Output: {'✓' if state['has_output'] else '✗'}")
+
+    if state["warnings"]:
+        print(f"\nWarnings ({len(state['warnings'])}):")
+        for w in state["warnings"]:
+            print(f"  ⚠ {w}")
+
+    if state["unlinked_required"]:
+        print(f"\nUnlinked required inputs:")
+        for u in state["unlinked_required"]:
+            print(f"  • {u}")
+
+    print(f"\nNodes:")
+    for n in state["nodes"]:
+        inputs_str = f" [{', '.join(n['inputs_set'])}]" if n['inputs_set'] else ""
+        outputs_str = f" → [{', '.join(n['outputs_linked'])}]" if n['outputs_linked'] else ""
+        print(f"  {n['name']} ({n['type']}){inputs_str}{outputs_str}")
+
+    if state["links"]:
+        print(f"\nLinks:")
+        for lnk in state["links"]:
+            print(f"  {lnk['from_node']}.{lnk['from_socket']} → {lnk['to_node']}.{lnk['to_socket']}")
+
+
 # Version check
 check_catalogue_version()

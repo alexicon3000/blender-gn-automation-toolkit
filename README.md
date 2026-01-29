@@ -6,6 +6,7 @@ The toolkit bridges how LLMs naturally describe things (structured text, diagram
 
 ### Core Capabilities
 
+- **Incremental API** — Build nodes one at a time with `add_node()` and `auto_link()`. Each statement validates immediately. Supports aliases ("scatter", "instance") and auto-detects compatible sockets. Use `describe_node_group()` for instant state feedback.
 - **Declarative graph building** — Define node graphs as JSON (`graph_json`) or Mermaid flowcharts, then execute in Blender without writing imperative Python.
 - **Preflight validation** — Catch errors (unknown node types, bad socket names, type mismatches) *before* touching Blender, giving fast feedback to LLMs.
 - **Incremental updates** — Diff existing graphs against desired state; add/update/remove only what changed.
@@ -32,6 +33,7 @@ The toolkit bridges how LLMs naturally describe things (structured text, diagram
 - Full graph reporting: optional “full report” dumps nodes, sockets, defaults,
   and links to aid manual reconstruction when automation fails. You can pass
   `last_graph_json` and `last_diff_summary` to include recent merge context.
+- Incremental build loop: use `add_node`, `auto_link`, and `describe_node_group` to add nodes one at a time, inspect the state, and fix issues before running expensive validation. Only run the MCP validation payload once describe_node_group reports no warnings.
 
 ## Getting Started
 1. Open Blender 5.0+ and run:
@@ -108,7 +110,7 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 pytest tests/ -v
 ```
 
-69 tests cover catalogue loading, preflight validation, Mermaid parsing, and diff/merge logic — all via bpy mocks.
+126 tests cover catalogue loading, preflight validation, Mermaid parsing, diff/merge logic, frames, and the incremental API — all via bpy mocks.
 
 ### Smoke Tests (in Blender)
 
