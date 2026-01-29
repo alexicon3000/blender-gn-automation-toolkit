@@ -182,7 +182,9 @@ python3 scripts/frame_validation_payload.py --mode cli --alias blender
 
 # Capture debugging
 uvx blender-mcp call blender execute_blender_code --params "$(python3 scripts/capture_smoke_test_payload.py)"
-```
+``
+
+If the report is the main deliverable, consider swapping the capture step with a simple viewport screenshot (`bpy.ops.screen.screenshot`) from the MCP workspace; it’s faster and still gives humans the visual context they need.`
 
 ### Via Direct MCP Call
 
@@ -211,6 +213,9 @@ Current coverage:
 - `test_mermaid.py` — Mermaid parsing and type resolution
 - `test_diff.py` — incremental merge logic
 - `test_frames.py` — frame creation, export, auto-framing
+- Quick smoke:
+  - `python3 -m pytest tests/test_incremental_api.py tests/test_frames.py -q`
+  - MCP connection ping via `python3 scripts/connection_smoke_test_payload.py` (default emit mode) or by pasting the snippet from GUIDE.md into `execute_blender_code`
 
 ---
 

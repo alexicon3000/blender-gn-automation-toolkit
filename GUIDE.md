@@ -153,6 +153,71 @@ print_node_group_state(ng)
 
 This tight feedback loop lets LLMs fix issues one at a time without running expensive full validation.
 
+### Group Interface Helpers
+Use `ensure_group_input()` / `ensure_group_output()` to manage modifier sockets without manual bpy boilerplate:
+
+```python
+# Ensure inputs with defaults and bounds
+ensure_group_input(ng, "Terrain Size", "NodeSocketFloat", default=5.0, min=0.1, max=200.0)
+ensure_group_input(ng, "Scatter Density", "NodeSocketFloat", default=10.0, min=0.0, max=50.0)
+
+# Ensure output (Geometry socket by default)
+ensure_group_output(ng, "Result Geometry", "NodeSocketGeometry")
+```
+
+Sockets are created if missing; otherwise their metadata (default/min/max/description) is updated in place.
+
+
+### Frame Planning During Incremental Builds
+To avoid one massive auto-frame, assign each node to a logical section as you build:
+```python
+frames = {
+    "Terrain": [],
+    "Cactus Asset": [],
+    "Scatter": [],
+}
+
+def add_section(node_group, label, *node_args, **node_kwargs):
+    node = add_node(node_group, *node_args, **node_kwargs)
+    node_id = node.get(_NODE_ID_PROP, node.name)
+    frames.setdefault(label, []).append(node_id)
+    return node
+
+terrain_grid = add_section(ng, "Terrain", "Grid", size_x=5)
+scatter_points = add_section(ng, "Scatter", "Distribute Points on Faces")
+# ... build rest of graph ...
+
+frame_specs = [
+    {
+        "id": f"frame_{label.lower().replace(' ', '_')}",
+        "label": label,
+        "nodes": ids,
+        "color": [0.2, 0.4, 0.8, 1.0],
+    }
+    for label, ids in frames.items() if ids
+]
+_apply_frames(ng, {node.get(_NODE_ID_PROP,node.name): node for node in ng.nodes}, frame_specs, errors=[])
+```
+This keeps frames aligned with the graph’s functional regions (Terrain vs Cactus vs Scatter). Leave nodes unassigned if you don’t want them framed yet.
+
+**Spatial layout tip:** keep an (x, y) cursor per section and assign node locations as you build. For example:
+```python
+sections = {
+    "Terrain": {"nodes": [], "cursor": [-600, 200]},
+    "Cactus Asset": {"nodes": [], "cursor": [-200, 200]},
+    "Scatter": {"nodes": [], "cursor": [200, 200]},
+}
+
+def add_section(node_group, label, *node_args, **node_kwargs):
+    node = add_node(node_group, *node_args, **node_kwargs)
+    node_id = node.get(_NODE_ID_PROP, node.name)
+    sections.setdefault(label, {"nodes": [], "cursor": [0, 0]})["nodes"].append(node_id)
+    node.location = tuple(sections[label]["cursor"])
+    sections[label]["cursor"][0] += 200  # offset next node
+    return node
+```
+This keeps each section’s nodes in a coherent column and makes the frames visually readable once applied.
+
 ### Debugging Playbook (When Things Go Wrong)
 
 1. **Snapshot first:** Call `describe_node_group()` (or `print_node_group_state()`) to see current nodes, links, warnings, and unlinked geometry inputs.
@@ -161,6 +226,31 @@ This tight feedback loop lets LLMs fix issues one at a time without running expe
 4. **Nodes crash when setting inputs:** Build the node with defaults first, then set values in a separate MCP call (as done in `scripts/frame_validation_payload.py`).
 5. **Graph drifted too far:** Use describe_node_group to list existing nodes/links; either delete problem nodes or rerun `build_graph_from_json(..., merge_existing=True)` to realign with desired JSON.
 6. **Validation still fails:** Run `full_geo_nodes_validation()` or the capture smoke test to get richer diagnostics, then drop back into the build loop and fix the specific issue before re-validating.
+7. **Prefer viewport captures when report is key:** If the validation report is the primary deliverable, a quick `bpy.ops.screen.screenshot` of the MCP workspace (or `get_viewport_screenshot` via MCP) is often enough. Capture the node graph only when you need the precise layout; otherwise the viewport shot gives humans the needed context with less friction.
+
+### Quick Smoke Tests
+
+- **Pytest sanity (no Blender needed):**
+  ```bash
+  cd /Users/alexanderporter/Documents/_DEV/Geo Nodes MCP
+  python3 -m pytest tests/test_incremental_api.py tests/test_frames.py -q
+  ```
+  Ensures incremental helpers and frame logic haven’t regressed before touching Blender.
+- **MCP connection ping:** either run `python3 scripts/connection_smoke_test_payload.py` (default emit mode prints a payload to paste into the MCP sidebar) or paste the snippet below directly into `execute_blender_code`. It prints the Blender version plus a small scene summary; if it runs, the MCP channel is healthy.
+  ```python
+  import bpy, json
+  print("Blender version:", bpy.app.version_string)
+  result = {
+      "scene": bpy.context.scene.name,
+      "objects": len(bpy.context.scene.objects),
+      "modifiers": {
+          obj.name: [mod.name for mod in obj.modifiers]
+          for obj in bpy.context.scene.objects
+          if obj.modifiers
+      },
+  }
+  print(json.dumps(result, indent=2))
+  ```
 
 ### Option 4: Manual with Safe Helpers
 

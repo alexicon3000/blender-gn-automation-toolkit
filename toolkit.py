@@ -1802,6 +1802,68 @@ def _configure_group_interface(node_group, graph_json):
     _apply_specs(output_specs, 'OUTPUT')
 
 
+def _find_interface_socket(node_group, name, in_out):
+    interface = getattr(node_group, "interface", None)
+    if interface is not None:
+        items = getattr(interface, "items_tree", None)
+        if items:
+            for item in items:
+                if getattr(item, "item_type", None) == 'SOCKET' and getattr(item, "in_out", None) == in_out and item.name == name:
+                    return item
+
+    sockets = node_group.inputs if in_out == 'INPUT' else node_group.outputs
+    if hasattr(sockets, "get"):
+        return sockets.get(name)
+    for sock in sockets:
+        if sock.name == name:
+            return sock
+    return None
+
+
+def ensure_group_input(node_group, name, socket_type='NodeSocketFloat', *, default=None, **metadata):
+    """Ensure a Group Input socket exists and update its metadata."""
+    interface = getattr(node_group, "interface", None)
+    if interface is None:
+        raise ValueError("Node group has no interface; cannot create group inputs")
+
+    socket = _find_interface_socket(node_group, name, 'INPUT')
+    if socket is None:
+        socket = interface.new_socket(name=name, in_out='INPUT', socket_type=socket_type)
+    elif socket_type and getattr(socket, "socket_type", None) and socket.socket_type != socket_type:
+        socket.socket_type = socket_type
+
+    if default is not None:
+        _assign_interface_default(socket, default)
+
+    for key, attr in _INTERFACE_PROP_MAP.items():
+        if key in metadata and hasattr(socket, attr):
+            setattr(socket, attr, metadata[key])
+
+    return socket
+
+
+def ensure_group_output(node_group, name, socket_type='NodeSocketFloat', *, default=None, **metadata):
+    """Ensure a Group Output socket exists and update its metadata."""
+    interface = getattr(node_group, "interface", None)
+    if interface is None:
+        raise ValueError("Node group has no interface; cannot create group outputs")
+
+    socket = _find_interface_socket(node_group, name, 'OUTPUT')
+    if socket is None:
+        socket = interface.new_socket(name=name, in_out='OUTPUT', socket_type=socket_type)
+    elif socket_type and getattr(socket, "socket_type", None) and socket.socket_type != socket_type:
+        socket.socket_type = socket_type
+
+    if default is not None:
+        _assign_interface_default(socket, default)
+
+    for key, attr in _INTERFACE_PROP_MAP.items():
+        if key in metadata and hasattr(socket, attr):
+            setattr(socket, attr, metadata[key])
+
+    return socket
+
+
 def build_graph_from_json(
     obj_name,
     modifier_name,
