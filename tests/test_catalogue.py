@@ -64,6 +64,40 @@ def test_find_nodes_by_keyword(toolkit):
     assert any("Switch" in (m.get("label") or "") for m in matches)
 
 
+def test_find_nodes_by_alias_scatter(toolkit):
+    """Keyword search should find nodes via aliases."""
+    matches = toolkit["find_nodes_by_keyword"]("scatter")
+    identifiers = [m.get("identifier") for m in matches]
+    # "scatter" is an alias for DistributePointsOnFaces
+    assert "GeometryNodeDistributePointsOnFaces" in identifiers
+
+
+def test_find_nodes_by_alias_loop(toolkit):
+    """Keyword search should find repeat nodes via 'loop' alias."""
+    matches = toolkit["find_nodes_by_keyword"]("loop")
+    identifiers = [m.get("identifier") for m in matches]
+    # "loop" is an alias for Repeat nodes
+    assert "GeometryNodeRepeatInput" in identifiers
+
+
+def test_find_nodes_by_native_term_still_works(toolkit):
+    """Keyword search should still work with native terms (not aliases)."""
+    matches = toolkit["find_nodes_by_keyword"]("mesh")
+    assert len(matches) > 0
+    # Should find mesh-related nodes
+    assert any("Mesh" in (m.get("label") or "") for m in matches)
+
+
+def test_load_node_aliases(toolkit):
+    """Node aliases should load from the reference file."""
+    aliases = toolkit["load_node_aliases"]()
+    assert isinstance(aliases, dict)
+    assert len(aliases) > 0
+    # Should have scatter alias
+    assert "GeometryNodeDistributePointsOnFaces" in aliases
+    assert "scatter" in aliases["GeometryNodeDistributePointsOnFaces"]
+
+
 def test_socket_compat_loads(toolkit):
     compat = toolkit["load_socket_compatibility"]()
     assert isinstance(compat, set)

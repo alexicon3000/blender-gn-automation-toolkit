@@ -54,6 +54,7 @@ merge_existing=True, remove_extras=True)` to diff and merge by node ID.
 - **Complete catalogue:** `reference/geometry_nodes_complete_5_0.json`
 - **Minimal catalogue:** `reference/geometry_nodes_min_5_0.json`
 - **Socket compatibility:** `reference/socket_compat_5_0.csv`
+- **Manual metadata extras:** `reference/node_metadata_extras.json` (descriptions scraped from the Blender manual to fill gaps in the catalogue)
 
 
 ## Documentation
@@ -69,6 +70,7 @@ merge_existing=True, remove_extras=True)` to diff and merge by node ID.
 - `reference/` – Node catalogues (4.4, 5.0) and socket compatibility CSVs.
   To generate catalogues for other Blender versions, run
   `GeoNodes_Exporter_Complete.py` inside the target Blender.
+  To refresh manual metadata, run `python scripts/extract_manual_metadata.py` after updating the `_archive/blender-manual-gn` checkout.
 - `scripts/` – Smoke tests and utility scripts.
 - `_archive/` – Legacy assets (ignored by git).
 

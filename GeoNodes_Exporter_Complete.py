@@ -96,6 +96,66 @@ def extract_socket_info_from_node(node):
     }
 
 
+def extract_node_properties(node):
+    """Extract enum/dropdown properties from a node.
+
+    Returns a dict mapping property name to property info including:
+    - type: 'enum' for enum properties
+    - options: list of valid option identifiers
+    - default: the default value
+    - description: property description if available
+    """
+    props = {}
+
+    # Skip these internal/visual properties that aren't useful for graph building
+    skip_props = {
+        'bl_idname', 'bl_label', 'bl_description', 'bl_icon', 'bl_width_default',
+        'bl_width_min', 'bl_width_max', 'bl_height_default', 'bl_height_min',
+        'bl_height_max', 'bl_static_type', 'color', 'height', 'hide', 'label',
+        'location', 'mute', 'name', 'parent', 'select', 'show_options',
+        'show_preview', 'show_texture', 'type', 'use_custom_color', 'width',
+        'width_hidden', 'dimensions', 'internal_links', 'inputs', 'outputs',
+        'rna_type', 'is_active_output', 'target', 'is_registered_node_type',
+    }
+
+    if not hasattr(node, 'bl_rna'):
+        return props
+
+    for prop in node.bl_rna.properties:
+        prop_name = prop.identifier
+
+        # Skip internal/visual properties
+        if prop_name in skip_props or prop_name.startswith('bl_'):
+            continue
+
+        # Only extract ENUM type properties (dropdowns)
+        if prop.type == 'ENUM':
+            try:
+                enum_items = prop.enum_items
+                options = [item.identifier for item in enum_items]
+
+                if options:  # Only include if there are actual options
+                    prop_info = {
+                        "type": "enum",
+                        "options": options,
+                    }
+
+                    # Add default if available
+                    if hasattr(prop, 'default') and prop.default:
+                        prop_info["default"] = prop.default
+
+                    # Add description if available
+                    if prop.description:
+                        prop_info["description"] = prop.description
+
+                    props[prop_name] = prop_info
+            except Exception:
+                # Some properties may not have accessible enum_items
+                pass
+
+    return props
+
+
 def instantiate_node(cls_name):
     """Instantiate a node in a temporary GeometryNodeTree and return (node, tree)."""
     nt = bpy.data.node_groups.new("_GN_MCP_EXPORT_", "GeometryNodeTree")
@@ -141,6 +201,11 @@ def extract_node_spec(cls_name, skipped_nodes):
         # Add bl_description if available (tooltip)
         if hasattr(node, 'bl_description') and node.bl_description:
             spec["description"] = node.bl_description
+
+        # Extract enum properties (dropdowns like data_type, operation, etc.)
+        props = extract_node_properties(node)
+        if props:
+            spec["properties"] = props
 
         return spec
     except Exception as e:

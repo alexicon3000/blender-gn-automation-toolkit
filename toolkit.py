@@ -89,6 +89,8 @@ _NODE_CATALOGUE_MIN_SOURCE = None
 _SOCKET_COMPAT = None
 _SOCKET_COMPAT_SOURCE = None
 _MERMAID_TYPE_MAP = None
+_NODE_ALIASES = None
+_NODE_ALIASES_SOURCE = None
 
 def get_blender_version():
     """Return Blender version tuple and string."""
@@ -236,6 +238,47 @@ def get_socket_spec(node_type, socket_name, is_output=True):
     return None
 
 
+def load_node_aliases(path=None, force_reload=False):
+    """Load node alias mappings for improved keyword search.
+
+    Returns a dict mapping node identifier -> list of aliases.
+    """
+    global _NODE_ALIASES, _NODE_ALIASES_SOURCE
+
+    if _NODE_ALIASES is not None and not force_reload and not path:
+        return _NODE_ALIASES
+
+    # Determine path
+    if path:
+        resolved = path
+    else:
+        # Check env var first
+        env_path = os.environ.get("GN_MCP_ALIASES_PATH")
+        if env_path:
+            resolved = env_path
+        else:
+            # Default: look in reference/ directory
+            resolved = os.path.join(_REFERENCE_DIR, "node_aliases.json")
+
+    if not os.path.exists(resolved):
+        _NODE_ALIASES = {}
+        _NODE_ALIASES_SOURCE = None
+        return _NODE_ALIASES
+
+    try:
+        with open(resolved, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        # Filter out metadata keys like "_comment"
+        _NODE_ALIASES = {k: v for k, v in data.items() if not k.startswith("_")}
+        _NODE_ALIASES_SOURCE = resolved
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"[load_node_aliases] Failed to load {resolved}: {e}")
+        _NODE_ALIASES = {}
+        _NODE_ALIASES_SOURCE = None
+
+    return _NODE_ALIASES
+
+
 def get_node_metadata(node_type):
     """Return high-level metadata (label/category/description) for a node."""
     spec = get_node_spec(node_type)
@@ -251,24 +294,34 @@ def get_node_metadata(node_type):
 
 
 def find_nodes_by_keyword(keyword, limit=10):
-    """Search catalogue labels/descriptions for a keyword (case-insensitive)."""
+    """Search catalogue labels/descriptions/aliases for a keyword (case-insensitive).
+
+    Searches node identifiers, labels, categories, descriptions, and any
+    aliases defined in reference/node_aliases.json.
+    """
     if not keyword:
         return []
 
     keyword = keyword.lower()
     matches = []
+    aliases = load_node_aliases()
 
     for spec in load_node_catalogue():
+        identifier = spec.get("identifier", "")
         haystack_parts = [
-            spec.get("identifier", ""),
+            identifier,
             spec.get("label", ""),
             spec.get("category", ""),
             spec.get("description", ""),
         ]
+        # Add aliases for this node to the searchable text
+        node_aliases = aliases.get(identifier, [])
+        haystack_parts.extend(node_aliases)
+
         haystack = " ".join(part for part in haystack_parts if part).lower()
         if keyword in haystack:
             matches.append({
-                "identifier": spec.get("identifier"),
+                "identifier": identifier,
                 "label": spec.get("label"),
                 "category": spec.get("category"),
                 "description": spec.get("description"),

@@ -1,0 +1,151 @@
+{
+  "_comment": "Maps node identifiers to searchable aliases. Used by find_nodes_by_keyword() to improve search results.",
+
+  "GeometryNodeDistributePointsOnFaces": ["scatter", "scatter points", "random points", "sprinkle", "distribute on surface"],
+  "GeometryNodeDistributePointsInVolume": ["scatter in volume", "fill volume with points"],
+  "GeometryNodeDistributePointsInGrid": ["grid points", "uniform points"],
+
+  "GeometryNodeInstanceOnPoints": ["instance", "place objects", "scatter objects", "duplicate at points", "copy to points"],
+  "GeometryNodeRealizeInstances": ["make real", "apply instances", "convert instances"],
+  "GeometryNodeGeometryToInstance": ["make instance", "convert to instance"],
+  "GeometryNodeInstancesToPoints": ["instance origins", "instance centers"],
+
+  "GeometryNodeMeshToPoints": ["vertices to points", "mesh points", "extract vertices"],
+  "GeometryNodePointsToVertices": ["points to mesh", "convert points"],
+  "GeometryNodeCurveToPoints": ["curve points", "sample curve points"],
+  "GeometryNodePointsToCurves": ["connect points", "points to curve"],
+
+  "GeometryNodeFlipFaces": ["flip normals", "reverse faces", "invert normals", "reverse normals"],
+  "GeometryNodeSetShadeSmooth": ["smooth shading", "flat shading", "auto smooth"],
+
+  "GeometryNodeRepeatInput": ["loop start", "for loop", "iterate", "repeat zone"],
+  "GeometryNodeRepeatOutput": ["loop end", "end loop", "repeat zone end"],
+  "GeometryNodeForeachGeometryElementInput": ["foreach", "for each", "element loop"],
+  "GeometryNodeForeachGeometryElementOutput": ["foreach end", "for each end"],
+  "GeometryNodeSimulationInput": ["simulation zone", "physics", "sim start"],
+  "GeometryNodeSimulationOutput": ["simulation end", "sim end"],
+
+  "GeometryNodeInputNamedAttribute": ["get attribute", "read attribute", "attribute input"],
+  "GeometryNodeStoreNamedAttribute": ["set attribute", "write attribute", "save attribute", "store attribute"],
+  "GeometryNodeCaptureAttribute": ["capture field", "store field value"],
+  "GeometryNodeRemoveAttribute": ["delete attribute", "clear attribute"],
+
+  "GeometryNodeExtrudeMesh": ["extrude", "push faces", "extrude faces"],
+  "GeometryNodeSubdivideMesh": ["subdivide", "add detail", "increase resolution"],
+  "GeometryNodeSubdivisionSurface": ["subsurf", "catmull clark", "smooth subdivide"],
+  "GeometryNodeTriangulate": ["triangulate", "convert to tris", "make triangles"],
+  "GeometryNodeDualMesh": ["dual", "voronoi mesh"],
+
+  "GeometryNodeMeshBoolean": ["boolean", "union", "difference", "intersect", "subtract", "combine meshes"],
+  "GeometryNodeConvexHull": ["hull", "shrinkwrap", "convex"],
+  "GeometryNodeMergeByDistance": ["remove doubles", "weld", "merge vertices", "cleanup"],
+
+  "GeometryNodeJoinGeometry": ["join", "combine", "merge geometry"],
+  "GeometryNodeSeparateGeometry": ["split", "separate by selection"],
+  "GeometryNodeDeleteGeometry": ["delete", "remove geometry"],
+  "GeometryNodeDuplicateElements": ["duplicate", "copy elements", "array"],
+
+  "GeometryNodeTransform": ["transform", "move", "rotate", "scale geometry"],
+  "GeometryNodeSetPosition": ["move vertices", "offset positions", "displace"],
+  "GeometryNodeScaleElements": ["scale faces", "scale edges", "inset"],
+
+  "GeometryNodeRotateInstances": ["rotate copies", "spin instances"],
+  "GeometryNodeScaleInstances": ["resize instances", "scale copies"],
+  "GeometryNodeTranslateInstances": ["move instances", "offset instances"],
+
+  "GeometryNodeMeshCube": ["box", "cube mesh"],
+  "GeometryNodeMeshCylinder": ["tube", "pipe", "cylinder mesh"],
+  "GeometryNodeMeshCone": ["cone mesh", "pyramid"],
+  "GeometryNodeMeshIcoSphere": ["icosphere", "geodesic sphere"],
+  "GeometryNodeMeshUVSphere": ["sphere", "uv sphere", "ball"],
+  "GeometryNodeMeshGrid": ["plane", "grid mesh", "flat mesh"],
+  "GeometryNodeMeshCircle": ["circle mesh", "disc", "disk", "ngon"],
+  "GeometryNodeMeshLine": ["line mesh", "edge"],
+
+  "GeometryNodeCurvePrimitiveCircle": ["circle curve", "round curve"],
+  "GeometryNodeCurvePrimitiveLine": ["line curve", "straight curve"],
+  "GeometryNodeCurvePrimitiveBezierSegment": ["bezier", "bezier curve"],
+  "GeometryNodeCurveQuadraticBezier": ["quadratic bezier", "parabola"],
+  "GeometryNodeCurvePrimitiveQuadrilateral": ["quad curve", "rectangle curve"],
+  "GeometryNodeCurveSpiral": ["helix", "spiral curve", "coil"],
+  "GeometryNodeCurveStar": ["star shape", "star curve"],
+  "GeometryNodeCurveArc": ["arc curve", "circular arc"],
+
+  "GeometryNodeCurveToMesh": ["curve to mesh", "sweep", "extrude curve"],
+  "GeometryNodeMeshToCurve": ["mesh to curve", "extract edges as curves"],
+  "GeometryNodeFillCurve": ["fill curve", "cap curve", "close curve"],
+  "GeometryNodeFilletCurve": ["round corners", "bevel curve", "fillet"],
+  "GeometryNodeResampleCurve": ["resample", "redistribute points"],
+  "GeometryNodeReverseCurve": ["reverse direction", "flip curve"],
+  "GeometryNodeTrimCurve": ["trim", "cut curve", "shorten curve"],
+  "GeometryNodeSubdivideCurve": ["smooth curve", "add curve points"],
+
+  "FunctionNodeRandomValue": ["random", "noise", "randomize", "jitter"],
+  "ShaderNodeMath": ["math", "add", "subtract", "multiply", "divide", "power", "sqrt", "sin", "cos"],
+  "ShaderNodeVectorMath": ["vector math", "normalize", "cross product", "dot product", "length"],
+  "FunctionNodeBooleanMath": ["and", "or", "not", "boolean logic"],
+  "FunctionNodeIntegerMath": ["integer math", "modulo", "int division"],
+  "FunctionNodeCompare": ["compare", "greater than", "less than", "equal"],
+
+  "ShaderNodeMix": ["mix", "blend", "lerp", "interpolate"],
+  "ShaderNodeMapRange": ["remap", "map range", "normalize range", "rescale"],
+  "ShaderNodeClamp": ["clamp", "limit", "constrain"],
+
+  "ShaderNodeSeparateXYZ": ["split vector", "get xyz", "extract components"],
+  "ShaderNodeCombineXYZ": ["make vector", "combine xyz", "vector from components"],
+  "FunctionNodeSeparateColor": ["split color", "rgb components"],
+  "FunctionNodeCombineColor": ["make color", "rgb to color"],
+
+  "GeometryNodeSwitch": ["if", "conditional", "switch", "choose"],
+  "GeometryNodeIndexSwitch": ["index switch", "select by index"],
+  "GeometryNodeMenuSwitch": ["menu", "dropdown", "enum switch"],
+
+  "GeometryNodeInputPosition": ["position", "coordinates", "xyz"],
+  "GeometryNodeInputNormal": ["normal", "face normal", "surface normal"],
+  "GeometryNodeInputIndex": ["index", "element index", "point index"],
+  "GeometryNodeInputID": ["id", "stable index"],
+  "GeometryNodeInputRadius": ["radius", "point size"],
+
+  "GeometryNodeRaycast": ["raycast", "ray trace", "hit test", "collision"],
+  "GeometryNodeProximity": ["proximity", "closest point", "nearest", "distance to"],
+  "GeometryNodeSampleNearest": ["nearest sample", "closest sample"],
+  "GeometryNodeSampleNearestSurface": ["surface sample", "project to surface"],
+  "GeometryNodeSampleCurve": ["sample along curve", "curve position"],
+  "GeometryNodeSampleIndex": ["lookup", "get by index"],
+
+  "GeometryNodeFieldAtIndex": ["evaluate at index", "field lookup"],
+  "GeometryNodeFieldOnDomain": ["interpolate", "transfer attribute", "domain transfer"],
+
+  "GeometryNodeAccumulateField": ["running total", "cumulative sum", "prefix sum"],
+  "GeometryNodeFieldAverage": ["average", "mean"],
+  "GeometryNodeFieldMinAndMax": ["min max", "bounds", "range"],
+
+  "GeometryNodeViewer": ["debug", "inspect", "view", "visualize"],
+  "GeometryNodeWarning": ["error", "alert", "message"],
+
+  "GeometryNodeSetMaterial": ["assign material", "apply material"],
+  "GeometryNodeReplaceMaterial": ["swap material", "change material"],
+  "GeometryNodeMaterialSelection": ["select by material", "material mask"],
+
+  "GeometryNodeStringToCurves": ["text", "font", "text to mesh", "typography"],
+  "FunctionNodeFormatString": ["format text", "string template", "printf"],
+  "FunctionNodeStringLength": ["text length", "character count"],
+  "GeometryNodeStringJoin": ["concatenate", "combine strings"],
+  "FunctionNodeReplaceString": ["find replace", "substitute"],
+
+  "GeometryNodeBoundBox": ["bounding box", "bounds", "extents", "aabb"],
+  "GeometryNodeObjectInfo": ["object transform", "object location", "object data"],
+  "GeometryNodeCollectionInfo": ["collection objects", "collection instances"],
+  "GeometryNodeSelfObject": ["this object", "current object"],
+
+  "GeometryNodeImageTexture": ["texture", "image sample", "uv map"],
+  "ShaderNodeValToRGB": ["color ramp", "gradient", "color map"],
+
+  "FunctionNodeRotateVector": ["rotate point", "spin vector"],
+  "FunctionNodeAlignRotationToVector": ["look at", "aim", "point towards"],
+  "FunctionNodeAlignEulerToVector": ["align euler", "orient"],
+
+  "GeometryNodeSplitEdges": ["sharp edges", "edge split", "hard edges"],
+  "GeometryNodeEdgePathsToCurves": ["edge path", "shortest path curve"],
+  "GeometryNodeShortestEdgePaths": ["shortest path", "pathfinding", "dijkstra"]
+}
