@@ -759,11 +759,14 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
     Returns:
         Dict with 'nodes', 'links', 'node_settings', and optionally 'positions':
         {
-            "nodes": [{"id": "Grid", "type": "GeometryNodeMeshGrid"}, ...],
-            "links": [{"from": "Grid", "from_socket": "Mesh", "to": "ToPoints", "to_socket": "Mesh"}, ...],
-            "node_settings": {"Grid": {"Vertices X": 10, "Vertices Y": 10}, ...},
-            "positions": {"Grid": [0, 0], "ToPoints": [200, 0], ...}  # if include_positions=True
+            "nodes": [{"id": "grid", "type": "GeometryNodeMeshGrid", "label": "Grid"}, ...],
+            "links": [{"from": "grid", "from_socket": "Mesh", "to": "to_points", "to_socket": "Mesh"}, ...],
+            "node_settings": {"grid": {"Vertices X": 10, "Vertices Y": 10}, ...},
+            "positions": {"grid": [0, 0], "to_points": [200, 0], ...}  # if include_positions=True
         }
+
+        The 'label' field shows what the user sees in Blender's UI, while 'id' is
+        the programmatic handle used for links and settings.
     """
     result = {
         "nodes": [],
@@ -786,9 +789,14 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
         if node.bl_idname == "NodeGroupOutput":
             continue
 
+        # Get the display label: node.label if set, else node.name (Blender's UI name)
+        # This helps LLMs understand what the user sees vs the programmatic ID
+        display_label = node.label if node.label else node.name
+
         result["nodes"].append({
             "id": node_id,
             "type": node.bl_idname,
+            "label": display_label,
         })
 
         if include_positions:
@@ -1305,14 +1313,15 @@ def build_graph_from_json(
 
         if merge_existing and node_id in existing_nodes:
             node = existing_nodes[node_id]
-            node.label = node_id
+            # Store ID in custom property for export, but don't touch label
             node[_NODE_ID_PROP] = node_id
             result["nodes"][node_id] = node
             continue
 
         try:
             node = ng.nodes.new(node_type)
-            node.label = node_id
+            # Store ID in custom property for export, but don't touch label
+            # This keeps Blender's natural node names (Grid, Cone, etc.) in the UI
             node[_NODE_ID_PROP] = node_id
 
             # Auto-layout (simple horizontal arrangement)
