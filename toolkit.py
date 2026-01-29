@@ -41,7 +41,11 @@ _SOCKET_COMPAT_ENV_VAR = "GN_MCP_SOCKET_COMPAT_PATH"
 _SOCKET_COMPAT_FILENAME = "socket_compat.csv"
 
 def _detect_catalogue_version():
-    """Auto-detect catalogue version: env var > bpy.app.version > fallback."""
+    """Auto-detect catalogue version: env var > bpy.app.version > newest on disk.
+
+    When running outside Blender (no bpy.app.version), scans reference/ for the
+    newest available catalogue rather than hard-coding a fallback version.
+    """
     env_ver = os.environ.get("GN_MCP_CATALOGUE_VERSION")
     if env_ver:
         return env_ver
@@ -49,7 +53,27 @@ def _detect_catalogue_version():
         v = bpy.app.version
         return f"{v[0]}.{v[1]}"
     except Exception:
-        return "4.4"  # fallback when running outside Blender
+        # Outside Blender: find newest catalogue on disk
+        return _find_newest_catalogue_version() or "5.0"
+
+
+def _find_newest_catalogue_version():
+    """Scan reference/ for catalogue files and return the newest version string."""
+    import re
+    pattern = re.compile(r"geometry_nodes_complete_(\d+)_(\d+)\.json$")
+    newest = None
+    newest_tuple = (0, 0)
+    for base in [_REFERENCE_DIR, _ARCHIVE_REFERENCE_DIR]:
+        if not base or not os.path.isdir(base):
+            continue
+        for fname in os.listdir(base):
+            m = pattern.match(fname)
+            if m:
+                ver_tuple = (int(m.group(1)), int(m.group(2)))
+                if ver_tuple > newest_tuple:
+                    newest_tuple = ver_tuple
+                    newest = f"{m.group(1)}.{m.group(2)}"
+    return newest
 
 CATALOGUE_VERSION = _detect_catalogue_version()
 _DEFAULT_COMPLETE_NAME = f"geometry_nodes_complete_{CATALOGUE_VERSION.replace('.', '_')}.json"
@@ -158,8 +182,13 @@ def _read_catalogue_file(resolved_path):
 
 
 def load_node_catalogue(path=None, prefer_complete=True, force_reload=False):
-    """Load node catalogue JSON (complete or minimal) and cache the result."""
+    """Load node catalogue JSON (complete or minimal) and cache the result.
+
+    When a different catalogue is loaded (or force_reload=True), dependent caches
+    like _MERMAID_TYPE_MAP are invalidated so they rebuild from the new data.
+    """
     global _NODE_CATALOGUE, _NODE_CATALOGUE_INDEX, _NODE_CATALOGUE_SOURCE
+    global _MERMAID_TYPE_MAP
 
     if _NODE_CATALOGUE and not force_reload and not path:
         return _NODE_CATALOGUE
@@ -170,6 +199,10 @@ def load_node_catalogue(path=None, prefer_complete=True, force_reload=False):
             "Could not locate geometry node catalogue. Set GN_MCP_CATALOGUE_PATH or "
             "place geometry_nodes_complete/min files next to toolkit.py."
         )
+
+    # Invalidate dependent caches when catalogue changes
+    if resolved != _NODE_CATALOGUE_SOURCE:
+        _MERMAID_TYPE_MAP = None
 
     nodes, index = _read_catalogue_file(resolved)
 

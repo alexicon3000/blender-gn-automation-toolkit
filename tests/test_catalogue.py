@@ -96,3 +96,25 @@ def test_catalogue_source_is_set(toolkit):
     source = toolkit["get_catalogue_source"]()
     assert source is not None
     assert "geometry_nodes_complete" in source
+
+
+def test_mermaid_type_map_invalidated_on_catalogue_reload(toolkit):
+    """Verify _MERMAID_TYPE_MAP is cleared when catalogue is reloaded."""
+    from pathlib import Path
+
+    # Build the type map with 5.0 catalogue
+    toolkit["_build_mermaid_type_map"]()
+    assert toolkit["_MERMAID_TYPE_MAP"] is not None
+
+    # Reload with 4.4 catalogue
+    cat_44 = Path(__file__).parent.parent / "reference" / "geometry_nodes_complete_4_4.json"
+    if cat_44.exists():
+        toolkit["load_node_catalogue"](path=str(cat_44), force_reload=True)
+        # Cache should be invalidated
+        assert toolkit["_MERMAID_TYPE_MAP"] is None
+
+        # Rebuild and verify it uses 4.4 data
+        new_map = toolkit["_build_mermaid_type_map"]()
+        assert new_map is not None
+        # 4.4 catalogue has fewer nodes than 5.0
+        assert len(new_map) < 742  # 5.0 has 742 entries

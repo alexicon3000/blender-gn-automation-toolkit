@@ -105,7 +105,7 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 pytest tests/ -v
 ```
 
-68 tests cover catalogue loading, preflight validation, Mermaid parsing, and diff/merge logic — all via bpy mocks.
+69 tests cover catalogue loading, preflight validation, Mermaid parsing, and diff/merge logic — all via bpy mocks.
 
 ### Smoke Tests (in Blender)
 

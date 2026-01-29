@@ -56,23 +56,55 @@ def _load_toolkit(catalogue_version="5.0"):
     return ns
 
 
+def _reset_toolkit_caches(ns):
+    """Reset all module-level caches in the toolkit namespace."""
+    ns["_NODE_CATALOGUE"] = None
+    ns["_NODE_CATALOGUE_INDEX"] = {}
+    ns["_NODE_CATALOGUE_SOURCE"] = None
+    ns["_NODE_CATALOGUE_MIN"] = None
+    ns["_NODE_CATALOGUE_MIN_INDEX"] = {}
+    ns["_NODE_CATALOGUE_MIN_SOURCE"] = None
+    ns["_SOCKET_COMPAT"] = None
+    ns["_SOCKET_COMPAT_SOURCE"] = None
+    ns["_MERMAID_TYPE_MAP"] = None
+
+
 # Install mocks once at import time so toolkit exec works
 _install_bpy_mock()
 _install_mathutils_mock()
 
+# Load toolkit once at module level
+_TOOLKIT_NS = None
 
-@pytest.fixture(scope="session")
+
+def _get_toolkit():
+    global _TOOLKIT_NS
+    if _TOOLKIT_NS is None:
+        _TOOLKIT_NS = _load_toolkit("5.0")
+    return _TOOLKIT_NS
+
+
+@pytest.fixture
 def toolkit():
-    """Return the toolkit namespace (loaded once per session)."""
-    return _load_toolkit("5.0")
+    """Return the toolkit namespace with caches reset for test isolation.
+
+    Each test gets a clean slate — caches are cleared before the test runs,
+    ensuring no cross-test pollution from catalogue reloads or type map builds.
+    """
+    ns = _get_toolkit()
+    _reset_toolkit_caches(ns)
+    # Pre-load the 5.0 catalogue so tests start with expected state
+    cat_path = REFERENCE_DIR / "geometry_nodes_complete_5_0.json"
+    if cat_path.exists():
+        ns["load_node_catalogue"](path=str(cat_path), force_reload=True)
+    return ns
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def toolkit_44():
     """Return the toolkit namespace loaded with the 4.4 catalogue."""
-    # Reset cached catalogue so it re-loads
-    ns = _load_toolkit("5.0")
-    # Force reload with 4.4
+    ns = _get_toolkit()
+    _reset_toolkit_caches(ns)
     cat_path = REFERENCE_DIR / "geometry_nodes_complete_4_4.json"
     if cat_path.exists():
         ns["load_node_catalogue"](path=str(cat_path), force_reload=True)
