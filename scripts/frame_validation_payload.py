@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import textwrap
@@ -64,7 +65,14 @@ NODE_SETTINGS = {
     "instance": {"Scale": [0.5, 0.5, 0.5]},
 }
 
-SESSION_NOTES = REPO_ROOT / "_archive" / "session_notes_20260129.md"
+def _get_session_notes_path() -> Path:
+    """Get session notes path from env var or default to today's date."""
+    env_path = os.environ.get("MCP_SESSION_NOTES")
+    if env_path:
+        return Path(env_path)
+    today = datetime.now().strftime("%Y%m%d")
+    return REPO_ROOT / "_archive" / f"session_notes_{today}.md"
+
 DEFAULT_ALIAS = "blender"
 
 
@@ -272,16 +280,30 @@ _payload_log(f"[export] SUMMARY -> {summary}")
     return code
 
 
-def update_session_notes(screenshot_rel: str) -> None:
+def update_session_notes(screenshot_rel: str, session_notes_path: Path | None = None) -> None:
+    """Append a log entry to the session notes file.
+
+    Args:
+        screenshot_rel: Relative path to the screenshot file
+        session_notes_path: Optional path override; defaults to _get_session_notes_path()
+    """
+    notes_path = session_notes_path or _get_session_notes_path()
     entry = f"- Automated MCP frame validation via script ({screenshot_rel})."
-    lines = SESSION_NOTES.read_text().splitlines()
+
+    if not notes_path.exists():
+        # Create new session notes file with basic structure
+        notes_path.parent.mkdir(parents=True, exist_ok=True)
+        notes_path.write_text(f"# Session Notes — {datetime.now().strftime('%Y-%m-%d')}\n\n## Key Actions\n{entry}\n\n## Pending / Next Steps\n")
+        return
+
+    lines = notes_path.read_text().splitlines()
     for idx, line in enumerate(lines):
         if line.strip().startswith("## Pending"):
             lines.insert(idx, entry)
             break
     else:
         lines.append(entry)
-    SESSION_NOTES.write_text("\n".join(lines) + "\n")
+    notes_path.write_text("\n".join(lines) + "\n")
 
 
 def main(argv: List[str] | None = None) -> int:

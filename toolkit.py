@@ -1309,8 +1309,8 @@ def _create_frame(node_group, frame_spec, node_map):
         for node in contained_nodes:
             try:
                 node.parent = frame
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[_create_frame] Could not parent {getattr(node, 'name', 'unknown')}: {e}")
     else:
         # Default placement when no nodes listed yet
         frame.location = (0.0, 0.0)
@@ -1362,11 +1362,17 @@ def _apply_frames(node_group, node_map, frames_spec, errors):
     if not frames_spec:
         return
 
+    # Check for duplicate frame IDs
+    seen_ids = set()
     for frame_spec in frames_spec:
+        frame_id = frame_spec.get("id", "frame")
+        if frame_id in seen_ids:
+            errors.append(f"Duplicate frame ID '{frame_id}' - skipping duplicate")
+            continue
+        seen_ids.add(frame_id)
         try:
             _create_frame(node_group, frame_spec, node_map)
         except Exception as e:
-            frame_id = frame_spec.get("id", "unknown")
             errors.append(f"Failed to create frame '{frame_id}': {e}")
 
 
