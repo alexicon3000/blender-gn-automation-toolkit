@@ -143,11 +143,11 @@ If crashes persist after restart:
   3. Retry the capture
   4. Fallback: `bpy.ops.screen.screenshot(filepath=path, full=False)`
 
-### Socket Names
+### Socket Names & Node IDs
 
-- **Always use names, not indices:** `node.inputs["Geometry"]` not `node.inputs[0]`
-- Socket names vary by Blender version — the catalogue is the source of truth
-- Use `FunctionNode*` for math nodes in geometry node trees, never `ShaderNode*`
+- **Always use names, not indices:** `node.inputs["Geometry"]` not `node.inputs[0]`.
+- Socket names vary by Blender version — resolve them with `scripts/query_node_metadata.py` instead of grepping the catalogue.
+- Blender 5.x exposes many math/utility helpers as **`ShaderNode*`** even inside Geometry Nodes (Combine/Separate/Math, Noise Texture, etc.). Trust the metadata CLI/alias map when it tells you the identifier; do **not** try to force a `FunctionNode*` name that doesn’t exist.
 
 ---
 

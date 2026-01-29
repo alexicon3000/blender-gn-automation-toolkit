@@ -313,8 +313,7 @@ socket_compat.csv                       # Legacy socket compatibility matrix
 6. Run validation smoke tests via Blender MCP (Mermaid → graph_json → build →
    `full_geo_nodes_validation`) to verify socket checks and catalogue loaders.
 7. Catalogue cleanup: mark/remove nodes that fail instantiation in GN context
-   (e.g., FunctionNodeCombineXYZ in Blender 5.0) and document allowed Shader
-   node fallbacks.
+   (e.g., ShaderNodeCombineXYZ shows up in GN even though it lives under the shader prefix). Document the short allowlist of Shader nodes and point agents to the metadata CLI instead of grepping the catalogue.
 8. Add interface-socket support (describe Group Input/Output sockets in
    graph_json so modifier parameters can be added automatically).
 9. Sanitise builder results for JSON output and clarify field vs non-field

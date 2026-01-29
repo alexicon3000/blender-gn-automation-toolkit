@@ -7,6 +7,7 @@ Produce a validated frame graph via MCP (screenshot + log) and capture the curre
 
 1. Launch Blender via `./blender-launcher.sh` (or the configured wrapper) so the sandbox scene and MCP add-on reload.
 2. In Blender’s scripting console, run `exec(open("/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP/toolkit.py").read())` to load the toolkit.
+   - Resolve node identifiers/sockets via `python3 scripts/query_node_metadata.py --node "<label>"` (or `--search <term>`). This CLI + alias map is authoritative; **do not** scan `reference/geometry_nodes_complete_*.json` manually.
 3. Run the frame validation payload in incremental mode:
    ```bash
    python3 scripts/frame_validation_payload.py --alias <your-mcp-alias>

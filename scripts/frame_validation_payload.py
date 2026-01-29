@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import subprocess
@@ -12,7 +13,7 @@ import textwrap
 from datetime import datetime
 from pathlib import Path
 from string import Template
-from typing import Iterable, List, Tuple
+from typing import List, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COLLECTION = "MCP_Frame_Test"
@@ -20,7 +21,7 @@ OBJECT_NAME = "MCP_Frame_Object"
 MODIFIER_NAME = "MCP_Frame_Mod"
 OBJECT_Z_OFFSET = 0.5
 
-GRAPH_JSON = {
+DEFAULT_GRAPH_JSON = {
     "nodes": [
         {"id": "grid", "type": "GeometryNodeMeshGrid"},
         {"id": "distribute", "type": "GeometryNodeDistributePointsOnFaces"},
@@ -37,7 +38,7 @@ GRAPH_JSON = {
     ],
 }
 
-FRAME_SPECS = [
+DEFAULT_FRAME_SPECS = [
     {
         "id": "emit_points",
         "label": "Emit Points",
@@ -55,15 +56,19 @@ FRAME_SPECS = [
     },
 ]
 
-# Apply node inputs after the initial build. Setting GeometryNodeDistributePointsOnFaces
-# values inside graph_json was crashing Blender 5.0.1, so we tweak inputs in a separate
-# MCP call instead.
-NODE_SETTINGS = {
+# Apply node inputs after the initial build. Setting
+# GeometryNodeDistributePointsOnFaces values inside graph_json was crashing
+# Blender 5.0.1, so we tweak inputs in a separate MCP call instead.
+DEFAULT_NODE_SETTINGS = {
     "grid": {"Vertices X": 32, "Vertices Y": 32, "Size X": 4.0, "Size Y": 4.0},
     "distribute": {"Density Max": 5.0},
     "cube": {"Size": 0.3},
     "instance": {"Scale": [0.5, 0.5, 0.5]},
 }
+
+GRAPH_JSON = copy.deepcopy(DEFAULT_GRAPH_JSON)
+FRAME_SPECS = copy.deepcopy(DEFAULT_FRAME_SPECS)
+NODE_SETTINGS = copy.deepcopy(DEFAULT_NODE_SETTINGS)
 
 def _get_session_notes_path() -> Path:
     """Get session notes path from env var or default to today's date."""
@@ -74,6 +79,37 @@ def _get_session_notes_path() -> Path:
     return REPO_ROOT / "_archive" / f"session_notes_{today}.md"
 
 DEFAULT_ALIAS = "blender"
+
+
+def _load_graph_spec(path: Path) -> Tuple[dict, List[dict] | None]:
+    data = json.loads(path.read_text())
+    if not isinstance(data, dict):
+        raise SystemExit(f"Graph spec at {path} must be a JSON object")
+    graph_json = data.get("graph_json", data)
+    if not isinstance(graph_json, dict):
+        raise SystemExit(f"graph_json at {path} must be an object")
+    frames = graph_json.get("frames")
+    if frames is not None and not isinstance(frames, list):
+        raise SystemExit(f"frames inside {path} must be a list if provided")
+    return graph_json, frames
+
+
+def configure_payload(
+    graph_json: dict,
+    *,
+    frame_specs: List[dict] | None = None,
+    node_settings: dict | None = None,
+) -> None:
+    """Update module-level payload data for subsequent MCP calls."""
+
+    global GRAPH_JSON, FRAME_SPECS, NODE_SETTINGS
+    GRAPH_JSON = copy.deepcopy(graph_json)
+    FRAME_SPECS = copy.deepcopy(
+        frame_specs if frame_specs is not None else DEFAULT_FRAME_SPECS
+    )
+    NODE_SETTINGS = copy.deepcopy(
+        node_settings if node_settings is not None else DEFAULT_NODE_SETTINGS
+    )
 
 
 def run_mcp(code: str, label: str, alias: str) -> None:
@@ -310,24 +346,66 @@ def main(argv: List[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--alias", default=DEFAULT_ALIAS, help="MCP alias to use")
     parser.add_argument("--skip-log", action="store_true", help="Skip session note update")
+    parser.add_argument(
+        "--graph-json-path",
+        help="Path to a JSON file containing graph_json (or {\"graph_json\": {...}}).",
+    )
+    parser.add_argument(
+        "--node-settings-path",
+        help="Optional JSON file with post-build node settings overrides.",
+    )
+    parser.add_argument(
+        "--frame-specs-path",
+        help="Optional JSON file containing the frame specs array to apply.",
+    )
+    parser.add_argument(
+        "--keep-default-node-settings",
+        action="store_true",
+        help="Retain the built-in post-build node settings even when --graph-json-path is provided.",
+    )
     args = parser.parse_args(argv)
 
+    graph_json = DEFAULT_GRAPH_JSON
+    frame_specs = DEFAULT_FRAME_SPECS
+    node_settings = DEFAULT_NODE_SETTINGS
+
+    if args.graph_json_path:
+        graph_path = Path(args.graph_json_path)
+        graph_json, frames_from_graph = _load_graph_spec(graph_path)
+        nodes_count = len(graph_json.get("nodes", []))
+        print(f"[config] Loaded graph_json from {graph_path} ({nodes_count} nodes)")
+        frame_specs = frames_from_graph if frames_from_graph is not None else []
+        node_settings = (
+            DEFAULT_NODE_SETTINGS if args.keep_default_node_settings else {}
+        )
+
+    if args.frame_specs_path:
+        frames_override = json.loads(Path(args.frame_specs_path).read_text())
+        if not isinstance(frames_override, list):
+            raise SystemExit("--frame-specs-path must point to a JSON list")
+        frame_specs = frames_override
+
+    if args.node_settings_path:
+        settings_override = json.loads(Path(args.node_settings_path).read_text())
+        if not isinstance(settings_override, dict):
+            raise SystemExit("--node-settings-path must point to a JSON object")
+        node_settings = settings_override
+
+    configure_payload(graph_json, frame_specs=frame_specs, node_settings=node_settings)
+
     screenshot_rel = f"frame_validation_nodes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-    steps: Iterable[Tuple[str, str]] = [("build", build_code())]
+    steps: List[Tuple[str, str]] = [("build", build_code())]
     if NODE_SETTINGS:
-        steps = [
-            *steps,
-            # Do not push node settings into graph_json; adjusting Distribute Points inputs
-            # during the initial build caused Blender 5.0.1 to crash. Instead, tweak inputs
-            # via a dedicated MCP call after the nodes exist.
-            ("node-settings", node_settings_code()),
-        ]
-    steps = [
-        *steps,
-        ("validation", validation_code()),
-        ("frames", frames_code()),
-        ("export", export_code(screenshot_rel)),
-    ]
+        steps.append(
+            (
+                "node-settings",
+                node_settings_code(),
+            )
+        )
+    steps.append(("validation", validation_code()))
+    if FRAME_SPECS:
+        steps.append(("frames", frames_code()))
+    steps.append(("export", export_code(screenshot_rel)))
 
     for label, code in steps:
         run_mcp(code, label, args.alias)

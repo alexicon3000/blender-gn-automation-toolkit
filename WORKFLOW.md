@@ -90,10 +90,7 @@ errors: [ list ]      # empty if GRAPH_OK
   3.  No duplicate node IDs or links.
   4.  Required inputs without defaults get a link or an explicit value.
   5. **Node‑ID correctness**  
-   - When a node lives in the **Geometry** domain, use the *Geometry/Function‑node* idname, **never** the Shader tree equivalent.  
-     •`FunctionNodeFloatMath` instead of `ShaderNodeMath`  
-     •`FunctionNodeVectorMath` instead of `ShaderNodeVectorMath`  
-     •(General rule → prefix `FunctionNode` for math/utility nodes inside Geo‑trees.)
+   - Resolve identifiers with `python3 scripts/query_node_metadata.py --node "<label>"` (or `--search <term>`). Blender 5.x often exposes math/utility helpers as `ShaderNode*` even inside Geometry Nodes (e.g., Math, Combine/Separate, Noise Texture). Use the identifier returned by the metadata CLI/alias map; do **not** invent `FunctionNode*` names that aren’t in the catalogue.
 
   6. **Group Input / Output sockets**  
      - Before linking, add required IO sockets explicitly:  
