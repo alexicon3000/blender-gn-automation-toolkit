@@ -79,7 +79,7 @@ Step 5: capture_node_graph()     → screenshots
 build_graph_from_json(..., node_settings={...})  # May crash!
 ```
 
-See `scripts/frame_validation_payload.py` for the reference implementation.
+See `scripts/frame_validation_payload.py` for the reference implementation. Run `python3 scripts/frame_validation_payload.py` to emit a single payload you can paste into the MCP sidebar’s `execute_blender_code` tool; pass `--mode cli` only if the `uvx blender-mcp` wrapper is working.
 
 ### 4. Validate Connectivity
 
@@ -99,7 +99,7 @@ After successful runs, update session notes:
 
 ```bash
 # Automatic (for frame validation)
-python scripts/frame_validation_payload.py --alias blender
+python3 scripts/frame_validation_payload.py  # copy emitted payload into MCP and run once
 
 # Manual entry in _archive/session_notes_YYYYMMDD.md
 ```
@@ -174,8 +174,11 @@ If crashes persist after restart:
 ### Via CLI
 
 ```bash
-# Frame validation (full pipeline)
-python scripts/frame_validation_payload.py --alias blender
+# Frame validation (emit payload for VS Code)
+python3 scripts/frame_validation_payload.py
+
+# Optional legacy CLI mode (only if the STDIO bridge is healthy)
+python3 scripts/frame_validation_payload.py --mode cli --alias blender
 
 # Capture debugging
 uvx blender-mcp call blender execute_blender_code --params "$(python3 scripts/capture_smoke_test_payload.py)"

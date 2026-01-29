@@ -11,12 +11,12 @@ Produce a validated frame graph via MCP (screenshot + log) and capture the curre
    - Sanity-check MCP is responsive: `uvx blender-mcp call blender get_scene_info` should return the active scene; if it fails, relaunch via `./blender-launcher.sh`.
    - In the VS Code MCP sidebar, you can run the same tools (e.g., `get_scene_info`, `execute_blender_code`). Prefer this UI when the CLI bridge is unstable, since it talks directly to the running MCP server.
 3. Stay in the build loop while constructing the graph: use `add_node`, `auto_link`, and `describe_node_group` to add nodes incrementally and verify the state after each change. Only move to validation once `describe_node_group` reports no warnings.
-4. Run the frame validation payload in incremental mode:
+4. Generate the frame validation payload (default mode prints a single script to paste into VS Code MCP):
    ```bash
-   python3 scripts/frame_validation_payload.py --alias <your-mcp-alias>
+   python3 scripts/frame_validation_payload.py
    ```
-   - This handles build → node-settings → validation → frames → export as separate MCP calls.
-   - The script now prints the `capture_node_graph` path and retries once if the PNG is missing. Treat “Screenshot capture failed” as an error.
+   - Copy the emitted code block into the MCP sidebar’s `execute_blender_code` tool and run it once. It performs build → node-settings → validation → frames → export sequentially and writes the screenshot to `_archive/`.
+   - If you specifically need the old CLI behavior (when the STDIO bridge is healthy), run `python3 scripts/frame_validation_payload.py --mode cli --alias <alias>`.
 5. Confirm a new PNG exists in `_archive/` (e.g., `_archive/frame_validation_nodes_<timestamp>.png`). If it’s missing, run the capture smoke test:
    ```bash
    uvx blender-mcp call <alias> execute_blender_code --params "$(python3 scripts/capture_smoke_test_payload.py)"

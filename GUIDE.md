@@ -311,7 +311,7 @@ Switch Blender builds by editing the one-line `blender_mcp_path.txt` file—no o
 
 ### Frame validation payload
 
-The script at `scripts/frame_validation_payload.py` builds a grid → Distribute Points → Instance graph, applies frames, runs validation, exports frame metadata, and captures a node-graph screenshot via Blender MCP. Run it through `execute_blender_code` when you need a full frame round-trip check. If Blender crashes, follow the agent checklist above, then rerun the payload.
+The script at `scripts/frame_validation_payload.py` now prints a single payload by default. Run `python3 scripts/frame_validation_payload.py`, copy the emitted code into the MCP sidebar’s `execute_blender_code` tool, and execute it once. It builds a grid → Distribute Points → Instance graph, applies frames, runs validation, exports frame metadata, and captures a node-graph screenshot. (Pass `--mode cli` only if the `uvx blender-mcp` bridge is healthy.) If Blender crashes, follow the agent checklist above, then rerun the payload.
 
 Note: node defaults are applied in a separate MCP call after the graph is built (setting Distribute Points inputs inside `graph_json` was crashing Blender 5.0.1), so keep that pattern when extending the payload.
 

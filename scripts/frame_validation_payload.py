@@ -13,7 +13,7 @@ import textwrap
 from datetime import datetime
 from pathlib import Path
 from string import Template
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COLLECTION = "MCP_Frame_Test"
@@ -147,8 +147,8 @@ def dedent_template(template: str, **subs: str) -> str:
     return textwrap.dedent(Template(dedented).substitute(**subs))
 
 
-def build_code() -> str:
-    code = common_preamble()
+def build_code(include_preamble: bool = True) -> str:
+    code = common_preamble() if include_preamble else ""
     code += f"\nGRAPH_JSON = {repr(GRAPH_JSON)}\n"
     code += dedent_template(
         """
@@ -171,8 +171,8 @@ def build_code() -> str:
     return code
 
 
-def node_settings_code() -> str:
-    code = common_preamble()
+def node_settings_code(include_preamble: bool = True) -> str:
+    code = common_preamble() if include_preamble else ""
     code += f"\nNODE_SETTINGS = {repr(NODE_SETTINGS)}\n"
     code += dedent_template(
         """
@@ -202,8 +202,8 @@ def node_settings_code() -> str:
     return code
 
 
-def validation_code() -> str:
-    code = common_preamble()
+def validation_code(include_preamble: bool = True) -> str:
+    code = common_preamble() if include_preamble else ""
     code += dedent_template(
         """
         import bpy
@@ -223,8 +223,8 @@ def validation_code() -> str:
     return code
 
 
-def frames_code() -> str:
-    code = common_preamble()
+def frames_code(include_preamble: bool = True) -> str:
+    code = common_preamble() if include_preamble else ""
     code += f"\nFRAME_SPECS = {repr(FRAME_SPECS)}\n"
     code += dedent_template(
         """
@@ -251,9 +251,9 @@ def frames_code() -> str:
     return code
 
 
-def export_code(screenshot_rel: str) -> str:
+def export_code(screenshot_rel: str, include_preamble: bool = True) -> str:
     screenshot_abs = (REPO_ROOT / "_archive" / screenshot_rel).as_posix()
-    code = common_preamble()
+    code = common_preamble() if include_preamble else ""
     template = Template(
         """
 import bpy
@@ -347,6 +347,12 @@ def main(argv: List[str] | None = None) -> int:
     parser.add_argument("--alias", default=DEFAULT_ALIAS, help="MCP alias to use")
     parser.add_argument("--skip-log", action="store_true", help="Skip session note update")
     parser.add_argument(
+        "--mode",
+        choices=("emit", "cli"),
+        default="emit",
+        help="emit (default) prints a combined payload for VS Code MCP; cli uses 'uvx blender-mcp'",
+    )
+    parser.add_argument(
         "--graph-json-path",
         help="Path to a JSON file containing graph_json (or {\"graph_json\": {...}}).",
     )
@@ -394,33 +400,61 @@ def main(argv: List[str] | None = None) -> int:
     configure_payload(graph_json, frame_specs=frame_specs, node_settings=node_settings)
 
     screenshot_rel = f"frame_validation_nodes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-    steps: List[Tuple[str, str]] = [("build", build_code())]
+
+    def export_builder(include_preamble: bool = True) -> str:
+        return export_code(screenshot_rel, include_preamble=include_preamble)
+
+    StepBuilder = Callable[[bool], str]
+    step_builders: List[Tuple[str, StepBuilder]] = [("build", build_code)]
     if NODE_SETTINGS:
-        steps.append(
-            (
-                "node-settings",
-                node_settings_code(),
-            )
-        )
-    steps.append(("validation", validation_code()))
+        step_builders.append(("node-settings", node_settings_code))
+    step_builders.append(("validation", validation_code))
     if FRAME_SPECS:
-        steps.append(("frames", frames_code()))
-    steps.append(("export", export_code(screenshot_rel)))
+        step_builders.append(("frames", frames_code))
+    step_builders.append(("export", export_builder))
 
-    for label, code in steps:
-        run_mcp(code, label, args.alias)
+    if args.mode == "cli":
+        for label, builder in step_builders:
+            run_mcp(builder(include_preamble=True), label, args.alias)
 
-    screenshot_path = REPO_ROOT / "_archive" / screenshot_rel
-    if not screenshot_path.exists():
-        raise SystemExit(
-            f"Expected screenshot {screenshot_rel} not found; check _archive/frame_validation_payload.log"
-        )
+        screenshot_path = REPO_ROOT / "_archive" / screenshot_rel
+        if not screenshot_path.exists():
+            raise SystemExit(
+                f"Expected screenshot {screenshot_rel} not found; check _archive/frame_validation_payload.log"
+            )
 
-    if not args.skip_log:
-        update_session_notes(screenshot_rel)
-        print(f"[log] Session notes updated with screenshot {screenshot_rel}")
+        if not args.skip_log:
+            update_session_notes(screenshot_rel)
+            print(f"[log] Session notes updated with screenshot {screenshot_rel}")
 
-    print("All steps completed successfully.")
+        print("All steps completed successfully.")
+        return 0
+
+    parts = [common_preamble()]
+    for label, builder in step_builders:
+        parts.append(f"# === Step: {label} ===\n" + builder(include_preamble=False))
+    combined = "\n\n".join(parts)
+
+    instructions = textwrap.dedent(
+        f"""
+        ==================================================================================
+        Paste the payload below into your VS Code MCP 'execute_blender_code' tool (or any
+        working MCP channel) and run once. It performs all steps sequentially:
+          1) Build graph_json
+          2) Apply post-build node settings
+          3) Run validation (no screenshot)
+          4) Apply frames
+          5) Capture screenshot + export data to _archive/{screenshot_rel}
+
+        After it finishes, check _archive/frame_validation_payload.log and the session notes
+        entry. If validation fails, re-enter the incremental build loop, fix issues, and run
+        this payload again.
+        ==================================================================================
+        """
+    ).strip("\n")
+    print(instructions)
+    print()
+    print(combined)
     return 0
 
 
