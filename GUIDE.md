@@ -197,6 +197,26 @@ report = full_graph_report(
 5. **Unchecked defaults:** Audit node parameters after creation
 6. **Mismatched socket names:** Output "Mesh" may go to input "Instance" - use graph_json for precision
 
+## Blender MCP Best Practices
+
+- **Use a disposable Blender profile/session.** Launch MCP runs with a separate config directory or `--factory-startup` so agent actions never touch your production preferences or open projects. Work in temporary `.blend` files or collections that can be deleted safely.
+- **Stage work in a dedicated collection.** Create e.g. `MCP_Frame_Test` and clear it before each run; this keeps agent-created objects separate from hand-authored assets and prevents accidental cleanup of real work.
+- **Split large scripts into small MCP calls.** Load `toolkit.py`, build the graph, run validation, apply frames, and capture screenshots as distinct `execute_blender_code` calls. Long monolithic scripts are far more likely to hang the MCP server or crash Blender.
+- **Keep a persistent `build_result`.** After calling `build_graph_from_json`, store the returned dictionary in the session so later steps (frame application, validation) can reference the same node map. Missing references were a root cause of past crashes.
+- **Validate connectivity before complex steps.** Issue quick `get_scene_info` or `execute_blender_code("print('pong')")` pings between major actions; if they fail, restart Blender before attempting heavier scripts.
+- **Rebuild frames incrementally.** The frame helpers expect the node map from the original build. When testing frames, run: build graph → obtain `result["nodes"]` → call `_apply_frames`. Avoid rebuilding nodes and frames in the same giant script.
+- **Document every MCP session.** When reproducing or diagnosing crashes, capture the commands, validation outputs, and screenshot paths in `_archive/session_notes_YYYYMMDD.md`. Note which steps were stable (e.g., “small scripts succeed; large monolithic scripts crash Blender”).
+
+### Launching Blender via the repo helper
+
+Use `./blender-launcher.sh` to open Blender with the MCP add-on enabled and (optionally) the reusable test scene:
+
+1. Edit `blender_mcp_path.txt` to contain the absolute path to the Blender binary you want to drive.
+2. (Optional) Override the default sandbox scene (`_archive/MCP_Testing_5.0.blend`) by exporting `MCP_SCENE=/path/to/file.blend` before running the launcher.
+3. Run `./blender-launcher.sh`. The script starts Blender with `--factory-startup`, enables the `blender_mcp` add-on via `blender_mcp_loader.py`, and prints the Blender version/build hash so you can confirm the environment before exec’ing `toolkit.py`.
+
+Switch Blender builds by editing the one-line `blender_mcp_path.txt` file—no other changes needed.
+
 ## Mermaid Conventions
 
 When using Mermaid for planning:
