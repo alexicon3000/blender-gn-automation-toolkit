@@ -10,6 +10,7 @@ Start here when beginning a new session:
 |----------|---------|
 | **[AGENT_GUIDE.md](AGENT_GUIDE.md)** | How to operate the toolkit, run MCP payloads, avoid crashes, and hand off sessions |
 | **[NODE_PATTERNS.md](NODE_PATTERNS.md)** | Common node patterns with sample code, plus nodes requiring special handling |
+| **[instructions_for_llm.md](instructions_for_llm.md)** | Original LLM instructions (legacy, see AGENT_GUIDE for current guidance) |
 
 ## Toolkit Reference
 
@@ -42,9 +43,10 @@ Daily session notes live in `_archive/session_notes_YYYYMMDD.md`. Check the most
 
 ```
 docs/
-├── README.md          ← You are here (index)
-├── AGENT_GUIDE.md     ← Start here for new sessions
-├── NODE_PATTERNS.md   ← Common patterns and quirks
+├── README.md              ← You are here (index)
+├── AGENT_GUIDE.md         ← Start here for new sessions
+├── NODE_PATTERNS.md       ← Common patterns and quirks
+├── instructions_for_llm.md ← Legacy LLM instructions
 └── fractal_leaf_instances.md  ← Example project notes
 
 GUIDE.md               ← Toolkit API reference (root level)

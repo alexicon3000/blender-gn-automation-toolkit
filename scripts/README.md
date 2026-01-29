@@ -13,6 +13,8 @@ This directory contains scripts for automating Blender MCP operations. Each scri
 | `export_roundtrip_test.py` | Test build → export → rebuild | Verifying graph serialization |
 | `batch_export_catalogues.py` | Export catalogues for multiple Blender versions | Updating reference data |
 | `verify_supports_field.py` | Check field support flags in catalogue | After catalogue regeneration |
+| `mcp_smoke_test_payload.py` | MCP-first smoke test | Quick validation of toolkit + MCP connection |
+| `smoke_test_mermaid.py` | Headless Blender smoke test | CI/batch testing without MCP |
 
 ---
 
@@ -154,6 +156,43 @@ python scripts/verify_supports_field.py reference/geometry_nodes_complete_5_0.js
 ```
 
 Reports count of nodes/sockets with `supports_field: true`.
+
+---
+
+### mcp_smoke_test_payload.py
+
+**Purpose:** MCP-first smoke test for the toolkit.
+
+**What it tests:**
+- Toolkit loads correctly via MCP
+- `graph_json` builds nodes and links
+- Group Output is properly connected
+- Validation pipeline works end-to-end
+
+**Usage:**
+```bash
+# Copy contents into execute_blender_code MCP call
+cat scripts/mcp_smoke_test_payload.py
+```
+
+Uses a dedicated `MCP_Smoke_Test` collection to isolate test objects.
+
+---
+
+### smoke_test_mermaid.py
+
+**Purpose:** Headless Blender smoke test (no MCP required).
+
+**What it tests:**
+- Same as `mcp_smoke_test_payload.py` but runs directly in Blender
+- Useful for CI/CD or batch testing
+
+**Usage:**
+```bash
+blender --background --python scripts/smoke_test_mermaid.py
+```
+
+**Note:** Expects `toolkit.py` to be in the parent directory. Update `REPO_ROOT` if running from a different location.
 
 ---
 

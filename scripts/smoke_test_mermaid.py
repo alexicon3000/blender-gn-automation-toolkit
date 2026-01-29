@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Headless Blender smoke test for the Geometry Nodes toolkit.
 
-Run with: blender --background --python smoke_test_mermaid.py
+Run with: blender --background --python scripts/smoke_test_mermaid.py
 
 This test validates:
 1. Toolkit loads correctly in Blender
@@ -19,7 +19,7 @@ from pathlib import Path
 
 import bpy  # type: ignore
 
-REPO_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parent.parent  # scripts/ -> repo root
 TOOLKIT_PATH = REPO_ROOT / "toolkit.py"
 
 # Load the toolkit into Blender's Python environment
