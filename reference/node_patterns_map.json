@@ -1,0 +1,17 @@
+{
+  "GeometryNodeDistributePointsOnFaces": ["surface_scatter", "modular_city"],
+  "GeometryNodeInstanceOnPoints": ["surface_scatter", "modular_city", "procedural_asset"],
+  "GeometryNodeRealizeInstances": ["surface_scatter", "procedural_asset"],
+  "GeometryNodeRepeatInput": ["repeat_zone"],
+  "GeometryNodeRepeatOutput": ["repeat_zone"],
+  "GeometryNodeSimulationInput": ["simulation_zone"],
+  "GeometryNodeSimulationOutput": ["simulation_zone"],
+  "GeometryNodeCurvePrimitiveLine": ["procedural_asset"],
+  "GeometryNodeCurveCircle": ["procedural_asset"],
+  "GeometryNodeCurveToMesh": ["procedural_asset"],
+  "GeometryNodeMeshCylinder": ["procedural_asset"],
+  "FunctionNodeRandomValue": ["surface_scatter", "modular_city", "procedural_asset"],
+  "ShaderNodeTexMusgrave": ["surface_scatter", "procedural_asset"],
+  "ShaderNodeTexNoise": ["surface_scatter", "modular_city"],
+  "GeometryNodeSetPosition": ["surface_scatter", "procedural_asset"]
+}

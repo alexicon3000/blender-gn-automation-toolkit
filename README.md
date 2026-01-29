@@ -72,6 +72,7 @@ merge_existing=True, remove_extras=True)` to diff and merge by node ID.
   `GeoNodes_Exporter_Complete.py` inside the target Blender.
   To refresh manual metadata, run `python scripts/extract_manual_metadata.py` after updating the `_archive/blender-manual-gn` checkout.
 - `scripts/` – Smoke tests and utility scripts.
+  - `scripts/query_node_metadata.py` – quick lookup for node descriptions, sockets, and properties using the catalogue + manual extras.
 - `_archive/` – Legacy assets (ignored by git).
 
 ## Contributing / Next Steps
