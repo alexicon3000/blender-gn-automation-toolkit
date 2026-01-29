@@ -2,11 +2,9 @@
 _archive/
 .roo
 memory-bank/
-docs/
 __pycache__/
 *.pyc
 .pytest_cache/
 .vscode/
 mcp_run_log.md
-blender_mcp_path.txt
 blender_mcp_path.txt
