@@ -8,3 +8,4 @@ __pycache__/
 .vscode/
 mcp_run_log.md
 blender_mcp_path.txt
+AGENTS.md
