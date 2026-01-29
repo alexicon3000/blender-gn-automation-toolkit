@@ -16,7 +16,7 @@ This loads all functions into Blender's Python environment.
 
 ### Option 1: Mermaid → Blender (Recommended for Complex Graphs)
 
-Plan in Mermaid first, then build:
+Plan in Mermaid for the high-level flow (Group Input/Output, major branches), then build:
 
 ```python
 mermaid_graph = '''
@@ -32,7 +32,7 @@ result = mermaid_to_blender("MyObject", "MyModifier", mermaid_graph,
     node_settings={"n1": {"Size X": 10}, "n4": {"Depth": 0.5}})
 ```
 
-### Option 2: graph_json (Precise Control)
+### Option 2: graph_json / Direct Scripting
 
 Build from explicit JSON specification:
 
@@ -80,6 +80,8 @@ Notes:
   added/removed links.
 - Random Value in Blender 5.0 emits fields by default. Set its data type to
   `FLOAT` (or capture the field) before wiring into Set Position Offset.
+
+**Note:** For detailed subgraphs (asset modeling, curve networks), you may skip Mermaid and go straight to `graph_json` or scripted helpers. Mermaid shines for topology sketches but gets unwieldy for intricate procedural assets. Use whichever approach keeps the graph readable.
 
 ### Option 3: Manual with Safe Helpers
 
