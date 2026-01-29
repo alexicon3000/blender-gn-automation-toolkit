@@ -236,6 +236,49 @@ def get_socket_spec(node_type, socket_name, is_output=True):
     return None
 
 
+def get_node_metadata(node_type):
+    """Return high-level metadata (label/category/description) for a node."""
+    spec = get_node_spec(node_type)
+    if not spec:
+        return None
+
+    return {
+        "identifier": spec.get("identifier"),
+        "label": spec.get("label"),
+        "category": spec.get("category"),
+        "description": spec.get("description"),
+    }
+
+
+def find_nodes_by_keyword(keyword, limit=10):
+    """Search catalogue labels/descriptions for a keyword (case-insensitive)."""
+    if not keyword:
+        return []
+
+    keyword = keyword.lower()
+    matches = []
+
+    for spec in load_node_catalogue():
+        haystack_parts = [
+            spec.get("identifier", ""),
+            spec.get("label", ""),
+            spec.get("category", ""),
+            spec.get("description", ""),
+        ]
+        haystack = " ".join(part for part in haystack_parts if part).lower()
+        if keyword in haystack:
+            matches.append({
+                "identifier": spec.get("identifier"),
+                "label": spec.get("label"),
+                "category": spec.get("category"),
+                "description": spec.get("description"),
+            })
+            if limit and len(matches) >= limit:
+                break
+
+    return matches
+
+
 def load_min_node_catalogue(path=None, force_reload=False):
     """Load the minimal node catalogue (GeometryNode* only)."""
     global _NODE_CATALOGUE_MIN, _NODE_CATALOGUE_MIN_INDEX, _NODE_CATALOGUE_MIN_SOURCE
@@ -774,6 +817,7 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
         "node_settings": {},
     }
 
+    node_positions = {}
     if include_positions:
         result["positions"] = {}
 
@@ -788,6 +832,9 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
             continue
         if node.bl_idname == "NodeGroupOutput":
             continue
+        # Skip Frame nodes — they're exported separately in the "frames" key
+        if node.bl_idname == "NodeFrame":
+            continue
 
         # Get the display label: node.label if set, else node.name (Blender's UI name)
         # This helps LLMs understand what the user sees vs the programmatic ID
@@ -799,8 +846,9 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
             "label": display_label,
         })
 
+        node_positions[node_id] = [node.location.x, node.location.y]
         if include_positions:
-            result["positions"][node_id] = [node.location.x, node.location.y]
+            result["positions"][node_id] = list(node_positions[node_id])
 
         # Collect non-default input values
         if include_defaults:
@@ -833,7 +881,88 @@ def export_node_group_to_json(node_group, include_positions=True, include_defaul
             "to_socket": link.to_socket.name,
         })
 
+    # Export frames
+    frames = _export_frames(node_group, node_positions)
+    if frames:
+        result["frames"] = frames
+
     return result
+
+
+def _export_frames(node_group, node_positions=None):
+    """Export Frame nodes from a node group.
+
+    Args:
+        node_group: The node group to export frames from
+        node_positions: Dict mapping node IDs to [x, y] positions (excludes frames)
+
+    Returns:
+        List of frame specs, or empty list if no frames
+    """
+    frames = []
+    node_positions = dict(node_positions or {})
+
+    # Ensure we have coordinates for every regular node even if the caller
+    # did not request positions in the export payload.
+    for node in node_group.nodes:
+        if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput", "NodeFrame"}:
+            continue
+        node_id = node.get(_NODE_ID_PROP, node.name)
+        node_positions.setdefault(node_id, [node.location.x, node.location.y])
+
+    # Get frame IDs so we can exclude them from containment checks
+    frame_ids = set()
+    for node in node_group.nodes:
+        if node.bl_idname == "NodeFrame":
+            frame_ids.add(node.get(_FRAME_ID_PROP, node.name))
+
+    for node in node_group.nodes:
+        if node.bl_idname != "NodeFrame":
+            continue
+
+        frame_id = node.get(_FRAME_ID_PROP, node.name)
+
+        # Determine which nodes are visually inside this frame
+        # by checking if node positions fall within frame bounds
+        frame_x = node.location.x
+        frame_y = node.location.y
+        frame_w = node.width
+        frame_h = node.height
+
+        contained_nodes = []
+        for nid, pos in node_positions.items():
+            # Skip other frames
+            if nid in frame_ids:
+                continue
+            nx, ny = pos
+            # Check if node center is inside frame bounds
+            # Frame y is top, extends downward; node y is also top
+            if (frame_x <= nx <= frame_x + frame_w and
+                frame_y - frame_h <= ny <= frame_y):
+                contained_nodes.append(nid)
+
+        frame_spec = {
+            "id": frame_id,
+            "label": node.label or "",
+            "nodes": contained_nodes,
+        }
+
+        # Add color if custom color is enabled
+        if node.use_custom_color:
+            frame_spec["color"] = [node.color[0], node.color[1], node.color[2], 1.0]
+
+        # Add shrink state
+        if node.shrink:
+            frame_spec["shrink"] = True
+
+        # Add description from custom property
+        desc = node.get("description", "")
+        if desc:
+            frame_spec["text"] = desc
+
+        frames.append(frame_spec)
+
+    return frames
 
 
 def _extract_node_settings(node):
@@ -1087,6 +1216,359 @@ def _gather_existing_links(node_group):
         )
         links[key] = link
     return links
+
+
+# ============================================================================
+# FRAME SUPPORT - Visual organization for node graphs
+# ============================================================================
+
+_FRAME_ID_PROP = "gn_mcp_frame_id"
+_FRAME_PADDING = 40  # Padding around contained nodes
+
+
+def _calculate_frame_bounds(nodes, padding=_FRAME_PADDING):
+    """Calculate bounding box for a list of nodes.
+
+    Returns (x, y, width, height) where x,y is the top-left corner.
+    Blender node locations are at top-left, y increases upward.
+    """
+    if not nodes:
+        return (0, 0, 200, 100)
+
+    # node.dimensions may not be available until UI updates, so use estimates
+    # Typical node width ~150-180px, height ~100-200px depending on sockets
+    NODE_WIDTH_ESTIMATE = 150
+    NODE_HEIGHT_ESTIMATE = 150
+
+    # Get bounds considering estimated node dimensions
+    min_x = min(n.location.x for n in nodes)
+    max_x = max(n.location.x + getattr(n, 'width', NODE_WIDTH_ESTIMATE) for n in nodes)
+    max_y = max(n.location.y for n in nodes)  # top
+    min_y = min(n.location.y - NODE_HEIGHT_ESTIMATE for n in nodes)  # bottom
+
+    # Add padding
+    x = min_x - padding
+    y = max_y + padding + 30  # Extra for frame header
+    width = (max_x - min_x) + 2 * padding
+    height = (max_y - min_y) + 2 * padding + 30
+
+    return (x, y, width, height)
+
+
+def _create_frame(node_group, frame_spec, node_map):
+    """Create a Frame node from a frame spec.
+
+    Args:
+        node_group: The node group to add the frame to
+        frame_spec: Dict with id, label, color, nodes, shrink, text
+        node_map: Dict mapping node IDs to actual node objects
+
+    Returns:
+        The created Frame node, or None if creation failed
+    """
+    frame_id = frame_spec.get("id", "frame")
+    label = frame_spec.get("label", "")
+    color = frame_spec.get("color")  # [R, G, B, A] or None
+    node_ids = frame_spec.get("nodes", [])
+    shrink = frame_spec.get("shrink", False)
+    text = frame_spec.get("text", "")
+
+    # Get the actual node objects for this frame
+    contained_nodes = [node_map[nid] for nid in node_ids if nid in node_map]
+
+    # Create the frame
+    frame = node_group.nodes.new("NodeFrame")
+    frame[_FRAME_ID_PROP] = frame_id
+
+    # Set label
+    if label:
+        frame.label = label
+
+    # Set color
+    if color and len(color) >= 3:
+        frame.use_custom_color = True
+        # Blender's frame.color is RGB, not RGBA
+        frame.color = (color[0], color[1], color[2])
+
+    # Set shrink
+    frame.shrink = shrink
+
+    # Set text/description
+    # Note: frame.text in Blender requires a Text datablock, not a string.
+    # We store the text in a custom property instead for simplicity.
+    if text:
+        frame["description"] = text
+
+    # Calculate and set bounds based on contained nodes
+    if contained_nodes:
+        x, y, width, height = _calculate_frame_bounds(contained_nodes)
+        frame.location = (x, y)
+        frame.width = width
+        frame.height = height
+
+    return frame
+
+
+def _clear_managed_frames(node_group):
+    """Remove previously created frames that carry the MCP frame marker."""
+    if not hasattr(node_group, "nodes"):
+        return
+
+    frames_to_remove = []
+    for node in list(node_group.nodes):
+        if getattr(node, "bl_idname", "") != "NodeFrame":
+            continue
+
+        keys_fn = getattr(node, "keys", None)
+        node_keys = []
+        if callable(keys_fn):
+            try:
+                node_keys = list(keys_fn())
+            except Exception:
+                node_keys = []
+
+        if _FRAME_ID_PROP in node_keys:
+            frames_to_remove.append(node)
+
+    for frame in frames_to_remove:
+        try:
+            node_group.nodes.remove(frame)
+        except Exception:
+            pass
+
+
+def _apply_frames(node_group, node_map, frames_spec, errors):
+    """Create all frames specified in graph_json.
+
+    Args:
+        node_group: The node group to add frames to
+        node_map: Dict mapping node IDs to actual node objects
+        frames_spec: List of frame specs from graph_json["frames"]
+        errors: List to append errors to
+    """
+    _clear_managed_frames(node_group)
+
+    if not frames_spec:
+        return
+
+    for frame_spec in frames_spec:
+        try:
+            _create_frame(node_group, frame_spec, node_map)
+        except Exception as e:
+            frame_id = frame_spec.get("id", "unknown")
+            errors.append(f"Failed to create frame '{frame_id}': {e}")
+
+
+# ============================================================================
+# AUTO-FRAMING - Automatic visual organization
+# ============================================================================
+
+def auto_frame_graph(node_group, strategy="connectivity", apply=False):
+    """Generate frame specs by analyzing node graph structure.
+
+    This helper analyzes an existing node graph and generates frame specifications
+    that can be used to visually organize the graph. LLMs can use this as a starting
+    point and customize the results before applying.
+
+    Args:
+        node_group: The Blender node group to analyze
+        strategy: How to group nodes:
+            - "connectivity": Group connected subgraphs (default)
+            - "type": Group by node type prefix (GeometryNode*, FunctionNode*, etc.)
+        apply: If True, create the frames in the node group immediately.
+               If False (default), just return the frame specs.
+
+    Returns:
+        List of frame specs that can be added to graph_json["frames"] or
+        passed to _apply_frames(). Each spec has:
+            - id: Auto-generated frame ID
+            - label: Descriptive label based on strategy
+            - nodes: List of node IDs contained in the frame
+            - color: Suggested color based on group type
+
+    Example:
+        >>> frames = auto_frame_graph(node_group, strategy="connectivity")
+        >>> print(frames)
+        [{"id": "group_1", "label": "Connected Group 1", "nodes": ["grid", "cone"], ...}]
+
+        >>> # Apply frames directly
+        >>> auto_frame_graph(node_group, strategy="type", apply=True)
+    """
+    if strategy == "connectivity":
+        frames = _auto_frame_by_connectivity(node_group)
+    elif strategy == "type":
+        frames = _auto_frame_by_type(node_group)
+    else:
+        raise ValueError(f"Unknown auto-frame strategy: {strategy}. Use 'connectivity' or 'type'.")
+
+    if apply and frames:
+        # Build node_map for frame creation
+        node_map = {}
+        for node in node_group.nodes:
+            if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput", "NodeFrame"}:
+                continue
+            node_id = node.get(_NODE_ID_PROP, node.name)
+            node_map[node_id] = node
+
+        errors = []
+        _apply_frames(node_group, node_map, frames, errors)
+        if errors:
+            print(f"[auto_frame_graph] Errors: {errors}")
+
+    return frames
+
+
+def _auto_frame_by_connectivity(node_group):
+    """Group nodes by connectivity using BFS to find connected subgraphs.
+
+    Returns a list of frame specs, one per connected component (excluding
+    single-node components which don't need framing).
+    """
+    # Build adjacency list (undirected — we want visual grouping)
+    adjacency = {}
+
+    # Get all non-special nodes
+    nodes_by_id = {}
+    for node in node_group.nodes:
+        if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput", "NodeFrame"}:
+            continue
+        node_id = node.get(_NODE_ID_PROP, node.name)
+        nodes_by_id[node_id] = node
+        adjacency[node_id] = set()
+
+    # Build edges from links
+    for link in node_group.links:
+        if not link.from_node or not link.to_node:
+            continue
+
+        from_id = link.from_node.get(_NODE_ID_PROP, link.from_node.name)
+        to_id = link.to_node.get(_NODE_ID_PROP, link.to_node.name)
+
+        # Skip links to/from group IO
+        if link.from_node.bl_idname == "NodeGroupInput":
+            continue
+        if link.to_node.bl_idname == "NodeGroupOutput":
+            continue
+
+        if from_id in adjacency and to_id in adjacency:
+            adjacency[from_id].add(to_id)
+            adjacency[to_id].add(from_id)
+
+    # BFS to find connected components
+    visited = set()
+    components = []
+
+    for start_id in adjacency:
+        if start_id in visited:
+            continue
+
+        # BFS from this node
+        component = []
+        queue = [start_id]
+        while queue:
+            node_id = queue.pop(0)
+            if node_id in visited:
+                continue
+            visited.add(node_id)
+            component.append(node_id)
+            for neighbor in adjacency[node_id]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+
+        if component:
+            components.append(component)
+
+    # Generate frame specs for components with >1 node
+    frames = []
+    colors = [
+        [0.2, 0.4, 0.8, 0.8],  # Blue
+        [0.2, 0.7, 0.4, 0.8],  # Green
+        [0.8, 0.5, 0.2, 0.8],  # Orange
+        [0.7, 0.2, 0.7, 0.8],  # Purple
+        [0.7, 0.7, 0.2, 0.8],  # Yellow
+        [0.2, 0.7, 0.7, 0.8],  # Cyan
+    ]
+
+    for i, component in enumerate(components):
+        if len(component) < 2:
+            continue  # Don't frame single nodes
+
+        frame_id = f"group_{i + 1}"
+        label = f"Connected Group {i + 1}"
+
+        # Try to infer a better label from node types
+        types = [nodes_by_id[nid].bl_idname for nid in component if nid in nodes_by_id]
+        if all("Instance" in t for t in types):
+            label = "Instancing"
+        elif all("Mesh" in t for t in types):
+            label = "Mesh Processing"
+        elif all("Curve" in t for t in types):
+            label = "Curve Processing"
+        elif all("Math" in t or "Vector" in t for t in types):
+            label = "Math Operations"
+
+        frames.append({
+            "id": frame_id,
+            "label": label,
+            "nodes": component,
+            "color": colors[i % len(colors)],
+        })
+
+    return frames
+
+
+def _auto_frame_by_type(node_group):
+    """Group nodes by their type prefix (GeometryNode*, FunctionNode*, etc.).
+
+    Returns a list of frame specs, one per node type category.
+    """
+    # Categorize nodes by type prefix
+    categories = {
+        "Mesh": {"prefix": "Mesh", "color": [0.2, 0.6, 0.8, 0.8], "nodes": []},
+        "Curve": {"prefix": "Curve", "color": [0.8, 0.5, 0.2, 0.8], "nodes": []},
+        "Instance": {"prefix": "Instance", "color": [0.2, 0.7, 0.4, 0.8], "nodes": []},
+        "Math": {"prefix": "Math", "color": [0.7, 0.7, 0.2, 0.8], "nodes": []},
+        "Vector": {"prefix": "Vector", "color": [0.6, 0.4, 0.8, 0.8], "nodes": []},
+        "Geometry": {"prefix": "Geometry", "color": [0.3, 0.5, 0.7, 0.8], "nodes": []},
+        "Attribute": {"prefix": "Attribute", "color": [0.7, 0.3, 0.5, 0.8], "nodes": []},
+        "Input": {"prefix": "Input", "color": [0.4, 0.7, 0.4, 0.8], "nodes": []},
+        "Other": {"prefix": None, "color": [0.5, 0.5, 0.5, 0.8], "nodes": []},
+    }
+
+    for node in node_group.nodes:
+        if node.bl_idname in {"NodeGroupInput", "NodeGroupOutput", "NodeFrame"}:
+            continue
+
+        node_id = node.get(_NODE_ID_PROP, node.name)
+        bl_idname = node.bl_idname
+
+        # Find matching category
+        matched = False
+        for cat_name, cat_data in categories.items():
+            if cat_name == "Other":
+                continue
+            if cat_data["prefix"] and cat_data["prefix"] in bl_idname:
+                cat_data["nodes"].append(node_id)
+                matched = True
+                break
+
+        if not matched:
+            categories["Other"]["nodes"].append(node_id)
+
+    # Generate frame specs for non-empty categories with >1 node
+    frames = []
+    for cat_name, cat_data in categories.items():
+        if len(cat_data["nodes"]) < 2:
+            continue
+
+        frames.append({
+            "id": f"type_{cat_name.lower()}",
+            "label": f"{cat_name} Nodes",
+            "nodes": cat_data["nodes"],
+            "color": cat_data["color"],
+        })
+
+    return frames
 
 
 def _diff_graph(node_group, graph_json):
@@ -1348,6 +1830,9 @@ def build_graph_from_json(
 
     # Create links
     _apply_links(ng, result["nodes"], graph_json, result["errors"])
+
+    # Create frames for visual organization
+    _apply_frames(ng, result["nodes"], graph_json.get("frames", []), result["errors"])
 
     result["success"] = len(result["errors"]) == 0
     return result

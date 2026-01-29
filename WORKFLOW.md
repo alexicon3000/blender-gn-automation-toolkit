@@ -184,4 +184,37 @@ If any rule fails → status: ERRORS_FOUND + list issues; else GRAPH_OK.
 
 ## MCP ACTION AFTER GRAPH_OK
 Feed graph_json to your MCP builder to instantiate the node tree.
-Optionally run a headless‑Blender validator for extra certainty.
+Optionally run a headless-Blender validator for extra certainty.
+
+## Visual Organization Best Practices
+
+- **Use frames to group related logic.** Add a `frames` array to `graph_json` so downstream tools can place Blender `NodeFrame` containers automatically:
+
+```json
+  "frames": [
+    {
+      "id": "inputs",
+      "label": "Mesh Inputs",
+      "color": [0.2, 0.4, 0.8, 0.8],
+      "nodes": ["grid", "mesh_to_points"],
+      "text": "Base geometry before instancing"
+    }
+  ]
+```
+
+- **Re-use `auto_frame_graph()`.** The toolkit exposes `auto_frame_graph(node_group, strategy="connectivity"|"type", apply=False)` to suggest sensible frames for an existing build. Capture its output, edit the labels/colors, then include the result in graph_json.
+- **Color-code consistently.** Pick one palette (inputs=blue, transforms=green, outputs=orange, math=purple) so humans can scan LLM-generated graphs quickly.
+- **Keep frames concise.** Split large graphs into multiple frames or nested groups once you exceed ~10 nodes per frame; clutter defeats the purpose.
+- **Document intent.** Populate the optional `text` field (stored as a custom property) to explain non-obvious math or attribute tricks—critical for human-in-the-loop review.
+- **Expose modifier controls near the frame.** When you add Group Input sockets for parameters (e.g., “Leaf Length”), park the input node inside the related frame so the interface and implementation stay synchronized.
+- **Note on validation:** Current frame support has unit coverage, but a live Blender validation pass is still pending. Keep an eye on layout quirks after MCP builds until that manual verification is complete.
+
+### Node Discovery Helpers (new)
+- Use `get_node_metadata("GeometryNodeMeshToPoints")` to surface the catalogue label/category/description for any identifier. The metadata mirrors Blender’s manual, so you can quote it directly when explaining tweaks.
+- Call `find_nodes_by_keyword("scatter")` (limited list) to search labels/descriptions for a phrase when the exact node name isn’t obvious. This helps map “flip normals” → Align Euler, or “switch between meshes” → Switch node, without guessing.
+
+### Utility / Meta Nodes Guidance
+- **Repeat Zone / Simulation Zone:** Reach for these when you need loops or stateful simulation. Remember to wire the “Repeat Output” or “Simulation Output” back into the main flow. Document the intent in a frame.
+- **Switch / Bundle / Reroute:** Use Switch for conditional flows (e.g., low/high LOD). Bundle sockets keep related wires clean—mirror the manual grouping (“Bundle > Geometry”) so humans can follow.
+- **Warning and Note nodes:** `GeometryNodeWarning` lets you surface runtime guidance. Include a brief “LLM TODO” message so users know what to inspect.
+- **Procedural utilities (Closures, Bag, etc.)** live under Add > Utilities. Mention the menu path when instructing manual tweaks: e.g., “Add > Utilities > Switch”. The catalogue’s `category` helps you cite the right section even if the UI differs between Blender versions.
