@@ -1,14 +1,20 @@
-# Blender Geometry Nodes Automation Toolkit
+# Blender Geometry Nodes MCP Toolkit
 
-Utilities and reference data for building Blender Geometry Nodes graphs through
-LLM- or MCP-driven workflows. The single-file `toolkit.py` is designed to be
-`exec()`'d inside Blender — it loads all helpers for building, validating, and
-inspecting geometry node graphs.
+**Enable LLMs to programmatically create Blender Geometry Node graphs via a declarative JSON/Mermaid interface.**
 
-You can drive it entirely via Mermaid + `graph_json`: sketch a flowchart, feed
-it to `mermaid_to_blender()`, and the toolkit/builders do the rest—even if
-you’re not using MCP. This makes it easy to pair any LLM (or your own scripts)
-with Geometry Nodes automation.
+The toolkit bridges how LLMs naturally describe things (structured text, diagrams) and Blender's imperative node API — acting as a compiler from intent to implementation.
+
+### Core Capabilities
+
+- **Declarative graph building** — Define node graphs as JSON (`graph_json`) or Mermaid flowcharts, then execute in Blender without writing imperative Python.
+- **Preflight validation** — Catch errors (unknown node types, bad socket names, type mismatches) *before* touching Blender, giving fast feedback to LLMs.
+- **Incremental updates** — Diff existing graphs against desired state; add/update/remove only what changed.
+- **Node catalogue** — JSON reference of all Geometry Node types with inputs/outputs/socket types, enabling validation without Blender running.
+
+### Target Users
+
+- **Primary:** LLM agents (Claude, GPT, etc.) via MCP that `exec()` the toolkit in Blender
+- **Secondary:** Developers building procedural geometry tools or automation scripts
 
 **Key ideas**
 - Plan visually: sketch Mermaid flow charts (with GroupInput/GroupOutput) so
@@ -91,7 +97,17 @@ High-level roadmap items live near the end of `GUIDE.md`. Briefly:
 - Extend the full graph report with per-link data payloads once the exporter
   captures them.
 
-## Smoke Tests
+## Testing
+
+### Unit Tests (no Blender required)
+
+```bash
+pytest tests/ -v
+```
+
+68 tests cover catalogue loading, preflight validation, Mermaid parsing, and diff/merge logic — all via bpy mocks.
+
+### Smoke Tests (in Blender)
 
 **MCP-first (recommended)**: Copy contents of `mcp_smoke_test_payload.py` into
 your MCP `execute_blender_code` call. This validates the full chain:
