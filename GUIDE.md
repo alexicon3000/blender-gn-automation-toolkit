@@ -206,6 +206,7 @@ report = full_graph_report(
 - **Validate connectivity before complex steps.** Issue quick `get_scene_info` or `execute_blender_code("print('pong')")` pings between major actions; if they fail, restart Blender before attempting heavier scripts.
 - **Rebuild frames incrementally.** The frame helpers expect the node map from the original build. When testing frames, run: build graph → obtain `result["nodes"]` → call `_apply_frames`. Avoid rebuilding nodes and frames in the same giant script.
 - **Document every MCP session.** When reproducing or diagnosing crashes, capture the commands, validation outputs, and screenshot paths in `_archive/session_notes_YYYYMMDD.md`. Note which steps were stable (e.g., “small scripts succeed; large monolithic scripts crash Blender”).
+- **Install MCP outside the sandbox once.** `uvx blender-mcp` needs to reach PyPI and write to `~/.cache/uv`; if you see cache permission errors, delete the stale cache entry (e.g., `rm -f ~/.cache/uv/sdists-v9/.git`), rerun unsandboxed so the package downloads once, then future runs can stay sandboxed.
 
 ### Launching Blender via the repo helper
 
@@ -220,6 +221,10 @@ Switch Blender builds by editing the one-line `blender_mcp_path.txt` file—no o
 ### Frame validation payload
 
 The script at `scripts/frame_validation_payload.py` builds a grid → Distribute Points → Instance graph, applies frames, runs validation, exports frame metadata, and captures a node-graph screenshot via Blender MCP. Run it through `execute_blender_code` when you need a full frame round-trip check. If Blender crashes, follow the agent checklist above, then rerun the payload.
+
+Note: node defaults are applied in a separate MCP call after the graph is built (setting Distribute Points inputs inside `graph_json` was crashing Blender 5.0.1), so keep that pattern when extending the payload.
+
+If the PNG fails to appear in `_archive/`, rerun just the export step—capture_node_graph can return `None` when Blender is still in fullscreen; the script now retries once but it’s worth double-checking the filesystem.
 
 ### If Blender Crashes Mid-Session (Agent Checklist)
 
