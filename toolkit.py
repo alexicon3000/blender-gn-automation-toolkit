@@ -1740,6 +1740,68 @@ def _apply_links(node_group, node_map, graph_json, errors):
             errors.append(str(e))
 
 
+def _assign_interface_default(socket, value):
+    """Apply default/min/max metadata to a group interface socket."""
+    if value is None:
+        return
+    try:
+        default = socket.default_value
+    except AttributeError:
+        default = None
+
+    if isinstance(value, (list, tuple)) and hasattr(default, "__len__"):
+        for idx, val in enumerate(value):
+            if idx < len(default):
+                default[idx] = val
+    elif default is not None:
+        socket.default_value = value
+
+
+_INTERFACE_PROP_MAP = {
+    "description": "description",
+    "min": "min_value",
+    "max": "max_value",
+    "soft_min": "soft_min",
+    "soft_max": "soft_max",
+    "subtype": "subtype",
+    "attribute_domain": "attribute_domain",
+    "hide_value": "hide_value",
+}
+
+
+def _configure_group_interface(node_group, graph_json):
+    """Create group interface sockets based on graph_json spec."""
+    interface = node_group.interface
+    input_specs = list(graph_json.get("group_inputs") or [])
+    output_specs = list(graph_json.get("group_outputs") or [])
+
+    def _ensure_geometry(specs, default_name):
+        for spec in specs:
+            sock_type = spec.get("type") or spec.get("socket_type")
+            if sock_type == "NodeSocketGeometry":
+                return specs
+        return [{"name": default_name, "type": "NodeSocketGeometry"}, *specs]
+
+    input_specs = _ensure_geometry(input_specs, "Geometry")
+    output_specs = _ensure_geometry(output_specs, "Geometry")
+
+    interface.clear()
+
+    def _apply_specs(specs, direction):
+        for spec in specs:
+            name = spec.get("name") or ("Input" if direction == 'INPUT' else "Output")
+            sock_type = spec.get("type") or spec.get("socket_type") or "NodeSocketFloat"
+            socket = interface.new_socket(name=name, in_out=direction, socket_type=sock_type)
+            if "default" in spec:
+                _assign_interface_default(socket, spec.get("default"))
+            for key, attr in _INTERFACE_PROP_MAP.items():
+                if key in spec and hasattr(socket, attr):
+                    setattr(socket, attr, spec[key])
+
+    _apply_specs(input_specs, 'INPUT')
+    _apply_specs(output_specs, 'OUTPUT')
+
+
 def build_graph_from_json(
     obj_name,
     modifier_name,
@@ -1828,10 +1890,9 @@ def build_graph_from_json(
     # Clear existing nodes if requested
     if clear_existing:
         ng.nodes.clear()
-        # Re-create interface sockets
-        ng.interface.clear()
-        ng.interface.new_socket(name="Geometry", in_out='INPUT', socket_type='NodeSocketGeometry')
-        ng.interface.new_socket(name="Geometry", in_out='OUTPUT', socket_type='NodeSocketGeometry')
+        _configure_group_interface(ng, graph_json)
+    elif graph_json.get("group_inputs") or graph_json.get("group_outputs"):
+        _configure_group_interface(ng, graph_json)
 
     # Ensure Group Input/Output nodes exist
     group_input = next((node for node in ng.nodes if node.bl_idname == 'NodeGroupInput'), None)
