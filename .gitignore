@@ -3,3 +3,6 @@ _archive/
 .roo
 memory-bank/
 docs/
+__pycache__/
+*.pyc
+.pytest_cache/
