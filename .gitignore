@@ -8,3 +8,4 @@ __pycache__/
 .pytest_cache/
 .vscode/
 mcp_run_log.md
+blender_mcp_path.txt

@@ -1,6 +1,0 @@
-# Absolute path to the Blender binary used for MCP sessions.
-# Update this file to point at the build you want to drive via blender-launcher.sh
-# Example:
-# /Users/alexanderporter/Documents/_Blender_Builds/blender-5.0.1-macos-arm64/Blender.app/Contents/MacOS/Blender
-
-/Users/alexanderporter/Documents/_Blender_Builds/stable/blender-5.0.1-macos-arm64+stable.a3db93c5b259/Blender.app/Contents/MacOS/Blender
