@@ -225,6 +225,69 @@ class TestClearManagedFrames:
         assert manual in node_group.nodes
 
 
+class _MockFrameNode:
+    """Mock frame node that supports item assignment like Blender nodes."""
+    def __init__(self, name):
+        self.name = name
+        self.bl_idname = "NodeFrame"
+        self.location = types.SimpleNamespace(x=0, y=0)
+        self.width = 200
+        self.height = 100
+        self.label = ""
+        self.use_custom_color = False
+        self.color = (0.5, 0.5, 0.5)
+        self.shrink = False
+        self._props = {}
+
+    def __setitem__(self, key, value):
+        self._props[key] = value
+
+    def __getitem__(self, key):
+        return self._props[key]
+
+    def get(self, key, default=None):
+        return self._props.get(key, default)
+
+    def keys(self):
+        return list(self._props.keys())
+
+
+class TestApplyFramesDuplicateIds:
+    def test_duplicate_frame_ids_reported_as_error(self, toolkit):
+        """Duplicate frame IDs should be skipped and logged as errors."""
+        node_a = _make_mock_node("a", gn_mcp_id="a")
+        node_b = _make_mock_node("b", gn_mcp_id="b")
+
+        # Mock node_group with a nodes list that supports iteration and .new()
+        created_frames = []
+        class MockNodeList(list):
+            def new(self, node_type):
+                frame = _MockFrameNode(f"Frame_{len(created_frames)}")
+                created_frames.append(frame)
+                return frame
+
+        nodes = MockNodeList([node_a, node_b])
+        node_group = types.SimpleNamespace(nodes=nodes)
+
+        node_map = {"a": node_a, "b": node_b}
+        frames_spec = [
+            {"id": "same_id", "label": "First", "nodes": ["a"]},
+            {"id": "same_id", "label": "Duplicate", "nodes": ["b"]},  # Duplicate!
+            {"id": "unique_id", "label": "Unique", "nodes": ["a", "b"]},
+        ]
+        errors = []
+
+        toolkit["_apply_frames"](node_group, node_map, frames_spec, errors)
+
+        # Should have one error about duplicate ID
+        assert len(errors) == 1
+        assert "Duplicate frame ID" in errors[0]
+        assert "same_id" in errors[0]
+
+        # Should have created only 2 frames (not 3)
+        assert len(created_frames) == 2
+
+
 # -- Auto-framing by connectivity tests --------------------------------------
 
 class TestAutoFrameByConnectivity:
