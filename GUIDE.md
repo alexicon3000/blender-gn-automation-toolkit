@@ -217,6 +217,19 @@ Use `./blender-launcher.sh` to open Blender with the MCP add-on enabled and (opt
 
 Switch Blender builds by editing the one-line `blender_mcp_path.txt` file—no other changes needed.
 
+### Frame validation payload
+
+The script at `scripts/frame_validation_payload.py` builds a grid → Distribute Points → Instance graph, applies frames, runs validation, exports frame metadata, and captures a node-graph screenshot via Blender MCP. Run it through `execute_blender_code` when you need a full frame round-trip check. If Blender crashes, follow the agent checklist above, then rerun the payload.
+
+### If Blender Crashes Mid-Session (Agent Checklist)
+
+1. Ask the user to relaunch Blender via `./blender-launcher.sh` (or the configured wrapper) so the sandbox scene and MCP add-on reload in a clean session.
+2. Wait until Blender is back online, then re-run `exec(open("/path/to/toolkit.py").read())` to reload the toolkit module.
+3. Resume from the last confirmed step: rebuild the graph, reapply frames, or rerun the MCP payload in smaller chunks as needed.
+4. Record the incident (commands, errors, follow-up steps) in `_archive/session_notes_YYYYMMDD.md` so future agents know what occurred.
+
+If multiple crashes occur after relaunch, request a full Blender restart (`--factory-startup`) before proceeding.
+
 ## Mermaid Conventions
 
 When using Mermaid for planning:

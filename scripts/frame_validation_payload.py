@@ -1,37 +1,23 @@
-"""Frame-focused Blender MCP validation payload.
+#!/usr/bin/env python3
+"""Automate frame validation via incremental Blender MCP calls."""
 
-Run this via `execute_blender_code` to ensure frame metadata survives
-the build/validation cycle and to capture a node-graph screenshot for
-_archive diagnostics.
-"""
+from __future__ import annotations
 
+import argparse
 import json
-import os
-import shutil
+import subprocess
+import sys
+import textwrap
 from datetime import datetime
 from pathlib import Path
+from string import Template
+from typing import Iterable, List, Tuple
 
-REPO_ROOT = Path(os.environ.get("GN_MCP_BASE_PATH", "/Users/alexanderporter/Documents/_DEV/Geo Nodes MCP"))
-TOOLKIT_PATH = Path(os.environ.get("GN_MCP_TOOLKIT_PATH", REPO_ROOT / "toolkit.py"))
-
-if "GN_MCP_SOCKET_COMPAT_PATH" not in os.environ:
-    os.environ["GN_MCP_SOCKET_COMPAT_PATH"] = str(REPO_ROOT / "reference" / "socket_compat.csv")
-if "GN_MCP_CATALOGUE_PATH" not in os.environ:
-    os.environ["GN_MCP_CATALOGUE_PATH"] = str(REPO_ROOT / "reference" / "geometry_nodes_complete_5_0.json")
-
-with open(TOOLKIT_PATH, "r", encoding="utf-8") as fh:
-    code = compile(fh.read(), str(TOOLKIT_PATH), "exec")
-exec(code, globals())
-
+REPO_ROOT = Path(__file__).resolve().parents[1]
 COLLECTION = "MCP_Frame_Test"
 OBJECT_NAME = "MCP_Frame_Object"
 MODIFIER_NAME = "MCP_Frame_Mod"
-
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-SCREENSHOT_PATH = REPO_ROOT / "_archive" / f"frame_validation_nodes_{timestamp}.png"
-
-# Clear any previous test objects
-clear_collection(COLLECTION)
+OBJECT_Z_OFFSET = 0.5
 
 GRAPH_JSON = {
     "nodes": [
@@ -48,139 +34,244 @@ GRAPH_JSON = {
         {"from": "instance", "from_socket": "Instances", "to": "realize", "to_socket": "Geometry"},
         {"from": "realize", "from_socket": "Geometry", "to": "__GROUP_OUTPUT__", "to_socket": "Geometry"},
     ],
-    "node_settings": {
-        "grid": {"Vertices X": 32, "Vertices Y": 32, "Size X": 4.0, "Size Y": 4.0},
-        "distribute": {"Density Max": 5.0},
-        "cube": {"Size": 0.3},
-        "instance": {"Scale": [0.5, 0.5, 0.5]},
+}
+
+FRAME_SPECS = [
+    {
+        "id": "emit_points",
+        "label": "Emit Points",
+        "color": [0.2, 0.46, 0.84, 1.0],
+        "nodes": ["grid", "distribute"],
+        "text": "Controls surface sampling density",
     },
-    "frames": [
-        {
-            "id": "emit_points",
-            "label": "Emit Points",
-            "color": [0.2, 0.46, 0.84, 1.0],
-            "nodes": ["grid", "distribute"],
-            "text": "Controls surface sampling density",
-        },
-        {
-            "id": "instance_block",
-            "label": "Instance Shapes",
-            "color": [0.88, 0.42, 0.25, 1.0],
-            "nodes": ["cube", "instance", "realize"],
-            "shrink": True,
-            "text": "Instancing pipeline (cube → realize)",
-        },
-    ],
+    {
+        "id": "instance_block",
+        "label": "Instance Shapes",
+        "color": [0.88, 0.42, 0.25, 1.0],
+        "nodes": ["cube", "instance", "realize"],
+        "shrink": True,
+        "text": "Instancing pipeline (cube -> realize)",
+    },
+]
+
+NODE_SETTINGS = {
+    "grid": {"Vertices X": 32, "Vertices Y": 32, "Size X": 4.0, "Size Y": 4.0},
+    "distribute": {"Density Max": 5.0},
+    "cube": {"Size": 0.3},
+    "instance": {"Scale": [0.5, 0.5, 0.5]},
 }
 
-print("Building frame-focused graph via MCP session...", flush=True)
-build_result = build_graph_from_json(
-    OBJECT_NAME,
-    MODIFIER_NAME,
-    GRAPH_JSON,
-    collection=COLLECTION,
-)
+SESSION_NOTES = REPO_ROOT / "_archive" / "session_notes_20260129.md"
+DEFAULT_ALIAS = "blender"
 
-if not build_result.get("success"):
-    print("Build errors detected:")
-    for err in build_result.get("errors", []):
-        print(f"  - {err}")
-    raise SystemExit(1)
 
-print("Graph built; running validation...", flush=True)
-validation = full_geo_nodes_validation(OBJECT_NAME, MODIFIER_NAME, capture_screenshot=False)
-print_validation_report(validation)
+def run_mcp(code: str, label: str, alias: str) -> None:
+    params = json.dumps({"code": code, "user_prompt": f"Frame validation step: {label}"})
+    cmd = ["uvx", "blender-mcp", "call", alias, "execute_blender_code", "--params", params]
+    print(f"\n[step:{label}] running {' '.join(cmd[:-2])} ...", flush=True)
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    sys.stdout.write(proc.stdout)
+    sys.stderr.write(proc.stderr)
+    if proc.returncode != 0:
+        raise SystemExit(f"Step '{label}' failed with exit code {proc.returncode}")
 
-if validation.get("status") != "VALID":
-    print("Validation failed; aborting frame checks.")
-    raise SystemExit(2)
 
-import bpy  # noqa: E402  (requires Blender runtime)
+def common_preamble() -> str:
+    return textwrap.dedent(
+        f"""
+        import json, os, shutil
+        from datetime import datetime
+        from pathlib import Path
 
-obj = bpy.data.objects.get(OBJECT_NAME)
-mod = obj.modifiers.get(MODIFIER_NAME) if obj else None
-ng = mod.node_group if mod else None
+        REPO_ROOT = Path({REPO_ROOT!r})
+        TOOLKIT_PATH = Path(os.environ.get("GN_MCP_TOOLKIT_PATH", REPO_ROOT / "toolkit.py"))
+        os.environ.setdefault("GN_MCP_SOCKET_COMPAT_PATH", str(REPO_ROOT / "reference" / "socket_compat.csv"))
+        os.environ.setdefault("GN_MCP_CATALOGUE_PATH", str(REPO_ROOT / "reference" / "geometry_nodes_complete_5_0.json"))
 
-if not ng:
-    raise SystemExit("Node group not found after build")
+        with open(TOOLKIT_PATH, "r", encoding="utf-8") as fh:
+            code = compile(fh.read(), str(TOOLKIT_PATH), "exec")
+        exec(code, globals())
+        """
+    )
 
-frame_nodes = [node for node in ng.nodes if getattr(node, "bl_idname", "") == "NodeFrame"]
-frame_specs = {spec["id"]: spec for spec in GRAPH_JSON.get("frames", [])}
-id_to_name = {node_id: node.name for node_id, node in build_result.get("nodes", {}).items()}
-frame_prop_key = globals().get("_FRAME_ID_PROP", "gn_mcp_frame_id")
 
-def nodes_inside_frame(frame):
-    parented = [node.name for node in ng.nodes if getattr(node, "parent", None) == frame]
-    if parented:
-        return parented
+def dedent_template(template: str, **subs: str) -> str:
+    return Template(textwrap.dedent(template)).substitute(**subs)
 
-    contained = []
-    for node in ng.nodes:
-        if node == frame or getattr(node, "bl_idname", "") == "NodeFrame":
-            continue
-        width = getattr(node, "width", 140.0)
-        height = getattr(node, "height", 100.0)
-        center_x = node.location.x + width * 0.5
-        center_y = node.location.y - height * 0.5
-        if (frame.location.x <= center_x <= frame.location.x + frame.width and
-                frame.location.y - frame.height <= center_y <= frame.location.y):
-            contained.append(node.name)
-    return contained
 
-errors = []
-print(f"Detected {len(frame_nodes)} frame nodes in Blender.")
+def build_code() -> str:
+    code = common_preamble()
+    code += f"\nGRAPH_JSON = {repr(GRAPH_JSON)}\n"
+    code += dedent_template(
+        """
+        print("[build] Clearing collection and building graph...", flush=True)
+        clear_collection($collection)
+        build_result = build_graph_from_json(
+            $object_name,
+            $modifier_name,
+            GRAPH_JSON,
+            collection=$collection,
+        )
+        print(json.dumps(build_result, indent=2))
+        if not build_result.get("success"):
+            raise SystemExit("build failed")
+        """,
+        collection=repr(COLLECTION),
+        object_name=repr(OBJECT_NAME),
+        modifier_name=repr(MODIFIER_NAME),
+    )
+    return code
 
-for frame_id, spec in frame_specs.items():
-    frame = next((node for node in frame_nodes if node.get(frame_prop_key, node.name) == frame_id), None)
-    if not frame:
-        errors.append(f"Frame '{frame_id}' was not created")
-        continue
 
-    expected_names = {id_to_name.get(nid, nid) for nid in spec.get("nodes", [])}
-    actual_names = set(nodes_inside_frame(frame))
-    missing = sorted(expected_names - actual_names)
-    if missing:
-        errors.append(f"Frame '{frame_id}' is missing nodes: {missing}")
+def node_settings_code() -> str:
+    code = common_preamble()
+    code += f"\nNODE_SETTINGS = {repr(NODE_SETTINGS)}\n"
+    code += dedent_template(
+        """
+        import bpy
+        print("[node-settings] Applying post-build node parameters...", flush=True)
+        obj = bpy.data.objects.get($object_name)
+        mod = obj.modifiers.get($modifier_name) if obj else None
+        if not (obj and mod and mod.node_group):
+            raise SystemExit("Missing object or node group for node-settings step")
+        node_map = {}
+        for node in mod.node_group.nodes:
+            node_id = node.get(_NODE_ID_PROP) if hasattr(node, "get") else None
+            if node_id:
+                node_map[node_id] = node
+        for node_id, inputs in NODE_SETTINGS.items():
+            node = node_map.get(node_id)
+            if not node:
+                print(f"[node-settings] Skipping unknown node {{node_id}}")
+                continue
+            for socket_name, value in inputs.items():
+                set_node_input(node, socket_name, value)
+        print("[node-settings] Done", flush=True)
+        """,
+        object_name=repr(OBJECT_NAME),
+        modifier_name=repr(MODIFIER_NAME),
+    )
+    return code
 
-    frame_info = {
-        "id": frame_id,
-        "label": frame.label,
-        "color": tuple(getattr(frame, "color", (0, 0, 0))),
-        "shrink": getattr(frame, "shrink", False),
-        "description": frame.items().get("description") if hasattr(frame, "items") else None,
-        "contained_nodes": sorted(actual_names),
-    }
-    print(json.dumps(frame_info, indent=2))
 
-exported = export_modifier_to_json(OBJECT_NAME, MODIFIER_NAME)
-frames_export = exported.get("frames", []) if isinstance(exported, dict) else []
-print("\nExported frame specs:")
-print(json.dumps(frames_export, indent=2))
+def validation_code() -> str:
+    code = common_preamble()
+    code += dedent_template(
+        """
+        import bpy
+        print("[validation] Running full_geo_nodes_validation...", flush=True)
+        obj = bpy.data.objects.get($object_name)
+        if obj:
+            obj.location.z = $z_offset
+        validation = full_geo_nodes_validation($object_name, $modifier_name, capture_screenshot=False)
+        print_validation_report(validation)
+        if validation.get("status") != "VALID":
+            raise SystemExit("Validation failed; adjust node settings or offsets")
+        """,
+        object_name=repr(OBJECT_NAME),
+        modifier_name=repr(MODIFIER_NAME),
+        z_offset=OBJECT_Z_OFFSET,
+    )
+    return code
 
-switch_to_mcp_workspace()
-frame_object_in_viewport(OBJECT_NAME, use_local_view=True)
-capture_path = capture_node_graph(OBJECT_NAME, MODIFIER_NAME)
 
-if capture_path and os.path.exists(capture_path):
-    SCREENSHOT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy(capture_path, SCREENSHOT_PATH)
-    print(f"Node graph screenshot saved to {SCREENSHOT_PATH}")
-else:
-    print("Node graph screenshot unavailable")
+def frames_code() -> str:
+    code = common_preamble()
+    code += f"\nFRAME_SPECS = {repr(FRAME_SPECS)}\n"
+    code += dedent_template(
+        """
+        import bpy
+        print("[frames] Applying frame specs...", flush=True)
+        obj = bpy.data.objects.get($object_name)
+        mod = obj.modifiers.get($modifier_name) if obj else None
+        if not (obj and mod and mod.node_group):
+            raise SystemExit("Missing object/modifier for frames step")
+        node_map = {}
+        for node in mod.node_group.nodes:
+            node_id = node.get(_NODE_ID_PROP) if hasattr(node, "get") else None
+            if node_id:
+                node_map[node_id] = node
+        errors = []
+        _apply_frames(mod.node_group, node_map, FRAME_SPECS, errors)
+        if errors:
+            raise SystemExit("Frame errors: " + "; ".join(errors))
+        print("[frames] Applied", len(FRAME_SPECS), "frames", flush=True)
+        """,
+        object_name=repr(OBJECT_NAME),
+        modifier_name=repr(MODIFIER_NAME),
+    )
+    return code
 
-summary = {
-    "validation_status": validation.get("status"),
-    "frame_errors": errors,
-    "frame_count": len(frame_nodes),
-    "exported_frame_count": len(frames_export),
-    "screenshot": str(SCREENSHOT_PATH if SCREENSHOT_PATH.exists() else ""),
-}
 
-print("\nFRAME_VALIDATION_SUMMARY")
-print(json.dumps(summary, indent=2))
+def export_code(screenshot_rel: str) -> str:
+    screenshot_abs = (REPO_ROOT / "_archive" / screenshot_rel).as_posix()
+    code = common_preamble()
+    code += dedent_template(
+        """
+        import bpy
+        print("[export] Dumping frames and capturing screenshot...", flush=True)
+        export_data = export_modifier_to_json($object_name, $modifier_name)
+        frames = export_data.get("graph_json", {{}}).get("frames", [])
+        print(json.dumps(frames, indent=2))
+        switch_to_mcp_workspace()
+        frame_object_in_viewport($object_name, use_local_view=True)
+        capture_path = capture_node_graph($object_name, $modifier_name)
+        target = Path($screenshot_abs)
+        if capture_path and Path(capture_path).exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(capture_path, target)
+            print(f"[export] Screenshot saved to {{target}}")
+        else:
+            raise SystemExit("Screenshot capture failed")
+        summary = {{"frames": len(frames), "screenshot": str(target)}}
+        print("[export] SUMMARY\n" + json.dumps(summary, indent=2))
+        """,
+        object_name=repr(OBJECT_NAME),
+        modifier_name=repr(MODIFIER_NAME),
+        screenshot_abs=repr(screenshot_abs),
+    )
+    return code
 
-if errors:
-    print("\nFrame validation detected issues.")
-    raise SystemExit(3)
 
-print("\nFrame validation PASSED!", flush=True)
+def update_session_notes(screenshot_rel: str) -> None:
+    entry = f"- Automated MCP frame validation via script ({screenshot_rel})."
+    lines = SESSION_NOTES.read_text().splitlines()
+    for idx, line in enumerate(lines):
+        if line.strip().startswith("## Pending"):
+            lines.insert(idx, entry)
+            break
+    else:
+        lines.append(entry)
+    SESSION_NOTES.write_text("\n".join(lines) + "\n")
+
+
+def main(argv: List[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--alias", default=DEFAULT_ALIAS, help="MCP alias to use")
+    parser.add_argument("--skip-log", action="store_true", help="Skip session note update")
+    args = parser.parse_args(argv)
+
+    screenshot_rel = f"frame_validation_nodes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+    steps: Iterable[Tuple[str, str]] = [("build", build_code())]
+    if NODE_SETTINGS:
+        steps = [*steps, ("node-settings", node_settings_code())]
+    steps = [
+        *steps,
+        ("validation", validation_code()),
+        ("frames", frames_code()),
+        ("export", export_code(screenshot_rel)),
+    ]
+
+    for label, code in steps:
+        run_mcp(code, label, args.alias)
+
+    if not args.skip_log:
+        update_session_notes(screenshot_rel)
+        print(f"[log] Session notes updated with screenshot {screenshot_rel}")
+
+    print("All steps completed successfully.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
