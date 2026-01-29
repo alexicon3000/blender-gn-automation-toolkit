@@ -1306,19 +1306,16 @@ def _create_frame(node_group, frame_spec, node_map):
         frame.width = width
         frame.height = height
 
-    # Parent requested nodes to the frame so Blender shows them inside visually
-    for node in contained_nodes:
-        try:
-            node.parent = frame
-        except Exception:
-            pass
-    for node_id in node_ids:
-        node = node_map.get(node_id)
-        if node and node not in contained_nodes:
+        for node in contained_nodes:
             try:
                 node.parent = frame
             except Exception:
                 pass
+    else:
+        # Default placement when no nodes listed yet
+        frame.location = (0.0, 0.0)
+        frame.width = 300.0
+        frame.height = 160.0
 
     return frame
 

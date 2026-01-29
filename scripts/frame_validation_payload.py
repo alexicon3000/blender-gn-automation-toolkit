@@ -54,6 +54,9 @@ FRAME_SPECS = [
     },
 ]
 
+# Apply node inputs after the initial build. Setting GeometryNodeDistributePointsOnFaces
+# values inside graph_json was crashing Blender 5.0.1, so we tweak inputs in a separate
+# MCP call instead.
 NODE_SETTINGS = {
     "grid": {"Vertices X": 32, "Vertices Y": 32, "Size X": 4.0, "Size Y": 4.0},
     "distribute": {"Density Max": 5.0},
@@ -83,7 +86,7 @@ def common_preamble() -> str:
         from datetime import datetime
         from pathlib import Path
 
-        REPO_ROOT = Path({REPO_ROOT!r})
+        REPO_ROOT = Path({str(REPO_ROOT)!r})
         TOOLKIT_PATH = Path(os.environ.get("GN_MCP_TOOLKIT_PATH", REPO_ROOT / "toolkit.py"))
         os.environ.setdefault("GN_MCP_SOCKET_COMPAT_PATH", str(REPO_ROOT / "reference" / "socket_compat.csv"))
         os.environ.setdefault("GN_MCP_CATALOGUE_PATH", str(REPO_ROOT / "reference" / "geometry_nodes_complete_5_0.json"))
@@ -96,7 +99,8 @@ def common_preamble() -> str:
 
 
 def dedent_template(template: str, **subs: str) -> str:
-    return Template(textwrap.dedent(template)).substitute(**subs)
+    dedented = textwrap.dedent(template)
+    return textwrap.dedent(Template(dedented).substitute(**subs))
 
 
 def build_code() -> str:
@@ -142,7 +146,7 @@ def node_settings_code() -> str:
         for node_id, inputs in NODE_SETTINGS.items():
             node = node_map.get(node_id)
             if not node:
-                print(f"[node-settings] Skipping unknown node {{node_id}}")
+                print(f"[node-settings] Skipping unknown node {node_id}")
                 continue
             for socket_name, value in inputs.items():
                 set_node_input(node, socket_name, value)
@@ -206,30 +210,65 @@ def frames_code() -> str:
 def export_code(screenshot_rel: str) -> str:
     screenshot_abs = (REPO_ROOT / "_archive" / screenshot_rel).as_posix()
     code = common_preamble()
-    code += dedent_template(
+    template = Template(
         """
-        import bpy
-        print("[export] Dumping frames and capturing screenshot...", flush=True)
-        export_data = export_modifier_to_json($object_name, $modifier_name)
-        frames = export_data.get("graph_json", {{}}).get("frames", [])
-        print(json.dumps(frames, indent=2))
-        switch_to_mcp_workspace()
-        frame_object_in_viewport($object_name, use_local_view=True)
-        capture_path = capture_node_graph($object_name, $modifier_name)
-        target = Path($screenshot_abs)
-        if capture_path and Path(capture_path).exists():
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy(capture_path, target)
-            print(f"[export] Screenshot saved to {{target}}")
-        else:
-            raise SystemExit("Screenshot capture failed")
-        summary = {{"frames": len(frames), "screenshot": str(target)}}
-        print("[export] SUMMARY\n" + json.dumps(summary, indent=2))
+import bpy
+print("[export] Dumping frames and capturing screenshot...", flush=True)
+export_data = export_modifier_to_json($object_name, $modifier_name)
+frames = export_data.get("graph_json", {}).get("frames", [])
+print(json.dumps(frames, indent=2))
+switch_to_mcp_workspace()
+frame_object_in_viewport($object_name, use_local_view=True)
+
+def _payload_log(message: str):
+    log_path = REPO_ROOT / "_archive" / "frame_validation_payload.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_path, "a", encoding="utf-8") as log_fh:
+        log_fh.write(f"{datetime.now().isoformat()} {message}\\n")
+
+# Screenshot capture is flaky when Blender is left in fullscreen; capturing twice is safer
+capture_path = capture_node_graph($object_name, $modifier_name)
+_payload_log(f"[export] capture_node_graph returned: {capture_path}")
+print(f"[export] capture_node_graph returned: {capture_path}")
+target = Path($screenshot_abs)
+
+def _copy_candidate(candidate_path, label):
+    candidate = Path(candidate_path) if candidate_path else None
+    if candidate and candidate.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(candidate, target)
+        msg = f"[export] Screenshot saved to {target} via {label}"
+        print(msg)
+        _payload_log(msg)
+        return True
+    return False
+
+if not _copy_candidate(capture_path, "primary"):
+    warn = "[export] Screenshot missing; retrying once..."
+    print(warn)
+    _payload_log(warn)
+    capture_path = capture_node_graph($object_name, $modifier_name)
+    print(f"[export] retry capture returned: {capture_path}")
+    _payload_log(f"[export] retry capture returned: {capture_path}")
+    if not _copy_candidate(capture_path, "retry"):
+        raise SystemExit("Screenshot capture failed")
+
+if not target.exists():
+    _payload_log(f"[export] ERROR target missing after copy: {target}")
+    raise SystemExit(f"Screenshot missing on disk: {target}")
+else:
+    _payload_log(f"[export] verified screenshot exists at {target}")
+summary = {"frames": len(frames), "screenshot": str(target)}
+print("[export] SUMMARY\\n" + json.dumps(summary, indent=2))
+_payload_log(f"[export] SUMMARY -> {summary}")
         """,
+    )
+    body = template.substitute(
         object_name=repr(OBJECT_NAME),
         modifier_name=repr(MODIFIER_NAME),
         screenshot_abs=repr(screenshot_abs),
-    )
+    ).strip("\n")
+    code += "\n" + body + "\n"
     return code
 
 
@@ -254,7 +293,13 @@ def main(argv: List[str] | None = None) -> int:
     screenshot_rel = f"frame_validation_nodes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
     steps: Iterable[Tuple[str, str]] = [("build", build_code())]
     if NODE_SETTINGS:
-        steps = [*steps, ("node-settings", node_settings_code())]
+        steps = [
+            *steps,
+            # Do not push node settings into graph_json; adjusting Distribute Points inputs
+            # during the initial build caused Blender 5.0.1 to crash. Instead, tweak inputs
+            # via a dedicated MCP call after the nodes exist.
+            ("node-settings", node_settings_code()),
+        ]
     steps = [
         *steps,
         ("validation", validation_code()),
@@ -264,6 +309,12 @@ def main(argv: List[str] | None = None) -> int:
 
     for label, code in steps:
         run_mcp(code, label, args.alias)
+
+    screenshot_path = REPO_ROOT / "_archive" / screenshot_rel
+    if not screenshot_path.exists():
+        raise SystemExit(
+            f"Expected screenshot {screenshot_rel} not found; check _archive/frame_validation_payload.log"
+        )
 
     if not args.skip_log:
         update_session_notes(screenshot_rel)
