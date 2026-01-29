@@ -740,6 +740,163 @@ def generate_full_graph_report(node_group, node_id_map=None, last_graph_json=Non
     return report
 
 
+# ============================================================================
+# GRAPH EXPORT - Read back node graphs as graph_json
+# ============================================================================
+
+def export_node_group_to_json(node_group, include_positions=True, include_defaults=True):
+    """Export a Blender node group to graph_json format.
+
+    This is the inverse of build_graph_from_json() — it reads an existing node
+    graph and produces a JSON structure that can be used to rebuild it or
+    understand its current state.
+
+    Args:
+        node_group: The bpy node group to export (e.g., modifier.node_group)
+        include_positions: If True, include node x/y positions in output
+        include_defaults: If True, include non-default socket values in node_settings
+
+    Returns:
+        Dict with 'nodes', 'links', 'node_settings', and optionally 'positions':
+        {
+            "nodes": [{"id": "Grid", "type": "GeometryNodeMeshGrid"}, ...],
+            "links": [{"from": "Grid", "from_socket": "Mesh", "to": "ToPoints", "to_socket": "Mesh"}, ...],
+            "node_settings": {"Grid": {"Vertices X": 10, "Vertices Y": 10}, ...},
+            "positions": {"Grid": [0, 0], "ToPoints": [200, 0], ...}  # if include_positions=True
+        }
+    """
+    result = {
+        "nodes": [],
+        "links": [],
+        "node_settings": {},
+    }
+
+    if include_positions:
+        result["positions"] = {}
+
+    # Build node list and settings
+    for node in node_group.nodes:
+        # Use gn_mcp_id if present (set by build_graph_from_json), else node.name
+        node_id = node.get(_NODE_ID_PROP, node.name)
+
+        # Skip Group Input/Output — they're implicit in graph_json
+        if node.bl_idname == "NodeGroupInput":
+            # But record it so links can reference __GROUP_INPUT__
+            continue
+        if node.bl_idname == "NodeGroupOutput":
+            continue
+
+        result["nodes"].append({
+            "id": node_id,
+            "type": node.bl_idname,
+        })
+
+        if include_positions:
+            result["positions"][node_id] = [node.location.x, node.location.y]
+
+        # Collect non-default input values
+        if include_defaults:
+            settings = _extract_node_settings(node)
+            if settings:
+                result["node_settings"][node_id] = settings
+
+    # Build link list
+    for link in node_group.links:
+        if not link.from_node or not link.to_node:
+            continue
+
+        from_node = link.from_node
+        to_node = link.to_node
+
+        # Map node names to IDs
+        from_id = from_node.get(_NODE_ID_PROP, from_node.name)
+        to_id = to_node.get(_NODE_ID_PROP, to_node.name)
+
+        # Handle Group Input/Output specially
+        if from_node.bl_idname == "NodeGroupInput":
+            from_id = "__GROUP_INPUT__"
+        if to_node.bl_idname == "NodeGroupOutput":
+            to_id = "__GROUP_OUTPUT__"
+
+        result["links"].append({
+            "from": from_id,
+            "from_socket": link.from_socket.name,
+            "to": to_id,
+            "to_socket": link.to_socket.name,
+        })
+
+    return result
+
+
+def _extract_node_settings(node):
+    """Extract non-default input values from a node.
+
+    Returns a dict of {input_name: value} for inputs that have been modified
+    from their defaults, or None if no settings to report.
+    """
+    settings = {}
+
+    for inp in node.inputs:
+        # Skip linked inputs — their value comes from the connection
+        if inp.is_linked:
+            continue
+
+        # Skip inputs without default_value (e.g., Geometry sockets)
+        if not hasattr(inp, "default_value"):
+            continue
+
+        value = inp.default_value
+        serialized = _serialize_value(value)
+
+        # Include all settable values (we can't easily detect "default" vs "modified"
+        # without catalogue metadata, so include everything)
+        if serialized is not None:
+            settings[inp.name] = serialized
+
+    return settings if settings else None
+
+
+def export_modifier_to_json(obj_name, modifier_name, include_positions=True, include_defaults=True):
+    """Export a geometry nodes modifier to graph_json format.
+
+    Convenience wrapper around export_node_group_to_json() that looks up the
+    object and modifier by name.
+
+    Args:
+        obj_name: Name of the object with the modifier
+        modifier_name: Name of the geometry nodes modifier
+
+    Returns:
+        Dict with 'success', 'graph_json', and 'error' keys
+    """
+    obj = bpy.data.objects.get(obj_name)
+    if not obj:
+        return {"success": False, "graph_json": None, "error": f"Object '{obj_name}' not found"}
+
+    modifier = obj.modifiers.get(modifier_name)
+    if not modifier:
+        return {"success": False, "graph_json": None, "error": f"Modifier '{modifier_name}' not found"}
+
+    if modifier.type != "NODES":
+        return {"success": False, "graph_json": None, "error": f"Modifier '{modifier_name}' is not a Geometry Nodes modifier"}
+
+    if not modifier.node_group:
+        return {"success": False, "graph_json": None, "error": f"Modifier '{modifier_name}' has no node group"}
+
+    graph_json = export_node_group_to_json(
+        modifier.node_group,
+        include_positions=include_positions,
+        include_defaults=include_defaults,
+    )
+
+    return {
+        "success": True,
+        "graph_json": graph_json,
+        "node_group_name": modifier.node_group.name,
+        "error": None,
+    }
+
+
 def validate_graph_json_preflight(graph_json):
     """Fail-fast validation of graph_json before touching Blender."""
     result = {
@@ -1706,6 +1863,9 @@ print("    - mermaid_to_blender(obj, mod, mermaid_text)  # One-step!")
 print("    - parse_mermaid_to_graph_json(mermaid_text)")
 print("    - set_node_input(node, input_name, value)")
 print("    - safe_link(node_group, from_socket, to_socket)")
+print("  Export (read-back):")
+print("    - export_modifier_to_json(obj, mod)  # Get current graph state!")
+print("    - export_node_group_to_json(node_group)")
 print("  Socket helpers:")
 print("    - get_output_by_type(node, type)")
 print("    - get_input_by_type(node, type)")
